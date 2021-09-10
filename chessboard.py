@@ -1,4 +1,4 @@
-#abbiamo bisogno di almeno 10 test patter
+ #abbiamo bisogno di almeno 10 test patter
 import numpy as np
 import cv2 
 import os
