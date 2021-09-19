@@ -24,7 +24,7 @@ class FPS:
     
     def time(self):
         #delta time
-        return (self._end - self._start).total_seconds()
+        return (self._stop - self._start).total_seconds()
     
     def FPS(self):
         #compute frame per second

@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 #andiamo ad analizzare un'array binario contenente 1 dove dovrebbero esserci ipixel delle linee (utilizzo np.logical_and)
 #devo utilizzare lo sliding window algorithm
+#cercare di utilizzare il più possibile numpy perchè effettua i calcoli più velocemente di tutte le funzioni python
 
 class curves:
     
@@ -30,6 +31,7 @@ class curves:
         self.mid = self.h / 2
         self.window_height = np.int(self.h / self.n) #altezza delle sliding box
                 
+
     def start(self, img, Hist = None):
         #creiamo istogramma di tutte le colonne della metà inferiore dell'immagine binaria e i dovremmo ottenere 2 vette coe possibili starting point della ricerca dei punti della curve
         ### Each portion of the histogram below displays how many white pixels are in each column of the image. ###
@@ -40,7 +42,8 @@ class curves:
         start_rightx = np.argmax(hist[mid:]) + mid
         if Hist == True:
             n, bins, patches = plt.hist(x=hist, bins='auto', color='#0504aa',
-                            alpha=0.7, rwidth=0.85)plt.grid(axis='y', alpha=0.75)
+                            alpha=0.7, rwidth=0.85)
+            plt.grid(axis='y', alpha=0.75)
             plt.xlabel('X')
             plt.ylabel('N. white points')
             plt.title('Istogramma decisione x di partenza')
@@ -75,12 +78,9 @@ class curves:
     
     def plot(self, t = 4):
         
-        #creo un tensore della dimensione dell'immagine con 3 canali binari uno per colore
+        #colore i pixel della foto relativi alle curve
         self.out_img[self.left_ypoints, self.left_xpoints] = [255, 0, 255]
         self.out_img[self.right_ypoints, self.right_xpoints] = [0, 255, 255]
-
-        self.left_fit_curve_pix = np.polyfit(self.left_ypoints, self.left_xpoints, 2)
-        self.right_fit_curve_pix = np.polyfit(self.right_ypoints, self.right_xpoints, 2)
         
         #kl e kr contengono i coefficienti dell'equazione di secondo grado
         kl, kr = self.left_fit_curve_pix, self.right_fit_curve_pix
@@ -115,7 +115,7 @@ class curves:
         #calcoliamo le coordinate x dei bordi a quella coordinata y:
         kl, kr = self.left_fit_curve_pix, self.right_fit_curve_pix
         left_xs = kl[0] * (y**2) + kl[1] * y + kl[2]
-        right_xs = kr[0] * (y**2) + kr[1] * y + kl[2]
+        right_xs = kr[0] * (y**2) + kr[1] * y + kr[2]
         
         #calcoliamo il centro della strada:
         road_pox = left_xs + (right_xs - left_xs)/2
@@ -125,7 +125,7 @@ class curves:
         
         
     
-    def Detect(self,img):
+    def Detect(self,img, plot = 0):
         self.getInfo(img)
         start_leftx, start_rightx = self.start(img,Hist = None)
         left_indices, right_indices = [], []
@@ -160,19 +160,20 @@ class curves:
         
         self.right_xpoints, self.right_ypoints = self.pixel_location(self.right_indices, img)
         
-        self.left_curve = np.polyfit(self.left_xpoints, self.left_ypoints,2)
-        self.right_curve = np.polyfit(self.right_xpoints, self.right_ypoints,2)
+        self.left_fit_curve_pix = np.polyfit(self.left_ypoints, self.left_xpoints,2)
+        self.right_fit_curve_pix = np.polyfit(self.right_ypoints, self.right_xpoints,2)
         
-        self.plot()
+        if plot > 0:
+            self.plot()
+            
         self.getPosition()
+        #left_xs e ys esistono per il debug
         self.result = {
-          'image': self.out_img,
-          'real_left_best_fit_curve': self.left_curve,
-          'real_right_best_fit_curve': self.right_curve, 
+          'image': self.out_img, 
           'pixel_left_best_fit_curve': self.left_fit_curve_pix,
           'pixel_right_best_fit_curve': self.right_fit_curve_pix, 
-          'curve_pointsx': self.left_xs,
-          'curve_pointsy': self.ys
+          #'curve_pointsx': self.left_xs,
+          #'curve_pointsy': self.ys,
           'Center_distance': self.position
         }
 
