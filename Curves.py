@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 #andiamo ad analizzare un'array binario contenente 1 dove dovrebbero esserci ipixel delle linee (utilizzo np.logical_and)
 #devo utilizzare lo sliding window algorithm
+#cercare di utilizzare il più possibile numpy perchè effettua i calcoli più velocemente di tutte le funzioni python
 
 class curves:
     
@@ -28,7 +29,7 @@ class curves:
         
                 
     def start(self, img):
-        #creiamo istogramma di tutte le colonne della metà inferiore dell'immagine binaria e i dovremmo ottenere 2 vette coe possibili starting point della ricerca dei punti della curve
+        #creiamo istogramma di tutte le colonne della metà inferiore dell'immagine binaria e i dovremmo ottenere 2 vette con possibili starting point della ricerca dei punti della curve
         ### Each portion of the histogram below displays how many white pixels are in each column of the image. ###
         ###We then take the highest peaks of each side of the image, one for each lane line.###
         hist = np.sum(img[np.int(self.h /2):, :], axis = 0)
