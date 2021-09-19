@@ -6,12 +6,8 @@ import matplotlib.pyplot as plt
 
 class curves:
     
-    def __init__(self, ImgBinary, NumberOfWindows, Margin, nPixelActivation):
-        self.img = ImgBinary
-        self.h, self.w = self.img.shape[0], self.img.shape[1]
-        self.mid = self.h / 2
+    def __init__(self, NumberOfWindows, Margin, nPixelActivation):
         self.n = NumberOfWindows #numero di  sliding windows
-        self.window_height = np.int(self.h / self.n) #altezza delle sliding box
         self.m = Margin #margine dalla x centrale in avanti e indietro del box ; 100
         self.nActivation = nPixelActivation #numero di pixel di attivazione per ativare lo spostamento di midx : 50
         self.left_indices = []
@@ -25,9 +21,16 @@ class curves:
         self.left_fit_curve_pix = None
         self.right_fit_curve_pix = None
         self.out_img = None
-        
+    
+    def getInfo(self, ImgBinary):
+        #inizializza tutte le variabili di classe legate all'immagine
+        #non lo faccio nell'__init__ perchè in caso di video non si può chiamare ripetutamente il costruttore
+        self.img = ImgBinary
+        self.h, self.w = self.img.shape[0], self.img.shape[1]
+        self.mid = self.h / 2
+        self.window_height = np.int(self.h / self.n) #altezza delle sliding box
                 
-    def start(self, img):
+    def start(self, img, Hist = None):
         #creiamo istogramma di tutte le colonne della metà inferiore dell'immagine binaria e i dovremmo ottenere 2 vette coe possibili starting point della ricerca dei punti della curve
         ### Each portion of the histogram below displays how many white pixels are in each column of the image. ###
         ###We then take the highest peaks of each side of the image, one for each lane line.###
@@ -35,6 +38,13 @@ class curves:
         mid = np.int(hist.shape[0]/2)
         start_leftx = np.argmax(hist[:mid])
         start_rightx = np.argmax(hist[mid:]) + mid
+        if Hist == True:
+            n, bins, patches = plt.hist(x=hist, bins='auto', color='#0504aa',
+                            alpha=0.7, rwidth=0.85)plt.grid(axis='y', alpha=0.75)
+            plt.xlabel('X')
+            plt.ylabel('N. white points')
+            plt.title('Istogramma decisione x di partenza')
+            
         return start_leftx, start_rightx
     
     def findY(self, box):
@@ -97,8 +107,27 @@ class curves:
     def draw_boundaries(self, p1, p2, color, thickness = 5):
         cv2.rectangle(self.out_img, p1, p2, color, thickness)
     
+    def getPosition(self):
+        #punto medio: 
+        mid = self.w /2
+        y = self.h
+        
+        #calcoliamo le coordinate x dei bordi a quella coordinata y:
+        kl, kr = self.left_fit_curve_pix, self.right_fit_curve_pix
+        left_xs = kl[0] * (y**2) + kl[1] * y + kl[2]
+        right_xs = kr[0] * (y**2) + kr[1] * y + kl[2]
+        
+        #calcoliamo il centro della strada:
+        road_pox = left_xs + (right_xs - left_xs)/2
+        
+        #calcoliamo la distanza in pixel: <0 se la macchina sta curvando troppo verso sinsitra, >0 ser verso destra
+        self.position = road_pox - mid
+        
+        
+    
     def Detect(self,img):
-        start_leftx, start_rightx = self.start(img)
+        self.getInfo(img)
+        start_leftx, start_rightx = self.start(img,Hist = None)
         left_indices, right_indices = [], []
         x = [None, None, None, None]
         y = [None,None]
@@ -135,6 +164,7 @@ class curves:
         self.right_curve = np.polyfit(self.right_xpoints, self.right_ypoints,2)
         
         self.plot()
+        self.getPosition()
         self.result = {
           'image': self.out_img,
           'real_left_best_fit_curve': self.left_curve,
@@ -143,6 +173,7 @@ class curves:
           'pixel_right_best_fit_curve': self.right_fit_curve_pix, 
           'curve_pointsx': self.left_xs,
           'curve_pointsy': self.ys
+          'Center_distance': self.position
         }
 
         return self.result
