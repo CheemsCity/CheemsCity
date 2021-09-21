@@ -4,11 +4,11 @@ import cv2
 import os
 
 class Chessboard:
-    def __init__(self, nx, ny, path):
+    def __init__(self, nx, ny, frame):
     
         self.nx, self.ny = nx, ny
         self.n = (self.nx, self.ny)
-        self.path = path
+        self.frame = frame
 
         #prepariamo gli object points (punti 3D), come (0,0,0), (1,0,0)...
         objp = np.zeros((self.nx*self.ny, 3), np.float32)
@@ -19,11 +19,11 @@ class Chessboard:
         #Array to store the object points
         self.objpoints = objp  #3d points
 
-        img=cv2.imread(self.path)
-        gray = cv2.cvtColor(img, cv.COLOR_BGR2GRAY)
+        img = np.array(frame)
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
         #trova gli spigoli
-        self.ret, corners = cv2.findChessboardCorners(gray, self.n, none)
+        self.ret, corners = cv2.findChessboardCorners(gray, self.n, None)
 
         #se trovato, aggiungi gli object points e gli image points
         if self.ret == True:
