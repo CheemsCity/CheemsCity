@@ -9,7 +9,7 @@ class curves:
     
     def __init__(self, NumberOfWindows, Margin, nPixelActivation):
         self.n = NumberOfWindows #numero di  sliding windows
-        self.m = Margin #margine dalla x centrale in avanti e indietro del box ; 100
+        self.m = Margin #margine dalla x centrale in avanti e indietro del box, quanto grossa dev'essere il lato x del rettangolo/2
         self.nActivation = nPixelActivation #numero di pixel di attivazione per ativare lo spostamento di midx : 50
         self.left_indices = []
         self.right_indices = []
@@ -40,13 +40,14 @@ class curves:
         mid = np.int(hist.shape[0]/2)
         start_leftx = np.argmax(hist[:mid])
         start_rightx = np.argmax(hist[mid:]) + mid
+        #se Hist = True plotta il grafico del numero di pyxel bianchi per collona dell'immagine
+        #Hist = True usato principalmente per il debug o didattica, non serve per programma in esecuzione.
         if Hist == True:
-            n, bins, patches = plt.hist(x=hist, bins='auto', color='#0504aa',
-                            alpha=0.7, rwidth=0.85)
-            plt.grid(axis='y', alpha=0.75)
+            plt.bar(range(len(hist)), hist)
             plt.xlabel('X')
             plt.ylabel('N. white points')
             plt.title('Istogramma decisione x di partenza')
+            print(start_leftx, start_rightx)
             
         return start_leftx, start_rightx
     
@@ -62,6 +63,7 @@ class curves:
         return xLeft, xRight
     
     def indices_in_box(self,img, yLow, yHigh, xLeft, xRight):
+        #ritorna la posizione dei pixel bianchi nei vari box
         self.all_pixels_x = np.array(img.nonzero()[1])
         self.all_pixels_y = np.array(img.nonzero()[0])
         cond1 = (self.all_pixels_y >= yLow)
@@ -126,6 +128,7 @@ class curves:
         
     
     def Detect(self,img, plot = 0):
+        #funzione principale
         self.getInfo(img)
         start_leftx, start_rightx = self.start(img,Hist = None)
         left_indices, right_indices = [], []
@@ -163,6 +166,8 @@ class curves:
         self.left_fit_curve_pix = np.polyfit(self.left_ypoints, self.left_xpoints,2)
         self.right_fit_curve_pix = np.polyfit(self.right_ypoints, self.right_xpoints,2)
         
+        #plot > 0 disegna le righe e i rettangoli sull'immagine
+        #utile per il debug, mostra come si comporta l'algoritmo che guarda le linee
         if plot > 0:
             self.plot()
             
@@ -178,7 +183,6 @@ class curves:
         }
 
         return self.result
-    
         
         
         

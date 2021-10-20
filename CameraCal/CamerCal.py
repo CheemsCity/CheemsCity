@@ -8,6 +8,11 @@ import os
 from chessboard import Chessboard
 import yaml
 import time
+from picamera import PiCamera
+from CameraStream import CameraStream
+from threading import Thread
+from FPS import FPS
+import numpy as np
 
 class ChessboardApp:
     
@@ -20,6 +25,7 @@ class ChessboardApp:
         self.endEvent = None
         self.chessboards = []
         self.n = 0
+        self.cod = False
         #self.ctrl serve per attivare il delay dopo un'immagine buona in modo che l'utente capisca che è stata presa
         self.ctrl = False
         
@@ -30,24 +36,23 @@ class ChessboardApp:
         self.panel = None
         
         #barra che indica il progresso nel raccoglimento foto
-        pbar = ttk.Progressbar(self.root, orient = 'horizontal', length = 300, mode = 'determinate')
-        pbar['value'] = self.n * 100/14
-        pbar.pack(padx=10, pady = 10)
+        self.pbar = ttk.Progressbar(self.root, orient = 'horizontal', length = 300, mode = 'determinate')
+        self.pbar.pack(padx=10, pady = 10)
         
         #testo che indica quante foto raccogliere e quante da raccogliere
-        value_label = ttk.Label(self.root, text = f"Current Progress: {self.n}/14")
+        value_label = ttk.Label(self.root, text =self.update_label())
         value_label.pack(padx=10, pady =10)
         
-        if self.n >= 14:
+       # if self.n >= 14:
             #se è stato raggiunto il numero giusto di foto il bottone è cliccabile e azionerà la creazione e salvataggio della matrice
             #per creare un bottone:
-            btn = tk.Button(self.root, text = "SAVE", command = self.SaveMatrix, bg = "#07e041")
+            #self.btn = tk.Button(self.root, text = "SAVE", command = self.SaveMatrix, bg = "#07e041")
             #pack è uno dei geometry managment mechanism
-            btn.pack(side = 'bottom', fill="both", expand = "yes", padx=10, pady =10)
+            #self.btn.pack(side = 'bottom', fill="both", expand = "yes", padx=10, pady =10)
         
-        else:
-            btn = tk.Button(self.root, text = "SAVE", command = None)
-            btn.pack(side = 'bottom', fill="both", expand = "yes", padx=10, pady =10)
+       # else:
+        self.btn = tk.Button(self.root, text = "SAVE", command = None)
+        self.btn.pack(side = 'bottom', fill="both", expand = "yes", padx=10, pady =10)
         
         #thread che poolla i frame dalla camera
         self.endEvent= threading.Event()
@@ -65,18 +70,23 @@ class ChessboardApp:
         try:
             
             while not self.endEvent.is_set():
-                ret, self.frame = self.vs.read()
+                self.frame = self.vs.read()
                 
                 #analize image for chessboard
-                if self.n<14:
+                if self.n < 40:
                     #attiva l'analisi delle foto finchè necessario
-                    chessboard = Chessboard(nx = 7, ny = 6,frame = self.frame)
+                    chessboard = Chessboard(nx = 9, ny = 7,frame = self.frame, square_size = 0.017) #metri
                     if chessboard.ret == True:
                         self.ctrl = True
                         self.chessboards.append(chessboard)
                         self.n += 1
-                        cv2.drawChessboardCorners(self.frame, (7,6), chessboard.corners2, chessboard.ret)
-                        
+                        self.pbar['value']=(self.n * 100)/40
+                        cv2.drawChessboardCorners(self.frame, (9,7), chessboard.imgpoints, chessboard.ret)
+                        print(self.n)
+
+                if (self.n==40 and  self.cod ==False):
+                    self.btn.configure(command = self.SaveMatrix, bg = "#07e041")
+                    self.cod = True
                     
                 #opencv represents image in BGR, we need to convert i RGB
                 image = cv2.cvtColor(self.frame, cv2.COLOR_BGR2RGB)
@@ -106,12 +116,12 @@ class ChessboardApp:
         
         objpoints = []
         imgpoints = []
-        shape = self.chessboards[0].dimensions
+        h, w = self.frame.shape[:2]
         for chessboard in self.chessboards:
             objpoints.append(chessboard.objpoints)
             imgpoints.append(chessboard.imgpoints)
             
-        ret, matrix, distortion_coef, rv, tv = cv2.calibrateCamera(objpoints, imgpoints, shape, None, None)
+        ret, matrix, distortion_coef, rv, tv = cv2.calibrateCamera(objpoints, imgpoints, (w,h), None, None)
         
         calibration_data = {
             "camera_matrix": matrix, 
@@ -119,7 +129,7 @@ class ChessboardApp:
         }
         
         with open('calibration_data.yml', 'w') as outfile:
-            yaml.dump(data, outfile, default_flow_style=False)
+            yaml.dump(calibration_data, outfile, default_flow_style=False)
         
         print("[INFO] saved calibration_data.yml")
         
@@ -129,6 +139,8 @@ class ChessboardApp:
         # the quit process to continue
         print("[INFO] closing...")
         self.endEvent.set()
-        self.vs.release()
+        self.vs.stop()
         self.root.quit()
-    
+
+    def update_label(self):
+        return f"Foto acquisite: {self.n}"

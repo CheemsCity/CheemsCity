@@ -1,8 +1,13 @@
 from CamerCal import ChessboardApp
 import time
 import cv2
+from picamera import PiCamera
+from CameraStream import CameraStream
+from threading import Thread
+from FPS import FPS
+import numpy as np
 
-vs = cv2.VideoCapture(0)
+vs = CameraStream().start()
 time.sleep(2.0)
 
 pba = ChessboardApp(vs,"")

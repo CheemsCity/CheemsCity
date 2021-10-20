@@ -14,8 +14,9 @@ class LaneFilter:
     
     def ROI(self,img):
         height = img.shape[0]
+        #roy da modificare quando avremo la struttura della macchina e quindi posizione fissa della telecamera
         trapezio = np.array([
-            [(200, height), (1100, height), (790,400), (400, 400)]
+            [(0, height), (300, height), (250,150), (50, 150)]
         ])
         mask = np.zeros_like(img)
         cv2.fillPoly(mask, trapezio, 255) #crea maschera
