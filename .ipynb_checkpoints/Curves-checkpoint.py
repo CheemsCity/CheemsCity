@@ -84,22 +84,25 @@ class curves:
         self.out_img[self.left_ypoints, self.left_xpoints] = [255, 0, 255]
         self.out_img[self.right_ypoints, self.right_xpoints] = [0, 255, 255]
         
-        #kl e kr contengono i coefficienti dell'equazione di secondo grado
-        kl, kr = self.left_fit_curve_pix, self.right_fit_curve_pix
-        #linspace genera un insieme di self.h punti equalmente distanti da 0 a self.h, 
-        ys = np.linspace(0, self.h - 1, self.h)
-        self.ys = ys
-        
-        #ricaviamo i punti delle x a partire dall'equazione e dalle y
-        left_xs = kl[0] * (ys**2) + kl[1] * ys + kl[2]
-        self.left_xs = left_xs
-        right_xs = kr[0] * (ys**2) + kr[1] * ys + kr[2]
+        if (left_fit is None or right_fit is None):
+            return
+        else:
+            #kl e kr contengono i coefficienti dell'equazione di secondo grado
+            kl, kr = self.left_fit_curve_pix, self.right_fit_curve_pix
+            #linspace genera un insieme di self.h punti equalmente distanti da 0 a self.h, 
+            ys = np.linspace(0, self.h - 1, self.h)
+            self.ys = ys
 
-        xls, xrs, ys = left_xs.astype(np.uint32), right_xs.astype(np.uint32), ys.astype(np.uint32)
+            #ricaviamo i punti delle x a partire dall'equazione e dalle y
+            left_xs = kl[0] * (ys**2) + kl[1] * ys + kl[2]
+            self.left_xs = left_xs
+            right_xs = kr[0] * (ys**2) + kr[1] * ys + kr[2]
 
-        for xl, xr, y in zip(xls, xrs, ys):
-            cv2.line(self.out_img, (xl - t, y), (xl + t, y), (255, 255, 0), int(t / 2))
-            cv2.line(self.out_img, (xr - t, y), (xr + t, y), (0, 0, 255), int(t / 2))
+            xls, xrs, ys = left_xs.astype(np.uint32), right_xs.astype(np.uint32), ys.astype(np.uint32)
+
+            for xl, xr, y in zip(xls, xrs, ys):
+                cv2.line(self.out_img, (xl - t, y), (xl + t, y), (255, 255, 0), int(t / 2))
+                cv2.line(self.out_img, (xr - t, y), (xr + t, y), (0, 0, 255), int(t / 2))
         
     def pixel_location(self, indices, img):
         all_pixels_x = np.array(img.nonzero()[1])
@@ -163,8 +166,14 @@ class curves:
         
         self.right_xpoints, self.right_ypoints = self.pixel_location(self.right_indices, img)
         
-        self.left_fit_curve_pix = np.polyfit(self.left_ypoints, self.left_xpoints,2)
-        self.right_fit_curve_pix = np.polyfit(self.right_ypoints, self.right_xpoints,2)
+        #metto if per evitare errori qual'ora non ci fosse la strada
+        if (self.left_ypoints.size != 0 and self.left_xpoints.size != 0 and self.right_ypoints.size != 0 and self.right_xpoints.size != 0):
+            self.left_fit_curve_pix = np.polyfit(self.left_ypoints, self.left_xpoints,2)
+            self.right_fit_curve_pix = np.polyfit(self.right_ypoints, self.right_xpoints,2)
+            self.position = self.getPosition()
+        else:
+            self.left_fit_curve_pix = None
+            self.right_fit_curve_pix = None
         
         #plot > 0 disegna le righe e i rettangoli sull'immagine
         #utile per il debug, mostra come si comporta l'algoritmo che guarda le linee

@@ -29,25 +29,28 @@ class BirdView:
     def Visual(self, image, ImgBinary, left_fit, right_fit, color = (0, 255, 0), debug = False):
         z = np.zeros_like(ImgBinary)
         filtered = np.dstack((z,z,z))
-
-        kl, kr = left_fit, right_fit
-        h = filtered.shape[0]
-        ys = np.linspace(0, h -1, h)
-        lxs = kl[0] * (ys**2) + kl[1] * ys + kl[2]
-        rxs = kr[0] * (ys**2) + kr[1] * ys + kr[2]
-        #creiamo un array verticale che contine i punti x e y della curva
-        pts_left = np.array([np.transpose(np.vstack([lxs,ys]))])
-        #qua uso transpose perche si inverte l'ordine dei punti e si può fare una bella area
-        pts_right = np.array([np.flipud(np.transpose(np.vstack([rxs,ys])))])
-        #creiamo un array orizzontale dei 2 punti delle curve
-        pts = np.hstack((pts_left, pts_right))
-        #riempiamo lo spazio tra i punti
-        cv2.fillPoly(filtered, np.int_(pts), color)
-        if debug == True:
-            plt.imshow(filtered)
-            plt.show()
-        shape = (filtered.shape[1], filtered.shape[0])
-        #faccio l'inversa della maschera per rimetterla sull'immagine originale
-        ground_lane = cv2.warpPerspective(filtered, self.inv_sky_matrix, shape)
-        combo = cv2.addWeighted(image,1,ground_lane, 0.3, 0)
-        return combo
+        
+        if (left_fit is None or right_fit is None):
+            return image
+        else:
+            kl, kr = left_fit, right_fit
+            h = filtered.shape[0]
+            ys = np.linspace(0, h -1, h)
+            lxs = kl[0] * (ys**2) + kl[1] * ys + kl[2]
+            rxs = kr[0] * (ys**2) + kr[1] * ys + kr[2]
+            #creiamo un array verticale che contine i punti x e y della curva
+            pts_left = np.array([np.transpose(np.vstack([lxs,ys]))])
+            #qua uso transpose perche si inverte l'ordine dei punti e si può fare una bella area
+            pts_right = np.array([np.flipud(np.transpose(np.vstack([rxs,ys])))])
+            #creiamo un array orizzontale dei 2 punti delle curve
+            pts = np.hstack((pts_left, pts_right))
+            #riempiamo lo spazio tra i punti
+            cv2.fillPoly(filtered, np.int_(pts), color)
+            if debug == True:
+                plt.imshow(filtered)
+                plt.show()
+            shape = (filtered.shape[1], filtered.shape[0])
+            #faccio l'inversa della maschera per rimetterla sull'immagine originale
+            ground_lane = cv2.warpPerspective(filtered, self.inv_sky_matrix, shape)
+            combo = cv2.addWeighted(image,1,ground_lane, 0.3, 0)
+            return combo
