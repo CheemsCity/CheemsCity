@@ -74,24 +74,26 @@ bool msgAnal(String msg){
       //è un comando di gestione dei motori
       if(msg[2]=='r'){
         //controllo motore destro
-        power = msg.substring(3).toInt();
+        power = msg.substring(3).toFloat();
         if (power >0){
           digitalWrite(M1,LOW);
         }
         else{
           digitalWrite(M1,HIGH);
+          power = power * (-1);
         }
         analogWrite(E1, power*(255/100));
         
       }
       else if(msg[2]=='l'){
         //controllo motore sinistro
-        power = msg.substring(3).toInt();
+        power = msg.substring(3).toFloat();
         if (power >0){
           digitalWrite(M2,LOW);
         }
         else{
           digitalWrite(M2,HIGH);
+          power = power * (-1);
         }
         analogWrite(E2, power*(255/100));
       }
