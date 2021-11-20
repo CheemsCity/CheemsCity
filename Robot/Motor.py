@@ -10,7 +10,7 @@ class Motor:
         #motor è un char che indica se motore destro(r) o sinistro(l)
         #power è un float compreso tra -100 e 100, con i numeri negativi a significare la direzione contraria.
         try:
-            msg = "s" + "m" + motor + str(power)
+            msg = "s" + "m" + motor + str(power) + "\n"
             self.comm.SendCommand(msg)
             return True
         else:
