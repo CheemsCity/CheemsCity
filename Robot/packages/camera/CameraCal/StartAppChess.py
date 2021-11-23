@@ -2,9 +2,9 @@ from CamerCal import ChessboardApp
 import time
 import cv2
 from picamera import PiCamera
-from CameraStream import CameraStream
+from camera.CameraStream import CameraStream
 from threading import Thread
-from FPS import FPS
+from camera.FPS import FPS
 import numpy as np
 
 vs = CameraStream().start()

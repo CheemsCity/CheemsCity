@@ -9,9 +9,9 @@ from chessboard import Chessboard
 import yaml
 import time
 from picamera import PiCamera
-from CameraStream import CameraStream
+from camera.CameraStream import CameraStream
 from threading import Thread
-from FPS import FPS
+from camera.FPS import FPS
 import numpy as np
 
 class ChessboardApp:
