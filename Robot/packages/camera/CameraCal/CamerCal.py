@@ -32,6 +32,7 @@ class ChessboardApp:
         
         #create the main window of an application
         self.root = tk.Tk() #start
+        self.root.geometry('640x480')
         #panel for image
         self.panel = None
         
@@ -75,13 +76,14 @@ class ChessboardApp:
                 #analize image for chessboard
                 if self.n < 40:
                     #attiva l'analisi delle foto finchè necessario
-                    chessboard = Chessboard(nx = 9, ny = 7,frame = self.frame, square_size = 0.017) #metri
+                    chessboard = Chessboard(nx = 7, ny = 7,frame = self.frame, square_size = 0.039) #metri
+                    print(vars(chessboard))
                     if chessboard.ret == True:
                         self.ctrl = True
                         self.chessboards.append(chessboard)
                         self.n += 1
                         self.pbar['value']=(self.n * 100)/40
-                        cv2.drawChessboardCorners(self.frame, (9,7), chessboard.imgpoints, chessboard.ret)
+                        cv2.drawChessboardCorners(self.frame, (8, 8), chessboard.imgpoints, chessboard.ret)
                         print(self.n)
 
                 if (self.n==40 and  self.cod ==False):
@@ -91,6 +93,7 @@ class ChessboardApp:
                 #opencv represents image in BGR, we need to convert i RGB
                 image = cv2.cvtColor(self.frame, cv2.COLOR_BGR2RGB)
                 image = Image.fromarray(image)
+                image = image.resize((711, 400), Image.ANTIALIAS)
                 image = ImageTk.PhotoImage(image)
                 
                 if self.panel is None:

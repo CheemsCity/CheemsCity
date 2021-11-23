@@ -8,6 +8,7 @@ import os
 from Curves import curves
 from LaneFilter import LaneFilter 
 from BirdView import BirdView
+import matplotlib.pyplot as plt
 
 vs = CameraStream().start()
 time.sleep(2.0)
@@ -40,7 +41,13 @@ while True:
     skyview = birdview.sky_view(filtered)
     undistort = birdview.undistort(image)
     result = curves.Detect(skyview,0)
-    combo = birdview.Visual(image, skyview, result['pixel_left_best_fit_curve'], result['pixel_right_best_fit_curve'])
-    cv2.imshow("frame", combo)
-    key = cv2.waitKey(1) & 0xFF
+    if result != -1:
+        combo = birdview.Visual(image, skyview, result['pixel_left_best_fit_curve'], result['pixel_right_best_fit_curve'])
+        comboBig = cv2.resize(combo, (640,480))
+        cv2.imshow("frame", comboBig)
+        key = cv2.waitKey(1) & 0xFF
+    else:
+        comboBig = cv2.resize(lane_image, (640,480))
+        cv2.imshow("frame", comboBig)
+        key = cv2.waitKey(1) & 0xFF
     

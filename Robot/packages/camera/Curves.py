@@ -84,7 +84,7 @@ class curves:
         self.out_img[self.left_ypoints, self.left_xpoints] = [255, 0, 255]
         self.out_img[self.right_ypoints, self.right_xpoints] = [0, 255, 255]
         
-        if (left_fit is None or right_fit is None):
+        if (self.left_fit_curve_pix is None or self.right_fit_curve_pix is None):
             return
         else:
             #kl e kr contengono i coefficienti dell'equazione di secondo grado
@@ -168,12 +168,15 @@ class curves:
         
         #metto if per evitare errori qual'ora non ci fosse la strada
         if (self.left_ypoints.size != 0 and self.left_xpoints.size != 0 and self.right_ypoints.size != 0 and self.right_xpoints.size != 0):
+            print("[INFO] PolyFit in corso\n")
             self.left_fit_curve_pix = np.polyfit(self.left_ypoints, self.left_xpoints,2)
             self.right_fit_curve_pix = np.polyfit(self.right_ypoints, self.right_xpoints,2)
             self.position = self.getPosition()
         else:
+            print("[INFO] Nessun PolyFit, errore\n")
             self.left_fit_curve_pix = None
             self.right_fit_curve_pix = None
+            return -1
         
         #plot > 0 disegna le righe e i rettangoli sull'immagine
         #utile per il debug, mostra come si comporta l'algoritmo che guarda le linee

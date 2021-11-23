@@ -15,3 +15,7 @@ camera/CameraCal/CamerCal.py
 camera/CameraCal/StartAppChess.py
 camera/CameraCal/__init__.py
 camera/CameraCal/chessboard.py
+hardware/Motor.py
+hardware/__init__.py
+utils/SerialCommunication.py
+utils/__init__.py
