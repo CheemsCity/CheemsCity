@@ -172,8 +172,10 @@ class curves:
             self.right_fit_curve_pix = np.polyfit(self.right_ypoints, self.right_xpoints,2)
             self.position = self.getPosition()
         else:
+            print("[INFO] Nessun PolyFit, errore\n")
             self.left_fit_curve_pix = None
             self.right_fit_curve_pix = None
+            return -1
         
         #plot > 0 disegna le righe e i rettangoli sull'immagine
         #utile per il debug, mostra come si comporta l'algoritmo che guarda le linee
