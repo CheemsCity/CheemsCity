@@ -52,9 +52,7 @@ while True:
 
     if result != -1:
         combo = birdview.Visual(image, skyview, result['pixel_left_best_fit_curve'], result['pixel_right_best_fit_curve'])
-        comboBig = cv2.resize(combo, (640,480))
-        cv2.imshow("frame", comboBig)
-        key = cv2.waitKey(1) & 0xFF
+        comboBig = cv2.resize(combo, (640,480)
         u = pid.compute(result['Center_distance'])
         powerLeft = basePower + u
         powerRight = basePower - u
@@ -66,6 +64,14 @@ while True:
             powerRight = 0
         if powerRight > 100:
             powerRight = 100
+            
+        #rappresenta real time tramite delle colonne come cambaino i valori dei motori
+        comboBig = cv2.rectangle(comboBig, (50,640- (powerLeft * 4.6)), (100, 640), (255, 0, 0), -1)
+        comboBig = cv2.rectangle(comboBig, ((480-100),640- (powerRight * 4.6)), (480-50, 640), (255, 0, 0), -1)
+        
+        cv2.imshow("frame", comboBig)
+        key = cv2.waitKey(1) & 0xFF
+        
         
         print("[INFO] velocità motore sinistro = " + powerLeft + " , motore destro = " + powerRight)
 
