@@ -13,7 +13,6 @@ class CameraStream:
         #inizializzo lo stream
         #codice ispirato a pyimagesearch
         self.camera = PiCamera()
-        self.camera.rotation = 180 #montata al contrario per necessità in attesa di un modello finito
         self.camera.resolution = resolution
         self.camera.framerate = framerate
         self.rawCapture = PiRGBArray(self.camera, size=resolution)

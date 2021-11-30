@@ -5,9 +5,9 @@ from threading import Thread
 import time
 import numpy as np
 import os
-from Curves import curves
-from LaneFilter import LaneFilter 
-from BirdView import BirdView
+from camera.LineDetector.Curves import curves
+from camera.LineDetector.LaneFilter import LaneFilter 
+from camera.LineDetector.BirdView import BirdView
 import matplotlib.pyplot as plt
 
 vs = CameraStream().start()
