@@ -54,8 +54,8 @@ while True:
         combo = birdview.Visual(image, skyview, result['pixel_left_best_fit_curve'], result['pixel_right_best_fit_curve'])
         comboBig = cv2.resize(combo, (640,480)
         u = pid.compute(result['Center_distance'])
-        powerLeft = basePower + u
-        powerRight = basePower - u
+        powerLeft = basePower - u
+        powerRight = basePower + u
         if powerLeft < 0:
             powerLeft = 0
         if powerLeft > 100:
