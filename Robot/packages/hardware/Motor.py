@@ -47,27 +47,27 @@ class Motor:
     
     def Avanti(self, power):
         ret=self.Power('r',power)
-        if(!ret):
+        if(ret==False):
             print("problema motore destro")
         ret = self.Power('l', power)
-        if(!ret):
+        if(ret==False):
             print("problema motore sinistro")
 
     
     def Indietro(self, power):
         ret = self.Power('r', power*(-1))
-        if(!ret):
+        if(ret==False):
             print("problema motore destro")
         ret = self.Power('l', power * (-1))
-        if(!ret):
+        if(ret==False):
             print("problema motore sinistro")
 
     def Left(self, power):
         ret = self.Power('r', power)
-        if(!ret):
+        if(ret==False):
             print("problema motore destro")
 
     def Right(self, power):
         ret = self.Power('l', power)
-        if(!ret):
+        if(ret==False):
             print("problema motore sinistro")
