@@ -4,7 +4,7 @@ from threading import Thread
 import time
 import numpy as np
 import os
-from camera.BirdView import BirdView
+from ..camera.BirdView import BirdView
 from camera.Curves import curves
 from camera.LaneFilter import LaneFilter 
 from camera.CameraStream import CameraStream
@@ -34,9 +34,11 @@ dest_points = [(100, height), (220, height), (220, 0), (100, 0)]
 birdview = BirdView(source_points, dest_points, matrix, dist_coef)
 curve = curves(9, 20, 50)
 
+print("prova 1, pre definizione del PID")
 basePower = 50
 pid = PID(0,0,0)
-pid.tune('kp', 'ki', 'kd')
+print("definizione del PID")
+pid.tune(10, 0, 0)
 
 
 
@@ -52,10 +54,10 @@ while True:
 
     if result != -1:
         combo = birdview.Visual(image, skyview, result['pixel_left_best_fit_curve'], result['pixel_right_best_fit_curve'])
-        comboBig = cv2.resize(combo, (640,480)
-        u = pid.compute(result['Center_distance'])
-        powerLeft = basePower - u
-        powerRight = basePower + u
+        comboBig = cv2.resize(combo, (640,480))
+        move = pid.compute(result['Center_distance'])
+        powerLeft = basePower - move
+        powerRight = basePower + move
         if powerLeft < 0:
             powerLeft = 0
         if powerLeft > 100:
@@ -73,7 +75,7 @@ while True:
         key = cv2.waitKey(1) & 0xFF
         
         
-        print("[INFO] velocità motore sinistro = " + powerLeft + " , motore destro = " + powerRight)
+        print("[INFO] velocita motore sinistro = " + str(powerLeft) + " , motore destro = " + str(powerRight))
 
     else:
         comboBig = cv2.resize(lane_image, (640,480))
@@ -82,6 +84,6 @@ while True:
     
 
     
-
+        
     
     
