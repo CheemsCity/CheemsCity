@@ -4,7 +4,7 @@ from threading import Thread
 import time
 import numpy as np
 import os
-from ..camera.BirdView import BirdView
+from camera.BirdView import BirdView
 from camera.Curves import curves
 from camera.LaneFilter import LaneFilter 
 from camera.CameraStream import CameraStream
@@ -38,7 +38,7 @@ print("prova 1, pre definizione del PID")
 basePower = 50
 pid = PID(0,0,0)
 print("definizione del PID")
-pid.tune(10, 0, 0)
+pid.tune(0.2, 0.2, 0.04)
 
 
 
@@ -66,10 +66,13 @@ while True:
             powerRight = 0
         if powerRight > 100:
             powerRight = 100
+
+        print("Potenza sinistra: " + str(powerLeft))
+        print("Potenza destra: " + str(powerRight))
             
         #rappresenta real time tramite delle colonne come cambaino i valori dei motori
-        comboBig = cv2.rectangle(comboBig, (50,640- (powerLeft * 4.6)), (100, 640), (255, 0, 0), -1)
-        comboBig = cv2.rectangle(comboBig, ((480-100),640- (powerRight * 4.6)), (480-50, 640), (255, 0, 0), -1)
+        comboBig = cv2.rectangle(comboBig, (50,int(640- (powerLeft * 4.6))), (100, 640), (255, 0, 0), 5)
+        comboBig = cv2.rectangle(comboBig, ((480-100),int(640- (powerRight * 4.6))), (480-50, 640), (255, 0, 0), 5)
         
         cv2.imshow("frame", comboBig)
         key = cv2.waitKey(1) & 0xFF

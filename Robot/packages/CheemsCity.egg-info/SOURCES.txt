@@ -16,6 +16,7 @@ camera/CameraCal/StartAppChess.py
 camera/CameraCal/__init__.py
 camera/CameraCal/chessboard.py
 control/PID.py
+control/PIDProva.py
 control/PidLoop.py
 control/__init__.py
 hardware/Motor.py
