@@ -1,6 +1,6 @@
 import cv2
 from picamera import PiCamera
-from CameraStream import CameraStream
+from camera.CameraStream import CameraStream
 from threading import Thread
 import time
 import numpy as np
@@ -33,7 +33,8 @@ dest_points = [(100, height), (220, height), (220, 0), (100, 0)]
 birdview = BirdView(source_points, dest_points, matrix, dist_coef)
 curves = curves(9, 20, 50)
 
-while True:
+white_flag = True
+while white_flag:
     image = vs.read()
     lane_image = np.copy(image)
     filtered = lanefilter.toCanny(lane_image)
@@ -46,8 +47,14 @@ while True:
         comboBig = cv2.resize(combo, (640,480))
         cv2.imshow("frame", comboBig)
         key = cv2.waitKey(1) & 0xFF
+        if key == 27:         #ESC
+            white_flag = False
     else:
         comboBig = cv2.resize(lane_image, (640,480))
         cv2.imshow("frame", comboBig)
         key = cv2.waitKey(1) & 0xFF
+        if key == 27:         #ESC
+            white_flag = False
+
+cv2.destroyAllWindows()
     

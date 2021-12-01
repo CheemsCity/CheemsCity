@@ -60,12 +60,19 @@ class ArucoDetector:
         #tvec mi da una rotazione del marker e markerLegnth mi da la lunghezza vera del lato del marker
         #questi dati mi permettono di definire le coordinate 3D del centro e dei corner, a quel punto basta definire il piano passante
         #per i 4 punti e si ha il sistema di riferimento
-        for i in range(len(self.ids)):
-            image = cv2.aruco.drawAxis(image, self.cam_matrix, self.dist_coeff, self.rvec[i], self.tvec[i], self.markerLength/2)
-        return image
+        try:
+            for i in range(len(self.ids)):
+                image = cv2.aruco.drawAxis(image, self.cam_matrix, self.dist_coeff, self.rvec[i], self.tvec[i], self.markerLength/2)
+            return image
+        except:
+            print("[ERRORE] Non ci sono markers di cui calcolare gli assi")
+            return image
 
     def printImage(self, image):
         comboBig = cv2.resize(image, (640,480))
         cv2.imshow("frame", comboBig)
         key = cv2.waitKey(1) & 0xFF
-        #TODO il programma non ha una safe exit, l'unico modo per chiuderlo è usare killall python, un po' brutale
+        return key
+
+    def close(self):
+        cv2.destroyAllWindows()

@@ -2,7 +2,8 @@ from camera.ArucoMarkerDetector.ArucoDetector import ArucoDetector
 from camera.CameraStream import CameraStream
 import time
 import yaml
-import numpy as np
+import sys 
+
 
 with open(r'FinalCalibration.yml') as file:
     calibration_data = yaml.load(file, Loader=yaml.UnsafeLoader)
@@ -14,7 +15,8 @@ time.sleep(2.0)
 
 detector = ArucoDetector(cam_matrix, dist_coeff)
 
-while True:
+white_flag = True
+while white_flag:
     raw_image = vs.read()
     #correggo la curvatura derivante dalla camera
     image = detector.undistort(raw_image)
@@ -26,5 +28,9 @@ while True:
     image = detector.drawDetectedMarkers(image)
     #stampo sull'immagine gli assi centrati
     image = detector.drawAxis(image)
-    #TODO quando non ci sono marker nell'immagine va in errore per il len(self.ids), inventarsi un try catch.
-    detector.printImage(image)
+    key = detector.printImage(image)
+    if key == 27:         # wait for ESC key to exit and terminate progra,
+        detector.close()
+        white_flag = False
+
+sys.exit("[INFO] Chiudo l'ArucoDetector")
