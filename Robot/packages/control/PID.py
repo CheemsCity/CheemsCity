@@ -49,8 +49,8 @@ class PID:
         #windup implementazione
         if self.Integral > 50:
             self.Integral = 50
-        if self.Integral < 50:
-            self.Integral = 50
+        if self.Integral < -50:
+            self.Integral = -50
 
         self.i += 1
         self.u = self.kp * self.error + self.ki * self.Integral + self.kd * self.Derivative

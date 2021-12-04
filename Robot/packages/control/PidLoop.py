@@ -38,7 +38,7 @@ print("prova 1, pre definizione del PID")
 basePower = 50
 pid = PID(0,0,0)
 print("definizione del PID")
-pid.tune(0.2, 0.2, 0.04)
+pid.tune(0.4,0.4, 0.08)
 
 
 
@@ -54,8 +54,7 @@ while True:
 
     if result != -1:
         combo = birdview.Visual(image, skyview, result['pixel_left_best_fit_curve'], result['pixel_right_best_fit_curve'])
-        comboBig = cv2.resize(combo, (640,480))
-        print("dimensioni immagine " + str(comboBig.shape[0]) + str(comboBig.shape[1]))  
+        comboBig = cv2.resize(combo, (640,480))  
         move = pid.compute(result['Center_distance'])
         powerLeft = basePower - move
         powerRight = basePower + move
@@ -75,7 +74,9 @@ while True:
         comboBig = cv2.rectangle(comboBig, (50,int(480- (powerLeft * 3))), (100, 480), (255, 0, 0), 5)
         comboBig = cv2.rectangle(comboBig, ((640-100),int(480- (powerRight * 3))), (640-50, 480), (255, 0, 0), 5)
         comboBig = cv2.line(comboBig, (320,480), (320, 0), (0,0,255), 5)
-        
+        comboBig = cv2.putText(comboBig,"distanza: " + str( result['Center_distance']), (5, 20) ,cv2.FONT_HERSHEY_SIMPLEX,0.5,(255,255, 0), 2, 1)
+        comboBig = cv2.putText(comboBig, "error De = " + str(pid.Derivative),(5, 40),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,0),2,1)
+        comboBig = cv2.putText(comboBig, "error I = " + str(pid.Integral), (5, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,0), 2, 1)
         cv2.imshow("frame", comboBig)
         key = cv2.waitKey(1) & 0xFF
         
