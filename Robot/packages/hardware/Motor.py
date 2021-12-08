@@ -1,9 +1,9 @@
-from SerialCommunication import SerialCommunication
+from utils.SerialCommunication import SerialCommunication
 import time
 
 class Motor:
     
-    def __init__():
+    def __init__(self):
         self.comm = SerialCommunication()
     
     def Power(self, motor, power):
@@ -13,7 +13,7 @@ class Motor:
             msg = "s" + "m" + motor + str(power) + "\n"
             self.comm.SendCommand(msg)
             return True
-        else:
+        except:
             return False
         
     def Test(self):

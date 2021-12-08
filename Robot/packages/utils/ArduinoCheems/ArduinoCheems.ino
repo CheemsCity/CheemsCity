@@ -82,7 +82,7 @@ bool msgAnal(String msg){
           digitalWrite(M1,HIGH);
           power = power * (-1);
         }
-        analogWrite(E1, power*(255/100));
+        analogWrite(E1, int(power*(255/100)));
         
       }
       else if(msg[2]=='l'){
@@ -95,7 +95,7 @@ bool msgAnal(String msg){
           digitalWrite(M2,HIGH);
           power = power * (-1);
         }
-        analogWrite(E2, power*(255/100));
+        analogWrite(E2, int(power*(255/100)));
       }
       else{
         return false;
