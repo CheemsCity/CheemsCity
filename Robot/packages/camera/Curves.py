@@ -115,7 +115,7 @@ class curves:
     def getPosition(self):
         #punto medio: 
         mid = self.w /2
-        y = self.h
+        y = int(self.h * (3/4))
         
         #calcoliamo le coordinate x dei bordi a quella coordinata y:
         kl, kr = self.left_fit_curve_pix, self.right_fit_curve_pix

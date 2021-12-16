@@ -46,6 +46,7 @@ class BirdView:
             pts = np.hstack((pts_left, pts_right))
             #riempiamo lo spazio tra i punti
             cv2.fillPoly(filtered, np.int_(pts), color)
+            cv2.line(filtered, (0,int(filtered.shape[0]*(3/4))), (filtered.shape[1], int(filtered.shape[0]*(3/4))), (152, 2, 137), 6)
             if debug == True:
                 plt.imshow(filtered)
                 plt.show()
