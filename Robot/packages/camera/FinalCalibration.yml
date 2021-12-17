@@ -26,7 +26,7 @@ camera_matrix: !!python/object/apply:numpy.core.multiarray._reconstruct
     - 0
   - false
   - !!binary |
-    0jpJrX9FZEAAAAAAAAAAAKQ1G+wIz2JAAAAAAAAAAADYwq1wuudiQPrPyWrnMF1AAAAAAAAAAAAA
+    +hyYVopDaUAAAAAAAAAAAPmdWQbyZWNAAAAAAAAAAAB0U+zyPw5pQNm/aiTBWl5AAAAAAAAAAAAA
     AAAAAAAAAAAAAAAAAPA/
 distortion_coefficient: !!python/object/apply:numpy.core.multiarray._reconstruct
   args:
@@ -43,4 +43,4 @@ distortion_coefficient: !!python/object/apply:numpy.core.multiarray._reconstruct
   - *id002
   - false
   - !!binary |
-    45J4cyHMvz8QoRfne7DWv75ZffEpK2K/chSl60w8gj/Zi/e2uCXFPw==
+    T0DH6sA74T/zzRsZeKr7vzT4qtT4eZE/D9NSJ2TveD/XbePoTaP5Pw==

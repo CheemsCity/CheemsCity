@@ -1,0 +1,5 @@
+aruco_dictionary: DICT_6X6_50
+aruco_markerLength: 0.03
+aruco_canvasResolution: !!python/tuple
+  - 640
+  - 480

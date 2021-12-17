@@ -1,4 +1,4 @@
-from CamerCal import ChessboardApp
+from CameraCalibration import ChessboardApp
 import time
 import cv2
 from picamera import PiCamera

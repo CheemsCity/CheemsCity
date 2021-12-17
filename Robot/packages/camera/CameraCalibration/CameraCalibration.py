@@ -17,7 +17,8 @@ import numpy as np
 class ChessboardApp:
     
     def __init__(self, VideoStream, outPath):
-        
+        with(r'camera_calibration_settings.yaml') as file:
+            self.settings = yaml.full_load(file)
         self.vs = VideoStream
         self.outPath = outPath
         self.frame = None
@@ -32,6 +33,7 @@ class ChessboardApp:
         
         #create the main window of an application
         self.root = tk.Tk() #start
+        self.root.geometry(self.settings['camera_calibration_canvasResolution'])
         #panel for image
         self.panel = None
         
@@ -75,13 +77,14 @@ class ChessboardApp:
                 #analize image for chessboard
                 if self.n < 40:
                     #attiva l'analisi delle foto finchè necessario
-                    chessboard = Chessboard(nx = 9, ny = 7,frame = self.frame, square_size = 0.017) #metri
+                    chessboard = Chessboard(nx = self.settings['camera_calibration_chessboardX'], ny = self.settings['camera_calibration_chessboardY'],frame = self.frame, square_size = self.settings['camera_calibration_squareSize']) #metri
+                    print(vars(chessboard))
                     if chessboard.ret == True:
                         self.ctrl = True
                         self.chessboards.append(chessboard)
                         self.n += 1
                         self.pbar['value']=(self.n * 100)/40
-                        cv2.drawChessboardCorners(self.frame, (9,7), chessboard.imgpoints, chessboard.ret)
+                        cv2.drawChessboardCorners(self.frame, (8, 8), chessboard.imgpoints, chessboard.ret)
                         print(self.n)
 
                 if (self.n==40 and  self.cod ==False):
@@ -91,6 +94,7 @@ class ChessboardApp:
                 #opencv represents image in BGR, we need to convert i RGB
                 image = cv2.cvtColor(self.frame, cv2.COLOR_BGR2RGB)
                 image = Image.fromarray(image)
+                image = image.resize(self.settings['camera_calibration_resizeImage'], Image.ANTIALIAS)
                 image = ImageTk.PhotoImage(image)
                 
                 if self.panel is None:
@@ -128,10 +132,10 @@ class ChessboardApp:
             "distortion_coefficient": distortion_coef
         }
         
-        with open('calibration_data.yml', 'w') as outfile:
+        with open('../FinalCalibration.yml', 'w') as outfile:
             yaml.dump(calibration_data, outfile, default_flow_style=False)
         
-        print("[INFO] saved calibration_data.yml")
+        print("[INFO] saved FinalCalibration.yml")
         
         
     def onClose(self):
