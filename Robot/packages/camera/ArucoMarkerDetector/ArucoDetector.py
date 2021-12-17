@@ -1,12 +1,42 @@
 import cv2
 import numpy as np
 import math
+import yaml
 
 class ArucoDetector:
 
     def __init__(self, cam_matrix, dist_coeff):
-        #prendo il dizionario dei 50 simboli aruco 6x6
-        self.dict = cv2.aruco.Dictionary_get(cv2.aruco.DICT_6X6_50)
+        with open(r'aruco_settings.yaml') as file:
+            self.settings = yaml.full_load(file)
+        self.arucoDictionary = {
+            "DICT_4X4_50": cv2.aruco.DICT_4X4_50,
+            "DICT_4X4_100": cv2.aruco.DICT_4X4_100,
+            "DICT_4X4_250": cv2.aruco.DICT_4X4_250,
+            "DICT_4X4_1000": cv2.aruco.DICT_4X4_1000,
+            "DICT_5X5_50": cv2.aruco.DICT_5X5_50,
+            "DICT_5X5_100": cv2.aruco.DICT_5X5_100,
+            "DICT_5X5_250": cv2.aruco.DICT_5X5_250,
+            "DICT_5X5_1000": cv2.aruco.DICT_5X5_1000,
+            "DICT_6X6_50": cv2.aruco.DICT_6X6_50,
+            "DICT_6X6_100": cv2.aruco.DICT_6X6_100,
+            "DICT_6X6_250": cv2.aruco.DICT_6X6_250,
+            "DICT_6X6_1000": cv2.aruco.DICT_6X6_1000,
+            "DICT_7X7_50": cv2.aruco.DICT_7X7_50,
+            "DICT_7X7_100": cv2.aruco.DICT_7X7_100,
+            "DICT_7X7_250": cv2.aruco.DICT_7X7_250,
+            "DICT_7X7_1000": cv2.aruco.DICT_7X7_1000,
+            "DICT_ARUCO_ORIGINAL": cv2.aruco.DICT_ARUCO_ORIGINAL,
+            "DICT_APRILTAG_16h5": cv2.aruco.DICT_APRILTAG_16h5,
+            "DICT_APRILTAG_25h9": cv2.aruco.DICT_APRILTAG_25h9,
+            "DICT_APRILTAG_36h10": cv2.aruco.DICT_APRILTAG_36h10,
+            "DICT_APRILTAG_36h11": cv2.aruco.DICT_APRILTAG_36h11
+        }.get(self.settings['aruco_dictionary'], 'ERROR')
+        #se c'è un errore nella richiesta del dizionario nelle settings
+        if(self.arucoDictionary == 'ERROR'):
+            print('Dizionario definito nell aruco_settings non esistente (DEFAULT: DICT_6X6_50)\n')
+            self.arucoDictionary = cv2.aruco.DICT_6X6_50
+        #prendo il dizionario dei simboli aruco definitivi nelle settings
+        self.dict = cv2.aruco.Dictionary_get(self.arucoDictionary)
         #qua posso definire paramtri personalizzati, per ora vanno bene quelli standard
         self.params = cv2.aruco.DetectorParameters_create()
         self.cam_matrix = cam_matrix
@@ -18,7 +48,7 @@ class ArucoDetector:
         self.tvec = None
         self._ = None
         #lunghezza di un lato di un marker nelle dimensioni reali in metri
-        self.markerLength = 0.03
+        self.markerLength = self.settings['aruco_markerLength']
 
     def undistort(self, raw_image):
         #annullare gli effetti di curvatura della camera
@@ -69,7 +99,7 @@ class ArucoDetector:
             return image
 
     def printImage(self, image):
-        comboBig = cv2.resize(image, (640,480))
+        comboBig = cv2.resize(image, self.settings['aruco_canvasResolution'])
         cv2.imshow("frame", comboBig)
         key = cv2.waitKey(1) & 0xFF
         return key

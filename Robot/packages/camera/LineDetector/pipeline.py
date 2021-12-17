@@ -14,12 +14,15 @@ vs = CameraStream().start()
 time.sleep(2.0)
 
 import yaml
-with open(r'FinalCalibration.yml') as file:
+with open(r'../FinalCalibration.yml') as file:
 # The FullLoader parameter handles the conversion from YAML
 # scalar values to Python the dictionary format
     calibration_data = yaml.load(file, Loader=yaml.UnsafeLoader)
     matrix = calibration_data['camera_matrix']
     dist_coef = calibration_data['distortion_coefficient']
+
+with open(r'line_detector_settings.yaml') as file:
+    settings = yaml.full_load(file)
 
 lanefilter = LaneFilter()
 
@@ -44,13 +47,13 @@ while white_flag:
     result = curves.Detect(skyview,0)
     if result != -1:
         combo = birdview.Visual(image, skyview, result['pixel_left_best_fit_curve'], result['pixel_right_best_fit_curve'])
-        comboBig = cv2.resize(combo, (640,480))
+        comboBig = cv2.resize(combo, settings['line_detector_resizeImage'])
         cv2.imshow("frame", comboBig)
         key = cv2.waitKey(1) & 0xFF
         if key == 27:         #ESC
             white_flag = False
     else:
-        comboBig = cv2.resize(lane_image, (640,480))
+        comboBig = cv2.resize(lane_image, settings['line_detector_resizeImage'])
         cv2.imshow("frame", comboBig)
         key = cv2.waitKey(1) & 0xFF
         if key == 27:         #ESC

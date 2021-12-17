@@ -5,7 +5,7 @@ import yaml
 import sys 
 
 
-with open(r'FinalCalibration.yml') as file:
+with open(r'../FinalCalibration.yml') as file:
     calibration_data = yaml.load(file, Loader=yaml.UnsafeLoader)
     cam_matrix = calibration_data['camera_matrix']
     dist_coeff = calibration_data['distortion_coefficient']
