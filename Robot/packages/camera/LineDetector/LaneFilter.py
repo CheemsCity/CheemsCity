@@ -1,15 +1,17 @@
 import cv2
 import numpy as np
 import yaml
+from pkg_resources import resource_string
 
 class LaneFilter:
     
     def __init__(self):
         self.problem = 0
-        with open(r'../cameraConfig.yaml') as file:
-            self.settings = yaml.full_load(file)
-            self.height = self.settings['res_h']
-            self.width = self.settings['res_w']
+
+        file = resource_string('camera', 'cameraConfig.yaml')
+        self.settings = yaml.full_load(file)
+        self.height = self.settings['res_h']
+        self.width = self.settings['res_w']
         
     def toCanny(self,img):
         gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)

@@ -4,9 +4,9 @@ from threading import Thread
 import time
 import numpy as np
 import os
-from camera.BirdView import BirdView
-from camera.Curves import curves
-from camera.LaneFilter import LaneFilter 
+from camera.LineDetector.BirdView import BirdView
+from camera.LineDetector.Curves import curves
+from camera.LineDetector.LaneFilter import LaneFilter 
 from camera.CameraStream import CameraStream
 from PID import PID
 
