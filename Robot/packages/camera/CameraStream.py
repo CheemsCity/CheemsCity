@@ -3,18 +3,26 @@ from picamera import PiCamera
 #https://picamera.readthedocs.io/en/release-1.13/api_array.html
 from picamera.array import PiRGBArray
 import cv2
+import yaml
+from pkg_resources import resource_string
 
 #distributing the frame gathering to a separate thread will definitely improve performance
 # by using a dedicated thread (separate from the main thread) to read frames from our camera sensor, 
 #we can dramatically increase the FPS processing rate of our pipeline. This speedup is obtained by 
 #(1)reducing I/O latency and (2) ensuring the main thread is never blocked, allowing us to grab the most recent frame read by the camera at any moment in time
 class CameraStream:
-    def __init__(self, resolution=(320,240), framerate = 32):
+    def __init__(self):
+
+        file  = resource_string('camera', 'cameraConfig.yaml')
+
+        #with open(path, 'r') as file:
+        self.settings = yaml.full_load(file)
         #inizializzo lo stream
         #codice ispirato a pyimagesearch
         self.camera = PiCamera()
+        resolution = (self.settings['res_w'], self.settings['res_h'])
         self.camera.resolution = resolution
-        self.camera.framerate = framerate
+        self.camera.framerate = self.settings['framerate']
         self.rawCapture = PiRGBArray(self.camera, size=resolution)
         self.stream = self.camera.capture_continuous(self.rawCapture, format="bgr", use_video_port=True)
         self.frame = None

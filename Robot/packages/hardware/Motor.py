@@ -11,38 +11,45 @@ class Motor:
         #power è un float compreso tra -100 e 100, con i numeri negativi a significare la direzione contraria.
         try:
             msg = "s" + "m" + motor + str(power) + "\n"
+            print(msg)
             self.comm.SendCommand(msg)
+            time.sleep(0.006)
             return True
         except:
             return False
         
     def Test(self):
         print("accendendo motore destro con direzione avanti")
-        for i in range(10):
-            ret=self.Power('r', 50)
+        for i in range(1000):
+            ret=self.Power('r', 100)
             if(ret == False):
                 print("problema comunicazione motore destro")
+        ret = self.Power('r', 1)
         time.sleep(1)
         
         print("accendendo motore sinistro con direzione avanti")
-        for i in range(10):
-            ret=self.Power('l', 50)
+        for i in range(1000):
+            ret=self.Power('l', 100)
             if(ret == False):
                 print("problema comunicazione motore sinistro")
+        ret = self.Power('l', 0)
         time.sleep(1)
         
         print("accendendo motore destro con direzione indietro")
-        for i in range(10):
-            ret=self.Power('r', -50)
+        for i in range(1000):
+            ret=self.Power('r', -100)
             if(ret == False):
                 print("problema comunicazione motore destro")
+        ret = self.Power('r', 0)
         time.sleep(1)
         
         print("accendendo motore sinistro con direzione indietro")
-        for i in range(10):
-            ret=self.Power('l', -50)
+        for i in range(1000):
+            ret=self.Power('l', -100)
             if(ret == False):
                 print("problema comunicazione motore destro")
+
+        ret = self.Power('l', 0)
         time.sleep(1)
     
     def Avanti(self, power):

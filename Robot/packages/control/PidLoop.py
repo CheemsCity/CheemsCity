@@ -4,23 +4,24 @@ from threading import Thread
 import time
 import numpy as np
 import os
-from camera.BirdView import BirdView
-from camera.Curves import curves
-from camera.LaneFilter import LaneFilter 
+from camera.LineDetector.BirdView import BirdView
+from camera.LineDetector.Curves import curves
+from camera.LineDetector.LaneFilter import LaneFilter 
 from camera.CameraStream import CameraStream
 from PID import PID
-
+from pkg_resources import resource_string
 
 vs = CameraStream().start()
 time.sleep(2.0)
 
 import yaml
-with open(r'FinalCalibration.yml') as file:
+file = resource_string('camera', 'FinalCalibration.yml')
+#with open(r'FinalCalibration.yml') as file:
 # The FullLoader parameter handles the conversion from YAML
 # scalar values to Python the dictionary format
-    calibration_data = yaml.load(file, Loader=yaml.UnsafeLoader)
-    matrix = calibration_data['camera_matrix']
-    dist_coef = calibration_data['distortion_coefficient']
+calibration_data = yaml.load(file, Loader=yaml.UnsafeLoader)
+matrix = calibration_data['camera_matrix']
+dist_coef = calibration_data['distortion_coefficient']
 
 lanefilter = LaneFilter()
 
