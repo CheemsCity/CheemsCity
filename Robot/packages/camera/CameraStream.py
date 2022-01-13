@@ -5,6 +5,7 @@ from picamera.array import PiRGBArray
 import cv2
 import yaml
 from pkg_resources import resource_string
+import base64
 
 #distributing the frame gathering to a separate thread will definitely improve performance
 # by using a dedicated thread (separate from the main thread) to read frames from our camera sensor, 
@@ -52,7 +53,16 @@ class CameraStream:
     def read(self):
         #ritorna il frame più recente
         return self.frame
-    
+   
     def stop(self):
         #indica che il thread deve fermarsi
         self.stopped = True
+
+#---------------------------------------------------------------------------#
+#                       RemoteControler's code
+    def frameController(self):
+        ret, self.frame_buff = cv2.imencode('.jpg', self.frame) #posso anche mettere png, ma allora devo aggiornare anche homepage.html
+        return self.frame_buff.tobytes()
+        #se voglio mostrare solo un'immagine
+        #self.frame_b64 = base64.b64encode(self.frame_buff).decode("utf-8")
+        #return self.frame_b64

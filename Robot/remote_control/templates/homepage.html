@@ -1,0 +1,12 @@
+<html>
+    <head>
+        <title>Homepage</title>
+    </head>
+    <body>
+        <h1>Camera</h1>
+        <div>
+            {% comment %} <img src="data:image/jpeg;base64,{{frame}}"></img> {% endcomment %}
+            <img src="{% url 'camera_stream' %}">
+        </div>
+    </body>
+</html>
