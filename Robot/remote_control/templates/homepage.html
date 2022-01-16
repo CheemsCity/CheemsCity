@@ -5,8 +5,13 @@
     <body>
         <h1>Camera</h1>
         <div>
-            {% comment %} <img src="data:image/jpeg;base64,{{frame}}"></img> {% endcomment %}
-            <img src="{% url 'camera_stream' %}">
+            <img src="{% url 'camera_stream' %}?filter={{filter}}">
         </div>
+        <form method="GET">
+            
+            {{ form }}
+            
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Carica</button>
+        </form>
     </body>
 </html>

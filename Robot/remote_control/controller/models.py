@@ -12,6 +12,14 @@ class Camera(models.Model):
     def __del__(self):
         self.cam.stop()
 
-    def frame(self):
-        f = self.cam.frameController()
+    def frameClear(self):
+        f = self.cam.frameClear()
+        return f
+
+    def frameLineDetector(self):
+        f = self.cam.frameLineDetector()
+        return f
+
+    def frameArucoDetector(self):
+        f = self.cam.frameArucoDetector()
         return f
