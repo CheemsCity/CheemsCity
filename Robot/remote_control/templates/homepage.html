@@ -12,84 +12,103 @@
     </head>
     <body onkeydown="keydown_event(0)" onkeyup="keyup_event(0)">
         <script type="text/javascript">
-            run_action('bwready');
-            run_action('fwready');
+            run_action('ready');
             function run_action(value){
-                var xmlHttp  = new XMLHttpRequest();
-                var protocol  = window.location.protocol;
-                var host      = window.location.host;
-                var pathname  = window.location.pathname;
-                url = protocol + "//" + host + pathname + "?action" + "=" + value;
-                console.log(url);
-                //document.getElementById("debug").innerHTML=url;
-                xmlHttp.open( "GET", url, false );
-                xmlHttp.send( null );
-                return xmlHttp.responseText;
+              var xmlHttp  = new XMLHttpRequest();
+              var protocol  = window.location.protocol;
+              var host      = window.location.host;
+              var pathname  = window.location.pathname;
+              url = protocol + "//" + host + pathname + "?action" + "=" + value;
+              console.log(url);
+              //document.getElementById("debug").innerHTML=url;
+              xmlHttp.open( "GET", url, false );
+              xmlHttp.send( null );
+              return xmlHttp.responseText;
+            }
+            function set_speed(value) {
+              var xmlHttp  = new XMLHttpRequest();
+              var protocol  = window.location.protocol;
+              var host      = window.location.host;
+              var pathname  = window.location.pathname;
+              url = protocol + "//" + host + pathname + "?speed" + "=" + value;
+              console.log(url);
+              //document.getElementById("debug").innerHTML=url;
+              xmlHttp.open( "GET", url, false );
+              xmlHttp.send( null );
+              return xmlHttp.responseText;
+            }
+            function keydown_event(key){
+              if (event.repeat != undefined) {
+                allowed = !event.repeat;
               }
-              function keydown_event(key){
-                if (event.repeat != undefined) {
-                  allowed = !event.repeat;
+              if (!allowed) return;
+              allowed = false;
+              if (key == 0){
+                var x;
+                if(window.event) { // IE8
+                  x=event.keyCode;
                 }
-                if (!allowed) return;
-                allowed = false;
-                if (key == 0){
-                  var x;
-                  if(window.event) { // IE8
-                    x=event.keyCode;
-                  }
-                  else if(event.which) {// IE9/Firefox/Chrome/Opera/Safari
-                    x=event.which;
-                  }
-                  var keychar=String.fromCharCode(x);
+                else if(event.which) {// IE9/Firefox/Chrome/Opera/Safari
+                  x=event.which;
                 }
-                else{
-                  keychar = key
-                }
-                switch(keychar){
-                  case 'W':
-                    run_action('forward')
-                    break;
-                  case 'S':
-                    run_action('backward')
-                    break;
-                  case 'A':
-                    run_action('fwleft')
-                    break;
-                  case 'D':
-                    run_action('fwright')
-                    break;
-                }
+                var keychar=String.fromCharCode(x);
               }
-              function keyup_event(key){
-                allowed = true;
-                if (key == 0){
-                  var x;
-                  if(window.event) { // IE8
-                    x=event.keyCode;
-                  }
-                  else if(event.which) {// IE9/Firefox/Chrome/Opera/Safari
-                    x=event.which;
-                  }
-                  var keychar=String.fromCharCode(x);
-                }
-                else{
-                  keychar = key
-                }
-                switch(keychar){
-                  case 'W':
-                    run_action('stop')
-                    break;
-                  case 'S':
-                    run_action('stop')
-                    break;
-                  case 'A':
-                    run_action('fwstraight')
-                    break;
-                  case 'D':
-                    run_action('fwstraight')
-                    break;
-                }
+              else{
+                keychar = key
               }
+              switch(keychar){
+                case 'W':
+                  run_action('forward')
+                  break;
+                case 'S':
+                  run_action('backward')
+                  break;
+                case 'A':
+                  run_action('left')
+                  break;
+                case 'D':
+                  run_action('right')
+                  break;
+              }
+            }
+            function keyup_event(key){
+              allowed = true;
+              if (key == 0){
+                var x;
+                if(window.event) { // IE8
+                  x=event.keyCode;
+                }
+                else if(event.which) {// IE9/Firefox/Chrome/Opera/Safari
+                  x=event.which;
+                }
+                var keychar=String.fromCharCode(x);
+              }
+              else{
+                keychar = key
+              }
+              switch(keychar){
+                case 'W':
+                  run_action('stop')
+                  break;
+                case 'S':
+                  run_action('stop')
+                  break;
+                case 'A':
+                  run_action('stop')
+                  break;
+                case 'D':
+                  run_action('stop')
+                  break;
+              }
+            }
+            function speed() {
+              var slider = document.getElementById("myRange");
+              var output = document.getElementById("vel");
+              console.log(slider);
+              output.innerHTML = slider.value;
+              
+              set_speed(slider.value);
+            }
         </script>
         <h1>Camera</h1>
         <div>
@@ -101,5 +120,29 @@
             
             <button class="btn btn-lg btn-primary btn-block" type="submit">Carica</button>
         </form>
+        <div>
+          <div class="slidecontainer">
+            <input type="range" min="1" max="100" value="50"  id="myRange" onchange="speed()">
+            <p>Velocità: <span id="vel">50</span></p>
+          </div>
+        </div>
+        <div>
+          <div align="center">
+            <button ontouchstart="run_action('forward')" ontouchend="stop()">▲</button>
+          </div>
+        </div>
+        <div>
+          <div align="center">
+            <button ontouchstart="run_action('left')" ontouchend="stop()">◀</button>
+          </div>
+          <div align="center">
+            <button ontouchstart="run_action('right')" ontouchend="stop()">▶</button>
+          </div>
+        </div>
+        <div>
+          <div align="center">
+            <button ontouchstart="run_action('backward')" ontouchend="stop()">▼</button>
+          </div>
+        </div>
     </body>
 </html>

@@ -17,6 +17,10 @@ class Motor:
             return True
         except:
             return False
+    
+    def Stop(self):
+        self.Power('r', 0)
+        self.Power('l', 0)
         
     def Test(self):
         print("accendendo motore destro con direzione avanti")

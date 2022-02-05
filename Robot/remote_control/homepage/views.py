@@ -3,12 +3,15 @@ from django.shortcuts import render
 from django.http.response import StreamingHttpResponse
 from controller.models import Camera
 from .forms import CameraFilter
+from hardware.Motor import Motor
 
 cam = Camera()
-bw_status = 0
+#mot = Motor()
+mot_status = 0
+speed = 50
 
 def index(request):
-	global bw_status
+	global mot_status, speed
 	filter = 'clear'
 	if request.method == 'GET':
 		form = CameraFilter(request.GET)
@@ -17,30 +20,24 @@ def index(request):
 	#TODO mettere gestione avanti,indietro,ecc.
 		if 'action' in request.GET:
 			action = request.GET['action']
-			if action == 'bwready':
-				#bw.ready()
-				bw_status = 0
-			elif action == 'forward':
-				#bw.speed = SPEED
-				#bw.forward()
-				bw_status = 1
-			elif action == 'backward':
-				#bw.speed = SPEED
-				#bw.backward()
-				bw_status = -1
-			elif action == 'stop':
-				#bw.stop()
-				bw_status = 0
-			print(bw_status)
-			# elif action == 'fwready':
-			# 	#fw.ready()
-			# elif action == 'fwleft':
-			# 	#fw.turn_left()
-			# elif action == 'fwright':
-			# 	#fw.turn_right()
-			# elif action == 'fwstraight':
-			# 	#fw.turn_straight()
-
+			# if action == 'ready':
+			# 	mot.ready()
+			# 	mot_status = 0
+			# elif action == 'stop':
+			# 	mot.Stop()
+			# 	mot_status = 0
+			# elif action == 'forward':
+			# 	mot.Avanti(speed)
+			# 	mot_status = 1
+			# elif action == 'backward':
+			# 	mot.Indietro(speed)
+			# 	mot_status = -1
+			# elif action == 'left':
+			# 	mot.Left(speed)
+			# elif action == 'right':
+			# 	mot.Right(speed)
+		elif 'speed' in request.GET:
+			speed = request.GET['speed']
 	else:
 		form = CameraFilter()
 	return render(request, 'homepage.html', {'form': form, 'filter': filter})
