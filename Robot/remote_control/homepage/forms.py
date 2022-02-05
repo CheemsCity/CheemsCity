@@ -8,3 +8,4 @@ CHOICES = [
 
 class CameraFilter(forms.Form): #lista dei vari pacchetti sviluppati sulla camera
     filter = forms.ChoiceField(choices = CHOICES)
+
