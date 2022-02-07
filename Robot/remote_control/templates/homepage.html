@@ -57,17 +57,23 @@
                 keychar = key
               }
               switch(keychar){
-                case 'W':
-                  run_action('forward')
+                case 'Q':
+                  run_action('frleft');
                   break;
-                case 'S':
-                  run_action('backward')
+                case 'W':
+                  run_action('forward');
+                  break;
+                case 'E':
+                  run_action('frright');
                   break;
                 case 'A':
-                  run_action('left')
+                  run_action('bwleft');
+                  break;
+                case 'S':
+                  run_action('backward');
                   break;
                 case 'D':
-                  run_action('right')
+                  run_action('bwright');
                   break;
               }
             }
@@ -87,17 +93,23 @@
                 keychar = key
               }
               switch(keychar){
-                case 'W':
-                  run_action('stop')
+                case 'Q':
+                  run_action('stop');
                   break;
-                case 'S':
-                  run_action('stop')
+                case 'W':
+                  run_action('stop');
+                  break;
+                case 'E':
+                  run_action('stop');
                   break;
                 case 'A':
-                  run_action('stop')
+                  run_action('stop');
+                  break;
+                case 'S':
+                  run_action('stop');
                   break;
                 case 'D':
-                  run_action('stop')
+                  run_action('stop');
                   break;
               }
             }
@@ -127,21 +139,25 @@
           </div>
         </div>
         <div>
+          <div align="left">
+            <button ontouchstart="run_action('frleft')" onmousedown="run_action('frleft')" ontouchend="run_action('stop')" onmouseup="run_action('stop')">◤</button>
+          </div>
           <div align="center">
-            <button ontouchstart="run_action('forward')" ontouchend="stop()">▲</button>
+            <button ontouchstart="run_action('forward')" onmousedown="run_action('forward')" ontouchend="run_action('stop')" onmouseup="run_action('stop')">▲</button>
+          </div>
+          <div align="right">
+            <button ontouchstart="run_action('frright')" onmousedown="run_action('frright')" ontouchend="run_action('stop')" onmouseup="run_action('stop')">◥</button>
           </div>
         </div>
         <div>
-          <div align="center">
-            <button ontouchstart="run_action('left')" ontouchend="stop()">◀</button>
+          <div align="left">
+            <button ontouchstart="run_action('bwleft')" onmousedown="run_action('bwleft')" ontouchend="run_action('stop')" onmouseup="run_action('stop')">◣</button>
           </div>
           <div align="center">
-            <button ontouchstart="run_action('right')" ontouchend="stop()">▶</button>
+            <button ontouchstart="run_action('backward')" onmousedown="run_action('backward')" ontouchend="run_action('stop')" onmouseup="run_action('stop')">▼</button>
           </div>
-        </div>
-        <div>
-          <div align="center">
-            <button ontouchstart="run_action('backward')" ontouchend="stop()">▼</button>
+          <div align="right">
+            <button ontouchstart="run_action('bwright')" onmousedown="run_action('bwright')" ontouchend="run_action('stop')" onmouseup="run_action('stop')">◢</button>
           </div>
         </div>
     </body>

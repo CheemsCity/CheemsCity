@@ -6,7 +6,7 @@ from .forms import CameraFilter
 from hardware.Motor import Motor
 
 cam = Camera()
-#mot = Motor()
+mot = Motor()
 mot_status = 0
 speed = 50
 
@@ -20,22 +20,30 @@ def index(request):
 	#TODO mettere gestione avanti,indietro,ecc.
 		if 'action' in request.GET:
 			action = request.GET['action']
-			# if action == 'ready':
-			# 	mot.ready()
-			# 	mot_status = 0
-			# elif action == 'stop':
-			# 	mot.Stop()
-			# 	mot_status = 0
-			# elif action == 'forward':
-			# 	mot.Avanti(speed)
-			# 	mot_status = 1
-			# elif action == 'backward':
-			# 	mot.Indietro(speed)
-			# 	mot_status = -1
-			# elif action == 'left':
-			# 	mot.Left(speed)
-			# elif action == 'right':
-			# 	mot.Right(speed)
+			if action == 'ready':
+				mot.ready()
+				mot_status = 0
+			elif action == 'stop':
+				mot.Stop()
+				mot_status = 0
+			elif action == 'frleft':
+				mot.NO(speed)
+				mot_status = 1
+			elif action == 'forward':
+				mot.Avanti(speed)
+				mot_status = 1
+			elif action == 'frright':
+				mot.NE(speed)
+				mot_status = 1
+			elif action == 'bwleft':
+				mot.SO(speed)
+				mot_status = -1
+			elif action == 'backward':
+				mot.Indietro(speed)
+				mot_status = -1
+			elif action == 'bwright':
+				mot.SE(speed)
+				mot_status = -1
 		elif 'speed' in request.GET:
 			speed = request.GET['speed']
 	else:
