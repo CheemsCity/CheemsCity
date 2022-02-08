@@ -5,6 +5,7 @@ import numpy as np
 import yaml
 import cv2
 import os
+from pkg_resources import resource_string
 
 class LineDetectorPipeline:
     def __init__(self):
@@ -13,13 +14,15 @@ class LineDetectorPipeline:
         self.source_points = [(0, self.height), (300, self.height), (250,150), (50, 150)]
         self.dest_points = [(100, self.height), (220, self.height), (220, 0), (100, 0)]
 
-        with open(r'/home/pi/CheemsCity/Robot/packages/camera/FinalCalibration.yml') as file:
-            calibration_data = yaml.load(file, Loader=yaml.UnsafeLoader)
-            self.matrix = calibration_data['camera_matrix']
-            self.dist_coef = calibration_data['distortion_coefficient']
+        #with open(r'/home/pi/CheemsCity/Robot/packages/camera/FinalCalibration.yml') as file:
+        file = resource_string('camera', 'FinalCalibration.yml')
+        calibration_data = yaml.load(file, Loader=yaml.UnsafeLoader)
+        self.matrix = calibration_data['camera_matrix']
+        self.dist_coef = calibration_data['distortion_coefficient']
 
-        with open(r'/home/pi/CheemsCity/Robot/packages/camera/LineDetector/line_detector_settings.yaml') as file:
-            self.settings = yaml.full_load(file)
+        #with open(r'/home/pi/CheemsCity/Robot/packages/camera/LineDetector/line_detector_settings.yaml') as file:
+        file = resource_string('camera.LineDetector','line_detector_settings.yaml')
+        self.settings = yaml.full_load(file)
 
         self.birdview = BirdView(self.source_points, self.dest_points, self.matrix, self.dist_coef)
         self.curves = curves(9, 20, 50)

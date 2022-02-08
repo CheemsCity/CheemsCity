@@ -1,14 +1,17 @@
 from camera.ArucoMarkerDetector.ArucoDetector import ArucoDetector
 import time
 import yaml
-import sys 
+import sys
+from pkg_resources import resource_string
 
 class ArucoDetectorPipeline():
     def __init__(self):
-        with open(r'/home/pi/CheemsCity/Robot/packages/camera/FinalCalibration.yml') as file:
-            calibration_data = yaml.load(file, Loader=yaml.UnsafeLoader)
-            self.cam_matrix = calibration_data['camera_matrix']
-            self.dist_coeff = calibration_data['distortion_coefficient']
+        #with open(r'/home/pi/CheemsCity/Robot/packages/camera/FinalCalibration.yml') as file:
+            #calibration_data = yaml.load(file, Loader=yaml.UnsafeLoader)
+        file = resource_string('camera', 'FinalCalibration.yml')
+        calibration_data = yaml.load(file, Loader=yaml.UnsafeLoader)
+        self.cam_matrix = calibration_data['camera_matrix']
+        self.dist_coeff = calibration_data['distortion_coefficient']
         
         self.detector = ArucoDetector(self.cam_matrix, self.dist_coeff)
 
