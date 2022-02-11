@@ -17,6 +17,6 @@ from django.urls import path
 from homepage import views
 
 urlpatterns = [
-    path('', views.index, name="Homepage"),
-    path('camera_stream', views.camera_stream, name="camera_stream")
+    path('', views.index, name="Homepage"), #lui è il template html della homepge
+    path('camera_stream', views.camera_stream, name="camera_stream") #lui è la vista che gestisce il box di streaming video
 ]

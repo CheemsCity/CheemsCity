@@ -38,8 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'homepage',
-    'controller'
+    'homepage', #lui gestisce tutta la parte della homepage con streaming e bottoni
+    'controller' #lui gestisce l'interazione con la camera
 ]
 
 MIDDLEWARE = [

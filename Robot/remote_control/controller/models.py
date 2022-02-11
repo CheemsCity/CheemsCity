@@ -3,6 +3,8 @@ from camera.CameraStream import CameraStream
 import time
 
 
+#qui chiamo direttamente le funzioni del pacchetto camera
+#NOTA: passo da qua perché se chiamo diretto CameraStream mi vengono degli errori sull'istanza iterata della cam ad ogni chiamata della vista
 class Camera(models.Model):
     def __init__(self):
         self.cam = CameraStream()

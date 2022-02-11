@@ -12,8 +12,9 @@
     </head>
     <body onkeydown="keydown_event(0)" onkeyup="keyup_event(0)">
         <script type="text/javascript">
+            //test del motore
             run_action('ready');
-            function run_action(value){
+            function run_action(value){ //quando mando in send le frecce inviano la richiesta
               var xmlHttp  = new XMLHttpRequest();
               var protocol  = window.location.protocol;
               var host      = window.location.host;
@@ -25,7 +26,7 @@
               xmlHttp.send( null );
               return xmlHttp.responseText;
             }
-            function set_speed(value) {
+            function set_speed(value) { //come sopra ma per la velocità
               var xmlHttp  = new XMLHttpRequest();
               var protocol  = window.location.protocol;
               var host      = window.location.host;
@@ -37,7 +38,7 @@
               xmlHttp.send( null );
               return xmlHttp.responseText;
             }
-            function keydown_event(key){
+            function keydown_event(key){ //quando viene premuto un tasto
               if (event.repeat != undefined) {
                 allowed = !event.repeat;
               }
@@ -56,7 +57,7 @@
               else{
                 keychar = key
               }
-              switch(keychar){
+              switch(keychar){ //abbastanza chiaro QWE nord da ovest a est e ASD sud da ovest a est
                 case 'Q':
                   run_action('frleft');
                   break;
@@ -77,7 +78,7 @@
                   break;
               }
             }
-            function keyup_event(key){
+            function keyup_event(key){ //come sopra quando tolgo il dito dal tasto fermo i motori
               allowed = true;
               if (key == 0){
                 var x;
@@ -113,7 +114,7 @@
                   break;
               }
             }
-            function speed() {
+            function speed() { //quando setto la velocità cambio anche il numero di fianco
               var slider = document.getElementById("myRange");
               var output = document.getElementById("vel");
               console.log(slider);
@@ -124,6 +125,7 @@
         </script>
         <h1>Camera</h1>
         <div>
+            <!-- metto la vista dello streaming video -->
             <img src="{% url 'camera_stream' %}?filter={{filter}}">
         </div>
         <form method="GET">
@@ -138,6 +140,8 @@
             <p>Velocità: <span id="vel">50</span></p>
           </div>
         </div>
+        <!-- fecce direzionali -->
+        <!-- quando schiacciate inviano segnali ai motori per muoversi -->
         <div>
           <div align="left">
             <button ontouchstart="run_action('frleft')" onmousedown="run_action('frleft')" ontouchend="run_action('stop')" onmouseup="run_action('stop')">◤</button>

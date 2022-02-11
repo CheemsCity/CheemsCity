@@ -16,5 +16,5 @@ Including another URLconf
 from django.urls import path, include
 
 urlpatterns = [
-    path('', include('homepage.urls'))
+    path('', include('homepage.urls')) #gestisco gli url (le varie viste) direttamente da urls di homepage
 ]

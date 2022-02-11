@@ -63,7 +63,7 @@ class CameraStream:
 
 #---------------------------------------------------------------------------#
 #                       RemoteControler's code
-
+    #chiamo solo le pipeline relative ai filtri
     def frameClear(self):
         ret, self.frame_buff = cv2.imencode('.jpg', self.frame) #posso anche mettere png, ma allora devo aggiornare anche homepage.html
         return self.frame_buff.tobytes()
