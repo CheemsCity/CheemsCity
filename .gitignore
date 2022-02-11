@@ -2,3 +2,4 @@
 ._.DS_Store
 __pycache__/*
 Robot/packages/__pycache__/*
+*/__pychache__/*
