@@ -82,7 +82,7 @@ void setPower(int power, int IN1_PIN, int IN2_PIN){
 
 void setMotorPower(int power, char motor){
 	if(motor == 'r'){
-		setPower(power, MA1, MA2);
+		setPower(-(power), MA1, MA2);
 	}
 	else if(motor == 'l'){
 		setPower(power, MB1, MB2);
