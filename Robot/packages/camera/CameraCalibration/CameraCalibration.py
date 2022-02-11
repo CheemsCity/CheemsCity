@@ -17,7 +17,7 @@ import numpy as np
 class ChessboardApp:
     
     def __init__(self, VideoStream, outPath):
-        with(r'camera_calibration_settings.yaml') as file:
+        with open(r'camera_calibration_settings.yaml') as file:
             self.settings = yaml.full_load(file)
         self.vs = VideoStream
         self.outPath = outPath

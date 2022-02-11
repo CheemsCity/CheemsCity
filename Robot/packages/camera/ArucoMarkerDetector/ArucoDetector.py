@@ -2,12 +2,14 @@ import cv2
 import numpy as np
 import math
 import yaml
+from pkg_resources import resource_string
 
 class ArucoDetector:
 
     def __init__(self, cam_matrix, dist_coeff):
-        with open(r'aruco_settings.yaml') as file:
-            self.settings = yaml.full_load(file)
+       # with open(r'/home/pi/CheemsCity/Robot/packages/camera/ArucoMarkerDetector/aruco_settings.yaml') as file:
+        file = resource_string('camera.ArucoMarkerDetector', 'aruco_settings.yaml')
+        self.settings = yaml.full_load(file)
         self.arucoDictionary = {
             "DICT_4X4_50": cv2.aruco.DICT_4X4_50,
             "DICT_4X4_100": cv2.aruco.DICT_4X4_100,

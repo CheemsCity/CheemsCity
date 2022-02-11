@@ -1,63 +1,61 @@
-import cv2
-from picamera import PiCamera
-from camera.CameraStream import CameraStream
-from threading import Thread
-import time
-import numpy as np
-import os
 from camera.LineDetector.Curves import curves
 from camera.LineDetector.LaneFilter import LaneFilter 
 from camera.LineDetector.BirdView import BirdView
-import matplotlib.pyplot as plt
-
-vs = CameraStream().start()
-time.sleep(2.0)
-
+import numpy as np
 import yaml
-with open(r'../FinalCalibration.yml') as file:
-# The FullLoader parameter handles the conversion from YAML
-# scalar values to Python the dictionary format
-    calibration_data = yaml.load(file, Loader=yaml.UnsafeLoader)
-    matrix = calibration_data['camera_matrix']
-    dist_coef = calibration_data['distortion_coefficient']
+import cv2
+import os
+from pkg_resources import resource_string
 
-with open(r'line_detector_settings.yaml') as file:
-    settings = yaml.full_load(file)
+class LineDetectorPipeline:
+    def __init__(self):
+        self.lanefilter = LaneFilter()
+        self.height = 240
+        self.source_points = [(0, self.height), (300, self.height), (250,150), (50, 150)]
+        self.dest_points = [(100, self.height), (220, self.height), (220, 0), (100, 0)]
 
-lanefilter = LaneFilter()
+        #with open(r'/home/pi/CheemsCity/Robot/packages/camera/FinalCalibration.yml') as file:
+        file = resource_string('camera', 'FinalCalibration.yml')
+        calibration_data = yaml.load(file, Loader=yaml.UnsafeLoader)
+        self.matrix = calibration_data['camera_matrix']
+        self.dist_coef = calibration_data['distortion_coefficient']
 
-matrix = calibration_data['camera_matrix']
-dist_coef = calibration_data['distortion_coefficient']
+        #with open(r'/home/pi/CheemsCity/Robot/packages/camera/LineDetector/line_detector_settings.yaml') as file:
+        file = resource_string('camera.LineDetector','line_detector_settings.yaml')
+        self.settings = yaml.full_load(file)
 
-height = 240
-source_points = [(0, height), (300, height), (250,150), (50, 150)]
-dest_points = [(100, height), (220, height), (220, 0), (100, 0)]
+        self.birdview = BirdView(self.source_points, self.dest_points, self.matrix, self.dist_coef)
+        self.curves = curves(9, 20, 50)
 
-birdview = BirdView(source_points, dest_points, matrix, dist_coef)
-curves = curves(9, 20, 50)
+    def lineDetector(self, image):
+        lane_image = np.copy(image)
+        filtered = self.lanefilter.toCanny(lane_image)
+        filtered = self.lanefilter.ROI(filtered)
+        skyview = self.birdview.sky_view(filtered)
+        result = self.curves.Detect(skyview,0) #molto lento, va ottimizzato
+        if result != -1:
+            combo = self.birdview.Visual(image, skyview, result['pixel_left_best_fit_curve'], result['pixel_right_best_fit_curve'])
+            self.comboBig = cv2.resize(combo, self.settings['line_detector_resizeImage'])
+        else:
+            self.comboBig = cv2.resize(lane_image, self.settings['line_detector_resizeImage'])
 
-white_flag = True
-while white_flag:
-    image = vs.read()
-    lane_image = np.copy(image)
-    filtered = lanefilter.toCanny(lane_image)
-    filtered = lanefilter.ROI(filtered)
-    skyview = birdview.sky_view(filtered)
-    undistort = birdview.undistort(image)
-    result = curves.Detect(skyview,0)
-    if result != -1:
-        combo = birdview.Visual(image, skyview, result['pixel_left_best_fit_curve'], result['pixel_right_best_fit_curve'])
-        comboBig = cv2.resize(combo, settings['line_detector_resizeImage'])
-        cv2.imshow("frame", comboBig)
-        key = cv2.waitKey(1) & 0xFF
-        if key == 27:         #ESC
-            white_flag = False
-    else:
-        comboBig = cv2.resize(lane_image, settings['line_detector_resizeImage'])
-        cv2.imshow("frame", comboBig)
-        key = cv2.waitKey(1) & 0xFF
-        if key == 27:         #ESC
-            white_flag = False
-
-cv2.destroyAllWindows()
+        return self.comboBig
     
+if __name__ == '__main__':
+    detector = LineDetectorPipeline()
+
+    from camera.CameraStream import CameraStream
+    import time
+    
+    vs = CameraStream().start()
+    time.sleep(1.0)
+    white_flag = True
+    while white_flag:
+        image = vs.read()
+        comboBig = detector.lineDetector(image)
+        cv2.imshow("frame", comboBig)
+        key = cv2.waitKey(1) & 0xFF
+        if key == 27:         #ESC
+            white_flag = False
+
+    cv2.destroyAllWindows()

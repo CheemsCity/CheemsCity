@@ -1,0 +1,168 @@
+<html>
+    <head>
+        <title>Homepage</title>
+        <script type="text/javascript">
+            function keydown_event(key){
+              var a=key
+            }
+            function keyup_event(key){
+              var a=key
+            }
+          </script>
+    </head>
+    <body onkeydown="keydown_event(0)" onkeyup="keyup_event(0)">
+        <script type="text/javascript">
+            //test del motore
+            run_action('ready');
+            function run_action(value){ //quando mando in send le frecce inviano la richiesta
+              var xmlHttp  = new XMLHttpRequest();
+              var protocol  = window.location.protocol;
+              var host      = window.location.host;
+              var pathname  = window.location.pathname;
+              url = protocol + "//" + host + pathname + "?action" + "=" + value;
+              console.log(url);
+              //document.getElementById("debug").innerHTML=url;
+              xmlHttp.open( "GET", url, false );
+              xmlHttp.send( null );
+              return xmlHttp.responseText;
+            }
+            function set_speed(value) { //come sopra ma per la velocità
+              var xmlHttp  = new XMLHttpRequest();
+              var protocol  = window.location.protocol;
+              var host      = window.location.host;
+              var pathname  = window.location.pathname;
+              url = protocol + "//" + host + pathname + "?speed" + "=" + value;
+              console.log(url);
+              //document.getElementById("debug").innerHTML=url;
+              xmlHttp.open( "GET", url, false );
+              xmlHttp.send( null );
+              return xmlHttp.responseText;
+            }
+            function keydown_event(key){ //quando viene premuto un tasto
+              if (event.repeat != undefined) {
+                allowed = !event.repeat;
+              }
+              if (!allowed) return;
+              allowed = false;
+              if (key == 0){
+                var x;
+                if(window.event) { // IE8
+                  x=event.keyCode;
+                }
+                else if(event.which) {// IE9/Firefox/Chrome/Opera/Safari
+                  x=event.which;
+                }
+                var keychar=String.fromCharCode(x);
+              }
+              else{
+                keychar = key
+              }
+              switch(keychar){ //abbastanza chiaro QWE nord da ovest a est e ASD sud da ovest a est
+                case 'Q':
+                  run_action('frleft');
+                  break;
+                case 'W':
+                  run_action('forward');
+                  break;
+                case 'E':
+                  run_action('frright');
+                  break;
+                case 'A':
+                  run_action('bwleft');
+                  break;
+                case 'S':
+                  run_action('backward');
+                  break;
+                case 'D':
+                  run_action('bwright');
+                  break;
+              }
+            }
+            function keyup_event(key){ //come sopra quando tolgo il dito dal tasto fermo i motori
+              allowed = true;
+              if (key == 0){
+                var x;
+                if(window.event) { // IE8
+                  x=event.keyCode;
+                }
+                else if(event.which) {// IE9/Firefox/Chrome/Opera/Safari
+                  x=event.which;
+                }
+                var keychar=String.fromCharCode(x);
+              }
+              else{
+                keychar = key
+              }
+              switch(keychar){
+                case 'Q':
+                  run_action('stop');
+                  break;
+                case 'W':
+                  run_action('stop');
+                  break;
+                case 'E':
+                  run_action('stop');
+                  break;
+                case 'A':
+                  run_action('stop');
+                  break;
+                case 'S':
+                  run_action('stop');
+                  break;
+                case 'D':
+                  run_action('stop');
+                  break;
+              }
+            }
+            function speed() { //quando setto la velocità cambio anche il numero di fianco
+              var slider = document.getElementById("myRange");
+              var output = document.getElementById("vel");
+              console.log(slider);
+              output.innerHTML = slider.value;
+              
+              set_speed(slider.value);
+            }
+        </script>
+        <h1>Camera</h1>
+        <div>
+            <!-- metto la vista dello streaming video -->
+            <img src="{% url 'camera_stream' %}?filter={{filter}}">
+        </div>
+        <form method="GET">
+            
+            {{ form }}
+            
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Carica</button>
+        </form>
+        <div>
+          <div class="slidecontainer">
+            <input type="range" min="1" max="100" value="50"  id="myRange" onchange="speed()">
+            <p>Velocità: <span id="vel">50</span></p>
+          </div>
+        </div>
+        <!-- fecce direzionali -->
+        <!-- quando schiacciate inviano segnali ai motori per muoversi -->
+        <div>
+          <div align="left">
+            <button ontouchstart="run_action('frleft')" onmousedown="run_action('frleft')" ontouchend="run_action('stop')" onmouseup="run_action('stop')">◤</button>
+          </div>
+          <div align="center">
+            <button ontouchstart="run_action('forward')" onmousedown="run_action('forward')" ontouchend="run_action('stop')" onmouseup="run_action('stop')">▲</button>
+          </div>
+          <div align="right">
+            <button ontouchstart="run_action('frright')" onmousedown="run_action('frright')" ontouchend="run_action('stop')" onmouseup="run_action('stop')">◥</button>
+          </div>
+        </div>
+        <div>
+          <div align="left">
+            <button ontouchstart="run_action('bwleft')" onmousedown="run_action('bwleft')" ontouchend="run_action('stop')" onmouseup="run_action('stop')">◣</button>
+          </div>
+          <div align="center">
+            <button ontouchstart="run_action('backward')" onmousedown="run_action('backward')" ontouchend="run_action('stop')" onmouseup="run_action('stop')">▼</button>
+          </div>
+          <div align="right">
+            <button ontouchstart="run_action('bwright')" onmousedown="run_action('bwright')" ontouchend="run_action('stop')" onmouseup="run_action('stop')">◢</button>
+          </div>
+        </div>
+    </body>
+</html>
