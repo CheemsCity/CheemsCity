@@ -68,14 +68,19 @@ void serialEvent(){
 
 void setPower(int power, int IN1_PIN, int IN2_PIN){
 	int pwm =0;
-	if(power < 0){
+	
+	if(power == 0){
+		digitalWrite(IN1_PIN, LOW);
+		digitalWrite(IN2_PIN, LOW);
+	}
+	else if(power < 0){
 		pwm = int(-power*(255/100));
 		analogWrite(IN1_PIN, pwm);
-		digitalWrite(IN2_PIN, pwm);
+		digitalWrite(IN2_PIN, LOW);
 	}
 	else{
 		pwm = int(power*(255/100));
-		digitalWrite(IN1_PIN, pwm);
+		digitalWrite(IN1_PIN, LOW);
 		analogWrite(IN2_PIN, pwm);
 	}
 }

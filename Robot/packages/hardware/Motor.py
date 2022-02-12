@@ -5,15 +5,19 @@ class Motor:
     
     def __init__(self):
         self.comm = SerialCommunication()
+
+    def __del__(self):
+        self.Stop()
+
     
     def Power(self, motor, power):
         #motor è un char che indica se motore destro(r) o sinistro(l)
         #power è un float compreso tra -100 e 100, con i numeri negativi a significare la direzione contraria.
         try:
-            msg = "s" + "m" + motor + str(power) + "\n"
+            msg = "s" + "m" + motor + str(-(power)) + "\n"
             print(msg)
             self.comm.SendCommand(msg)
-            time.sleep(0.006)
+            time.sleep(0.01)
             return True
         except:
             return False
