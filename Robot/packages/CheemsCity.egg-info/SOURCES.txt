@@ -14,6 +14,8 @@ camera/CameraCalibration/CameraCalibration.py
 camera/CameraCalibration/StartAppChess.py
 camera/CameraCalibration/__init__.py
 camera/CameraCalibration/chessboard.py
+camera/ColorFinder/__init__.py
+camera/ColorFinder/finder.py
 camera/LineDetector/BirdView.py
 camera/LineDetector/Curves.py
 camera/LineDetector/LaneFilter.py
