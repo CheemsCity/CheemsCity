@@ -59,13 +59,47 @@ form {
 
 #starter {
   background-color: blueviolet;
-  animation: 1s ease-out 2s 1 slideInFromLeft;
+  /*animation: 1s ease-out 2s 1 slideInFromLeft;*/
+  animation: glitched;
+  animation-duration: calc(var(--glitched-duration) * 1.4);
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
   padding-left: 6px;
 }
 
 #code-starter {
   color: black;
   text-align: left;
+}
+
+@keyframes glitched {
+  0% {
+    transform: skew(-20deg);
+    left: -4px;
+  }
+  10% {
+    transform: skew(-20deg);
+    left: -4px;
+  }
+  11% {
+    transform: skew(0deg);
+    left: 2px;
+  }
+  50% {
+    transform: skew(0deg);
+  }
+  51% {
+    transform: skew(10deg);
+  }
+  59% {
+    transform: skew(10deg);
+  }
+  60% {
+    transform: skew(0deg);
+  }
+  100% {
+    transform: skew(0deg);
+  }
 }
 #main {
   display: flex;
