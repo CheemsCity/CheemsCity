@@ -5,7 +5,7 @@ body {
     margin-left: 50px;
     margin-right:50px;
     --colors-primary--pink: #f507a3;
-    --ui-glow: 0 0 5px var(--colors-primary--500);
+    --ui-glow: 0 0 5px var(--colors-primary--pink);
   }
 h1 {
   color: blue;
