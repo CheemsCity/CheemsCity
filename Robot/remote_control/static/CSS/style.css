@@ -4,8 +4,15 @@ body {
     background-color: rgb(58, 58, 58);
     margin-left: 50px;
     margin-right:50px;
+    --colors-bg--300: #1e181e;
     --colors-primary--pink: #f507a3;
     --ui-glow: 0 0 5px var(--colors-primary--pink);
+    background-color: var(--colors-bg--300);
+    background-image: radial-gradient(
+      ellipse at 33% 10%,
+      #543ba3 0%,
+      transparent 75%
+    );
   }
 h1 {
   color: blue;
