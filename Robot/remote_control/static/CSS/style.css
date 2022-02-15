@@ -24,6 +24,6 @@ p {
   --aug-br1: 40px;
   --aug-tr1: 10px;
   --aug-bl1: 10px;
-  height: auto;
-  width: auto;
+  height: 480;
+  width: 640;
 }
