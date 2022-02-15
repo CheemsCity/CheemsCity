@@ -137,12 +137,33 @@
                 <!-- metto la vista dello streaming video -->
                 <img src="{% url 'camera_stream' %}?filter={{filter}}">
             </div>
-            <form method="GET" data-augmented-ui="">
-                
-                {{ form }}
-                
-                <button class="btn btn-lg btn-primary btn-block" type="submit">Carica</button>
-            </form>
+            <button id="clear">No Filter</button>
+            <script type="text/javascript">
+              document.getElementById("clear").onclick = function () {
+                var protocol  = window.location.protocol;
+                var host      = window.location.host;
+                var pathname  = window.location.pathname;
+                location.href = protocol + "//" + host + pathname + "?filter=clear";
+              };
+            </script>
+            <button id="arucoMarker">Aruco Marker</button>
+            <script type="text/javascript">
+              document.getElementById("arucoMarker").onclick = function () {
+                var protocol  = window.location.protocol;
+                var host      = window.location.host;
+                var pathname  = window.location.pathname;
+                location.href = protocol + "//" + host + pathname + "?filter=aruco";
+              };
+            </script>
+            <button id="lineDetector">Line Detector</button>
+            <script type="text/javascript">
+              document.getElementById("lineDetector").onclick = function () {
+                var protocol  = window.location.protocol;
+                var host      = window.location.host;
+                var pathname  = window.location.pathname;
+                location.href = protocol + "//" + host + pathname + "?filter=line_detector";
+              };
+            </script>
           </div>
           <div id = "movement-box">
             <div>

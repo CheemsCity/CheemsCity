@@ -2,7 +2,6 @@ from http.client import REQUEST_HEADER_FIELDS_TOO_LARGE
 from django.shortcuts import render
 from django.http.response import StreamingHttpResponse
 from controller.models import Camera
-from .forms import CameraFilter
 from hardware.Motor import Motor
 
 cam = Camera() #oggetto per la camera (stream + filtri)
@@ -14,8 +13,7 @@ def index(request):
 	global mot_status, speed
 	filter = 'clear' #parto dal senza filtri
 	if request.method == 'GET':
-		form = CameraFilter(request.GET) #analizzo la richiesta di filtro
-		if form.is_valid():
+		if 'filter' in request.GET:
 			filter = request.GET['filter'] #setto il filtro richiesto
 		if 'action' in request.GET: #se torno con una richiesta di action (le frecce)
 			action = request.GET['action']
@@ -45,9 +43,7 @@ def index(request):
 				mot_status = -1
 		elif 'speed' in request.GET: #in caso di modifica della velocità
 			speed = request.GET['speed'] #setta la nuova velocità di gestione dei motori
-	else:
-		form = CameraFilter()
-	return render(request, 'homepage.html', {'form': form, 'filter': filter})
+	return render(request, 'homepage.html', {'filter': filter})
 
 def stream(camera, filter):
 	while True: #qui vengono chiamate diverse pipeline per i frame a seconda del filro richiesto
