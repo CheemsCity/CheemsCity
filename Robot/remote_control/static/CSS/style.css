@@ -5,6 +5,7 @@ body {
     margin-left: 50px;
     margin-right:50px;
     --colors-bg--300: #1e181e;
+    --colors-bg--500: #191a1e;
     --colors-primary--pink: #f507a3;
     --ui-glow: 0 0 5px var(--colors-primary--pink);
     background-color: var(--colors-bg--300);
@@ -13,6 +14,11 @@ body {
       #543ba3 0%,
       transparent 75%
     );
+    background-repeat: no-repeat;
+    color: var(--colors-on_bg--500);
+    line-height: 1.4;
+    margin: 0;
+    min-height: 100vh;
   }
 h1 {
   color: blue;
