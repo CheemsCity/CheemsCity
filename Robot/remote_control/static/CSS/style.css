@@ -40,7 +40,7 @@ p {
 
 #starter {
   background-color: blueviolet;
-  animation: 1s ease-out 0s 1 slideInFromLeft;
+  animation: 1s ease-out 2s 1 slideInFromLeft;
 }
 
 #code-starter {
