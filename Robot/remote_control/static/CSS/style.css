@@ -95,7 +95,7 @@ form {
   animation-duration: calc(0.9s * 1.4 * 4);
   animation-iteration-count: infinite;
   animation-timing-function: linear;
-  height:19px;
+  height:25px;
   padding-left: 6px;
   margin-bottom: 2 px;
 }
