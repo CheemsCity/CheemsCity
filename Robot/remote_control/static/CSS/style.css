@@ -50,3 +50,11 @@ p {
   color: black;
   text-align: left;
 }
+
+#camera-box {
+  width: 50%;
+}
+
+#movement-box {
+  width: 50%;
+}
