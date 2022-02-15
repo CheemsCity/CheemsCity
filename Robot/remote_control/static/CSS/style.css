@@ -4,7 +4,6 @@ body {
     background-color: rgb(58, 58, 58);
     margin-left: 50px;
     margin-right:50px;
-    display: flex;
   }
 h1 {
   color: blue;
@@ -51,7 +50,9 @@ p {
   color: black;
   text-align: left;
 }
-
+#main {
+  display: flex;
+}
 #camera-box {
   flex: 50%;
 }

@@ -130,48 +130,50 @@
           <!-- barra iniziale di desig, in teoria quando si apre la pagina è la prima ad apparire-->
           <h3 id = "code-starter">CHEEMSBOT  VER 1.0 </h3>
         </div>
-        <div id = "camera-box">
-          <h1>Camera</h1>
-          <div id = "camera" data-augmented-ui="">
-              <!-- metto la vista dello streaming video -->
-              <img src="{% url 'camera_stream' %}?filter={{filter}}">
+        <div id = "main">
+          <div id = "camera-box">
+            <h1>Camera</h1>
+            <div id = "camera" data-augmented-ui="">
+                <!-- metto la vista dello streaming video -->
+                <img src="{% url 'camera_stream' %}?filter={{filter}}">
+            </div>
+            <form method="GET">
+                
+                {{ form }}
+                
+                <button class="btn btn-lg btn-primary btn-block" type="submit">Carica</button>
+            </form>
           </div>
-          <form method="GET">
-              
-              {{ form }}
-              
-              <button class="btn btn-lg btn-primary btn-block" type="submit">Carica</button>
-          </form>
-        </div>
-        <div id = "movement-box">
-          <div>
-            <div class="slidecontainer">
-              <input type="range" min="1" max="100" value="50"  id="myRange" onchange="speed()">
-              <p>Velocità: <span id="vel">50</span></p>
+          <div id = "movement-box">
+            <div>
+              <div class="slidecontainer">
+                <input type="range" min="1" max="100" value="50"  id="myRange" onchange="speed()">
+                <p>Velocità: <span id="vel">50</span></p>
+              </div>
             </div>
-          </div>
-          <!-- fecce direzionali -->
-          <!-- quando schiacciate inviano segnali ai motori per muoversi -->
-          <div>
-            <div align="left">
-              <button ontouchstart="run_action('frleft')" onmousedown="run_action('frleft')" ontouchend="run_action('stop')" onmouseup="run_action('stop')">◤</button>
+            <!-- fecce direzionali -->
+            <!-- quando schiacciate inviano segnali ai motori per muoversi -->
+            <div>
+              <div align="left">
+                <button ontouchstart="run_action('frleft')" onmousedown="run_action('frleft')" ontouchend="run_action('stop')" onmouseup="run_action('stop')">◤</button>
+              </div>
+              <div align="center">
+                <button ontouchstart="run_action('forward')" onmousedown="run_action('forward')" ontouchend="run_action('stop')" onmouseup="run_action('stop')">▲</button>
+              </div>
+              <div align="right">
+                <button ontouchstart="run_action('frright')" onmousedown="run_action('frright')" ontouchend="run_action('stop')" onmouseup="run_action('stop')">◥</button>
+              </div>
             </div>
-            <div align="center">
-              <button ontouchstart="run_action('forward')" onmousedown="run_action('forward')" ontouchend="run_action('stop')" onmouseup="run_action('stop')">▲</button>
-            </div>
-            <div align="right">
-              <button ontouchstart="run_action('frright')" onmousedown="run_action('frright')" ontouchend="run_action('stop')" onmouseup="run_action('stop')">◥</button>
-            </div>
-          </div>
-          <div>
-            <div align="left">
-              <button ontouchstart="run_action('bwleft')" onmousedown="run_action('bwleft')" ontouchend="run_action('stop')" onmouseup="run_action('stop')">◣</button>
-            </div>
-            <div align="center">
-              <button ontouchstart="run_action('backward')" onmousedown="run_action('backward')" ontouchend="run_action('stop')" onmouseup="run_action('stop')">▼</button>
-            </div>
-            <div align="right">
-              <button ontouchstart="run_action('bwright')" onmousedown="run_action('bwright')" ontouchend="run_action('stop')" onmouseup="run_action('stop')">◢</button>
+            <div>
+              <div align="left">
+                <button ontouchstart="run_action('bwleft')" onmousedown="run_action('bwleft')" ontouchend="run_action('stop')" onmouseup="run_action('stop')">◣</button>
+              </div>
+              <div align="center">
+                <button ontouchstart="run_action('backward')" onmousedown="run_action('backward')" ontouchend="run_action('stop')" onmouseup="run_action('stop')">▼</button>
+              </div>
+              <div align="right">
+                <button ontouchstart="run_action('bwright')" onmousedown="run_action('bwright')" ontouchend="run_action('stop')" onmouseup="run_action('stop')">◢</button>
+              </div>
             </div>
           </div>
         </div>
