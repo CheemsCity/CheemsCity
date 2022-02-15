@@ -1,9 +1,27 @@
+@import "~/node_modules/augmented-ui/augmented-ui.min.css";
+
 body {
     background-color: rgb(4, 138, 156);
   }
-  h1 {
-    color: blue;
-  }
-  p {
-    color: red;
-  }
+h1 {
+  color: blue;
+}
+p {
+  color: red;
+}
+
+#camera {
+  --aug-clip-tl1: initial;
+  --aug-round-tr1: initial;
+  --aug-clip-br1: initial;
+  --aug-round-bl1: initial;
+  --aug-border: initial;
+  --aug-inlay: initial;
+  --aug-border-all: 4px;
+  --aug-inlay-all: 2px;
+  --aug-border-bg: rgb(219, 29, 219);
+  --aug-tl1: 40px;
+  --aug-br1: 40px;
+  --aug-tr1: 10px;
+  --aug-bl1: 10px;
+}
