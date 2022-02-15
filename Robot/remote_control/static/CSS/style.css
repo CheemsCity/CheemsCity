@@ -1,4 +1,4 @@
-@import "~/node_modules/augmented-ui/augmented-ui.min.css";
+@import "../node_modules/augmented-ui/augmented-ui.min.css";
 
 body {
     background-color: rgb(4, 138, 156);
@@ -24,4 +24,6 @@ p {
   --aug-br1: 40px;
   --aug-tr1: 10px;
   --aug-bl1: 10px;
+  height: auto;
+  width: auto;
 }
