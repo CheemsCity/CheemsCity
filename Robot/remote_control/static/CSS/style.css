@@ -13,9 +13,7 @@ p {
 }
 
 form {
-  margin-top: 15px;
-}
-label {
+  margin-top: 40px;
   --aug-clip-tl1: initial;
   --aug-round-tr1: initial;
   --aug-clip-br1: initial;
