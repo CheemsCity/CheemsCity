@@ -4,6 +4,8 @@ body {
     background-color: rgb(58, 58, 58);
     margin-left: 50px;
     margin-right:50px;
+    --colors-primary--pink: #f507a3;
+    --ui-glow: 0 0 5px var(--colors-primary--500);
   }
 h1 {
   color: blue;
@@ -88,7 +90,6 @@ form {
 }
 
 #starter {
-  background-color: blueviolet;
   /*animation: 1s ease-out 2s 1 slideInFromLeft;*/
   animation: glitched;
   animation-duration: calc(0.9s * 1.4 * 4);
@@ -96,6 +97,18 @@ form {
   animation-timing-function: linear;
   height:19px;
   padding-left: 6px;
+  margin-bottom: 2 px;
+}
+
+#starter::after {
+  background-color: var(--colors-primary--pink);
+  box-shadow:  var(--ui-glow);
+  bottom: 0;
+  content: "";
+  height: 2px;
+  position: absolute;
+  width: 100%;
+  left: 6px;
 }
 
 #code-starter {
