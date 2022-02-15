@@ -62,27 +62,27 @@ form {
     transform: skew(-20deg);
     left: -4px;
   }
-  10% {
+  2.5% {
     transform: skew(-20deg);
     left: -4px;
   }
-  11% {
+  2.75% {
     transform: skew(0deg);
     left: 2px;
   }
-  50% {
+  12.5% {
     transform: skew(0deg);
   }
-  51% {
+  12.75% {
     transform: skew(10deg);
   }
-  59% {
+  14.75% {
     transform: skew(10deg);
   }
-  60% {
+  15% {
     transform: skew(0deg);
   }
-  100% {
+  25% {
     transform: skew(0deg);
   }
 }
@@ -91,7 +91,7 @@ form {
   background-color: blueviolet;
   /*animation: 1s ease-out 2s 1 slideInFromLeft;*/
   animation: glitched;
-  animation-duration: calc(0.9s * 1.4);
+  animation-duration: calc(0.9s * 1.4 * 4);
   animation-iteration-count: infinite;
   animation-timing-function: linear;
   height:19px;
