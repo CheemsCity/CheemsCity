@@ -6,7 +6,7 @@ body {
     margin-right:50px;
     --colors-bg--300: #1e181e;
     --colors-bg--500: #191a1e;
-    --colors-primary--pink: #f507a3;
+    --colors-primary--pink: #FF0DE7;
     --ui-glow: 0 0 5px var(--colors-primary--pink);
     background-color: var(--colors-bg--300);
     --glitched-duration: 0.9s;
@@ -17,24 +17,6 @@ body {
     );
     background-repeat: no-repeat;
   }
-
-#camera {
-  --aug-clip-tl1: initial;
-  --aug-round-tr1: initial;
-  --aug-clip-br1: initial;
-  --aug-round-bl1: initial;
-  --aug-border: initial;
-  --aug-inlay: initial;
-  --aug-border-all: 4px;
-  --aug-inlay-all: 2px;
-  --aug-border-bg: rgb(219, 29, 219);
-  --aug-tl1: 40px;
-  --aug-br1: 40px;
-  --aug-tr1: 10px;
-  --aug-bl1: 10px;
-  height: 480;
-  width: 640;
-}
 
 /*https://stackoverflow.com/questions/6805482/css3-transition-animation-on-load*/
 @keyframes slideInFromCenter {
@@ -123,13 +105,13 @@ body {
   --aug-inlay: initial;
   --aug-border-all: 4px;
   --aug-inlay-all: 2px;
-  --aug-border-bg: rgb(219, 29, 219);
+  --aug-border-bg: #FF0DE7;
   --aug-tl1: 40px;
   --aug-br1: 40px;
   --aug-tr1: 10px;
   --aug-bl1: 10px;
-  height: 480;
-  width: 640;
+  height: 480px;
+  width: 640px;
   display:flex;
   align-items: center;
 }
@@ -149,7 +131,7 @@ body {
 }
 
 button.cyberpunk{
-  --background-color: #f507a3;
+  --background-color: #FF0DE7;
   display: block;
   border: none;
   border-radius: 0%;
@@ -161,7 +143,7 @@ button.cyberpunk{
   margin: 10px;
   position: relative;
   color: #fff;
-  border-right: 3px solid #8ae66e;
+  border-right: 3px solid #1DEEE1;
   clip-path: polygon(
     -15px 0%,
     calc(100% + 15px) 0%,
@@ -192,8 +174,8 @@ button.cyberpunk::before{
   height: 12px;
   top: 0px;
   left: calc(0px - 1px - var(--outside));
-  border-left: 2px solid #8ae66e;
-  border-right: 2px solid #8ae66e;
+  border-left: 2px solid #1DEEE1;
+  border-right: 2px solid #1DEEE1;
 }
 
 button.cyberpunk:hover::before,
@@ -272,4 +254,8 @@ button.cyberpunk:focus::before {
     display: none;
     top: 0px;
   }
+}
+
+.slidecontainer {
+  margin-top: 40px;
 }
