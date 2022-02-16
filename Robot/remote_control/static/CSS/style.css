@@ -9,6 +9,7 @@ body {
     --colors-primary--pink: #f507a3;
     --ui-glow: 0 0 5px var(--colors-primary--pink);
     background-color: var(--colors-bg--300);
+    --glitched-duration: 0.9s;
     background-image: radial-gradient(
       ellipse at 33% 10%,
       #543ba3 0%,
@@ -16,29 +17,6 @@ body {
     );
     background-repeat: no-repeat;
   }
-h1 {
-  color: blue;
-}
-p {
-  color: red;
-}
-
-form {
-  margin-top: 40px;
-  --aug-clip-tl1: initial;
-  --aug-round-tr1: initial;
-  --aug-clip-br1: initial;
-  --aug-round-bl1: initial;
-  --aug-border: initial;
-  --aug-inlay: initial;
-  --aug-border-all: 4px;
-  --aug-inlay-all: 2px;
-  --aug-border-bg: rgb(219, 29, 219);
-  --aug-tl1: 40px;
-  --aug-br1: 40px;
-  --aug-tr1: 10px;
-  --aug-bl1: 10px;
-}
 
 #camera {
   --aug-clip-tl1: initial;
@@ -134,4 +112,152 @@ form {
 
 #movement-box {
   flex:50%
+}
+
+#camera {
+  --aug-clip-tl1: initial;
+  --aug-round-tr1: initial;
+  --aug-clip-br1: initial;
+  --aug-round-bl1: initial;
+  --aug-border: initial;
+  --aug-inlay: initial;
+  --aug-border-all: 4px;
+  --aug-inlay-all: 2px;
+  --aug-border-bg: rgb(219, 29, 219);
+  --aug-tl1: 40px;
+  --aug-br1: 40px;
+  --aug-tr1: 10px;
+  --aug-bl1: 10px;
+  height: 480;
+  width: 640;
+}
+
+#buttons {
+  margin-top: 15px;
+}
+
+button.cyberpunk{
+  --background-color: #f507a3;
+  display: block;
+  border: none;
+  border-radius: 0%;
+  font-size: 1.5rem;
+  line-height: 100%;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 35px 75px;
+  margin: 10px;
+  position: relative;
+  color: #fff;
+  border-right: 3px solid #8ae66e;
+  clip-path: polygon(
+    -15px 0%,
+    calc(100% + 15px) 0%,
+    calc(100% + 15px) 100%,
+    20px 100%,
+    -15px calc(100% - 35px)
+  );
+  cursor: pointer;
+  background-color: var(--background-color);
+  outline: none;
+}
+
+button.cyberpunk:hover,
+button.cyberpunk:focus {
+  animation-name: bGlitched;
+  animation-duration: var(--glitched-duration);
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+button.cyberpunk::before{
+  --outside: 4px;
+  content: "";
+  position: absolute;
+  display: none;
+  background-color: var(--background-color);
+  width: calc(100% + (var(--outside) * 2));
+  height: 12px;
+  top: 0px;
+  left: calc(0px - 1px - var(--outside));
+  border-left: 2px solid #8ae66e;
+  border-right: 2px solid #8ae66e;
+}
+
+button.cyberpunk:hover::before,
+button.cyberpunk:focus::before {
+  display: block;
+  animation-name: bbGlitched;
+  animation-duration: var(--glitched-duration);
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+@keyframes bGlitched {
+  0% {
+    transform: skew(0deg);
+  }
+  60% {
+    transform: skew(0deg);
+  }
+  61% {
+    transform: skew(10deg);
+  }
+  70% {
+    transform: skew(10deg);
+  }
+  71% {
+    transform: skew(0deg);
+  }
+  100% {
+    transform: skew(0deg);
+  }
+}
+
+@keyframes bbGlitched {
+  0% {
+    display: none;
+    top: 0px;
+  }
+  10% {
+    display: none;
+    top: 0px;
+  }
+  11% {
+    display: block;
+    top: 10px;
+    left: calc(0px - 0px - var(--outside));
+  }
+  29% {
+    top: 10px;
+  }
+  30% {
+    display: none;
+    top: 0px;
+  }
+  50% {
+    display: none;
+    top: 0px;
+  }
+  51% {
+    display: block;
+    top: 55px;
+    filter: blur(1px);
+    height: 22px;
+  }
+  90% {
+    display: block;
+    top: 55px;
+    height: 22px;
+  }
+  91% {
+    filter: blur(0px);
+    display: none;
+    top: 0px;
+    height: 12px;
+  }
+  100% {
+    display: none;
+    top: 0px;
+  }
 }

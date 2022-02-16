@@ -137,33 +137,35 @@
                 <!-- metto la vista dello streaming video -->
                 <img src="{% url 'camera_stream' %}?filter={{filter}}">
             </div>
-            <button id="clear">No Filter</button>
-            <script type="text/javascript">
-              document.getElementById("clear").onclick = function () {
-                var protocol  = window.location.protocol;
-                var host      = window.location.host;
-                var pathname  = window.location.pathname;
-                location.href = protocol + "//" + host + pathname + "?filter=clear";
-              };
-            </script>
-            <button id="arucoMarker">Aruco Marker</button>
-            <script type="text/javascript">
-              document.getElementById("arucoMarker").onclick = function () {
-                var protocol  = window.location.protocol;
-                var host      = window.location.host;
-                var pathname  = window.location.pathname;
-                location.href = protocol + "//" + host + pathname + "?filter=aruco";
-              };
-            </script>
-            <button id="lineDetector">Line Detector</button>
-            <script type="text/javascript">
-              document.getElementById("lineDetector").onclick = function () {
-                var protocol  = window.location.protocol;
-                var host      = window.location.host;
-                var pathname  = window.location.pathname;
-                location.href = protocol + "//" + host + pathname + "?filter=line_detector";
-              };
-            </script>
+            <div id = "buttons">
+              <button id="clear" class = "cyberpunk">No Filter</button>
+              <script type="text/javascript">
+                document.getElementById("clear").onclick = function () {
+                  var protocol  = window.location.protocol;
+                  var host      = window.location.host;
+                  var pathname  = window.location.pathname;
+                  location.href = protocol + "//" + host + pathname + "?filter=clear";
+                };
+              </script>
+              <button id="arucoMarker" class = "cyberpunk">Aruco Marker</button>
+              <script type="text/javascript">
+                document.getElementById("arucoMarker").onclick = function () {
+                  var protocol  = window.location.protocol;
+                  var host      = window.location.host;
+                  var pathname  = window.location.pathname;
+                  location.href = protocol + "//" + host + pathname + "?filter=aruco";
+                };
+              </script>
+              <button id="lineDetector" class = "cyberpunk">Line Detector</button>
+              <script type="text/javascript">
+                document.getElementById("lineDetector").onclick = function () {
+                  var protocol  = window.location.protocol;
+                  var host      = window.location.host;
+                  var pathname  = window.location.pathname;
+                  location.href = protocol + "//" + host + pathname + "?filter=line_detector";
+                };
+              </script>
+            </div>
           </div>
           <div id = "movement-box">
             <div>
