@@ -111,7 +111,7 @@ body {
 }
 
 #movement-box {
-  flex:50%
+  flex:50%;
 }
 
 #camera {
@@ -134,6 +134,9 @@ body {
 
 #buttons {
   margin-top: 15px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start
 }
 
 button.cyberpunk{
@@ -141,11 +144,11 @@ button.cyberpunk{
   display: block;
   border: none;
   border-radius: 0%;
-  font-size: 1.5rem;
+  font-size: 1rem;
   line-height: 100%;
   letter-spacing: 2px;
   text-transform: uppercase;
-  padding: 35px 75px;
+  padding: 28px 30px;
   margin: 10px;
   position: relative;
   color: #fff;
@@ -225,11 +228,11 @@ button.cyberpunk:focus::before {
   }
   11% {
     display: block;
-    top: 10px;
+    top: 5px;
     left: calc(0px - 0px - var(--outside));
   }
   29% {
-    top: 10px;
+    top: 5px;
   }
   30% {
     display: none;
@@ -241,20 +244,20 @@ button.cyberpunk:focus::before {
   }
   51% {
     display: block;
-    top: 55px;
+    top: 40px;
     filter: blur(1px);
-    height: 22px;
+    height: 20px;
   }
   90% {
     display: block;
-    top: 55px;
-    height: 22px;
+    top: 40px;
+    height: 20px;
   }
   91% {
     filter: blur(0px);
     display: none;
     top: 0px;
-    height: 12px;
+    height: 6px;
   }
   100% {
     display: none;
