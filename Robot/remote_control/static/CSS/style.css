@@ -130,11 +130,12 @@ body {
   --aug-bl1: 10px;
   height: 480;
   width: 640;
+  display:flex;
+  align-items: center;
 }
 
 #aim{
   width:640px;
-  height: 480px;
   z-index: 30000;
   position: absolute;
   background: transparent;
