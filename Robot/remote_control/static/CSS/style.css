@@ -132,10 +132,12 @@ body {
   width: 640;
 }
 
-image{
-  width:480px;
+#aim{
+  width:640px;
+  height: 480px;
   z-index: 30000;
   position: absolute;
+  background: transparent;
 }
 
 #buttons {
