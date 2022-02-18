@@ -273,13 +273,12 @@ button.cyberpunk:focus::before {
   --aug-inlay-all: 2px;
   --aug-border-bg: var(--colors-primary--pink);
   --aug-inlay-bg:  var(--colors-primary--pink);
-  --aug-inlay-opacity: 0.7;
+  --aug-inlay-opacity: 0.5;
   --aug-tl1: 40px;
   color:#543ba3;
   text-align: center;
   font-size: 1.5rem;
-  width: 20%;
-  height: 40px;
+  height: 70px;
 }
 
 #ubcenter{
@@ -291,14 +290,13 @@ button.cyberpunk:focus::before {
   --aug-inlay-all: 2px;
   --aug-border-bg: var(--colors-primary--pink);
   --aug-inlay-bg:  var(--colors-primary--pink);
-  --aug-inlay-opacity: 0.7;
+  --aug-inlay-opacity: 0.5;
   --aug-tl1: 20px;
   --aug-tl1: 20px;
   color:#543ba3;
   text-align: center;
   font-size: 1.5rem;
-  width: 20%;
-  height: 40px;
+  height: 70px;
 }
 
 #ubright{
@@ -309,11 +307,22 @@ button.cyberpunk:focus::before {
   --aug-inlay-all: 2px;
   --aug-border-bg: var(--colors-primary--pink);
   --aug-inlay-bg:  var(--colors-primary--pink);
-  --aug-inlay-opacity: 0.7;
+  --aug-inlay-opacity: 0.5;
   --aug-tr1: 40px;
   color:#543ba3;
   text-align: center;
   font-size: 1.5rem;
-  width: 20%;
-  height: 40px;
+  height: 70px;
+}
+
+#uleft{
+  width:20%;
+}
+
+#ucenter{
+  width:20%;
+}
+
+#uright{
+  width:20%;
 }
