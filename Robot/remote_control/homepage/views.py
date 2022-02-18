@@ -17,6 +17,8 @@ def index(request):
 			filter = request.GET['filter'] #setto il filtro richiesto
 		if 'action' in request.GET: #se torno con una richiesta di action (le frecce)
 			action = request.GET['action']
+			print("velocità richiesta: ")
+			println(speed)
 			if action == 'ready':
 				mot.ready() #se i motori funzionano
 				mot_status = 0
