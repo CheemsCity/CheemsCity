@@ -279,6 +279,7 @@ button.cyberpunk:focus::before {
   text-align: center;
   font-size: 1.5rem;
   height: 70px;
+  width: 100%;
 }
 
 #ubcenter{
@@ -297,6 +298,7 @@ button.cyberpunk:focus::before {
   text-align: center;
   font-size: 1.5rem;
   height: 70px;
+  width: 100%;
 }
 
 #ubright{
@@ -313,6 +315,7 @@ button.cyberpunk:focus::before {
   text-align: center;
   font-size: 1.5rem;
   height: 70px;
+  width: 100%;
 }
 
 #uleft{
