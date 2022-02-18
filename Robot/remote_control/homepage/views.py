@@ -45,7 +45,7 @@ def index(request):
 				mot.SE(speed) #va a Sud Est
 				mot_status = -1
 		elif 'speed' in request.GET: #in caso di modifica della velocità
-			speed = request.GET['speed'] #setta la nuova velocità di gestione dei motori
+			speed = int(request.GET['speed']) #setta la nuova velocità di gestione dei motori
 	return render(request, 'homepage.html', {'filter': filter})
 
 def stream(camera, filter):
