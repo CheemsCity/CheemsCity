@@ -278,6 +278,8 @@ button.cyberpunk:focus::before {
   color:#543ba3;
   text-align: center;
   font-size: 1.5rem;
+  width: 20%;
+  height: 40px;
 }
 
 #ubcenter{
@@ -295,6 +297,8 @@ button.cyberpunk:focus::before {
   color:#543ba3;
   text-align: center;
   font-size: 1.5rem;
+  width: 20%;
+  height: 40px;
 }
 
 #ubright{
@@ -310,4 +314,6 @@ button.cyberpunk:focus::before {
   color:#543ba3;
   text-align: center;
   font-size: 1.5rem;
+  width: 20%;
+  height: 40px;
 }
