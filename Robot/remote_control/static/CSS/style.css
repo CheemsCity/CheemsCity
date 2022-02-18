@@ -259,3 +259,55 @@ button.cyberpunk:focus::before {
 .slidecontainer {
   margin-top: 40px;
 }
+
+.buttonContainer {
+  display: flex;
+  justify-content: space-around;
+}
+
+#ubleft{
+  --aug-clip-tl1: initial;
+  --aug-border: initial;
+  --aug-inlay: initial;
+  --aug-border-all: 4px;
+  --aug-inlay-all: 2px;
+  --aug-border-bg: var(--colors-primary--pink);
+  --aug-inlay-bg:  var(--colors-primary--pink);
+  --aug-inlay-opacity: 0.7;
+  --aug-tl1: 40px;
+  color:#543ba3;
+  text-align: center;
+  font-size: 1.5rem;
+}
+
+#ubcenter{
+  --aug-clip-tl1: initial;
+  --aug-clip-tr1: initial;
+  --aug-border: initial;
+  --aug-inlay: initial;
+  --aug-border-all: 4px;
+  --aug-inlay-all: 2px;
+  --aug-border-bg: var(--colors-primary--pink);
+  --aug-inlay-bg:  var(--colors-primary--pink);
+  --aug-inlay-opacity: 0.7;
+  --aug-tl1: 20px;
+  --aug-tl1: 20px;
+  color:#543ba3;
+  text-align: center;
+  font-size: 1.5rem;
+}
+
+#ubright{
+  --aug-clip-tr1: initial;
+  --aug-border: initial;
+  --aug-inlay: initial;
+  --aug-border-all: 4px;
+  --aug-inlay-all: 2px;
+  --aug-border-bg: var(--colors-primary--pink);
+  --aug-inlay-bg:  var(--colors-primary--pink);
+  --aug-inlay-opacity: 0.7;
+  --aug-tr1: 40px;
+  color:#543ba3;
+  text-align: center;
+  font-size: 1.5rem;
+}
