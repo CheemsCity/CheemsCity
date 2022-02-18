@@ -178,17 +178,17 @@
             <!-- fecce direzionali -->
             <!-- quando schiacciate inviano segnali ai motori per muoversi -->
             <div class = "buttonContainer">
-              <div>
-                <button id = "ubleft" ontouchstart="run_action('frleft')" onmousedown="run_action('frleft')" ontouchend="run_action('stop')" onmouseup="run_action('stop')">.</button>
+              <div id = "ubleft" data-augmented-ui="">
+                <button ontouchstart="run_action('frleft')" onmousedown="run_action('frleft')" ontouchend="run_action('stop')" onmouseup="run_action('stop')">◤</button>
               </div>
-              <div>
-                <button id="ubcenter" ontouchstart="run_action('forward')" onmousedown="run_action('forward')" ontouchend="run_action('stop')" onmouseup="run_action('stop')">.</button>
+              <div id="ubcenter" data-augmented-ui="">
+                <button ontouchstart="run_action('forward')" onmousedown="run_action('forward')" ontouchend="run_action('stop')" onmouseup="run_action('stop')">▲</button>
               </div>
-              <div >
-                <button id ="ubright" ontouchstart="run_action('frright')" onmousedown="run_action('frright')" ontouchend="run_action('stop')" onmouseup="run_action('stop')">.</button>
+              <div id ="ubright">
+                <button ontouchstart="run_action('frright')" onmousedown="run_action('frright')" ontouchend="run_action('stop')" onmouseup="run_action('stop')">◥</button>
               </div>
             </div>
-            <div class = "buttonContainer">
+            <div class = "buttonContainer" data-augmented-ui="">
               <div id="lbleft">
                 <button ontouchstart="run_action('bwleft')" onmousedown="run_action('bwleft')" ontouchend="run_action('stop')" onmouseup="run_action('stop')">◣</button>
               </div>
