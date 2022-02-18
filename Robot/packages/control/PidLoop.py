@@ -10,6 +10,7 @@ from camera.LineDetector.LaneFilter import LaneFilter
 from camera.CameraStream import CameraStream
 from PID import PID
 from pkg_resources import resource_string
+from hardware.Motor import Motor
 
 vs = CameraStream().start()
 time.sleep(2.0)
@@ -40,6 +41,7 @@ basePower = 50
 pid = PID(0,0,0)
 print("definizione del PID")
 pid.tune(0.4,0.4, 0.08)
+motor = Motor()
 
 
 
@@ -70,6 +72,8 @@ while True:
 
         print("Potenza sinistra: " + str(powerLeft))
         print("Potenza destra: " + str(powerRight))
+        #motor.Power('l', powerLeft)
+        #motor.Power('r', powerRight)
             
         #rappresenta real time tramite delle colonne come cambaino i valori dei motori
         comboBig = cv2.rectangle(comboBig, (50,int(480- (powerLeft * 3))), (100, 480), (255, 0, 0), 5)
