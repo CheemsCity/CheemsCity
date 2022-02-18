@@ -1,0 +1,399 @@
+@import "../node_modules/augmented-ui/augmented-ui.min.css";
+
+body {
+    background-color: rgb(58, 58, 58);
+    margin-left: 50px;
+    margin-right:50px;
+    --colors-bg--300: #1e181e;
+    --colors-bg--500: #191a1e;
+    --colors-primary--pink: #FF0DE7;
+    --ui-glow: 0 0 5px var(--colors-primary--pink);
+    background-color: var(--colors-bg--300);
+    --glitched-duration: 0.9s;
+    background-image: radial-gradient(
+      ellipse at 33% 10%,
+      #543ba3 0%,
+      transparent 75%
+    );
+    background-repeat: no-repeat;
+  }
+
+/*https://stackoverflow.com/questions/6805482/css3-transition-animation-on-load*/
+@keyframes slideInFromCenter {
+  0% {
+      transform: scale(0.2, 1) translateX(75%);
+  }
+  100% {
+      transform: scale(1,1) translateX(0);
+  }
+}
+
+@keyframes glitched {
+  0% {
+    transform: skew(-20deg);
+    left: -4px;
+  }
+  2.5% {
+    transform: skew(-20deg);
+    left: -4px;
+  }
+  2.75% {
+    transform: skew(0deg);
+    left: 2px;
+  }
+  12.5% {
+    transform: skew(0deg);
+  }
+  12.75% {
+    transform: skew(10deg);
+  }
+  14.75% {
+    transform: skew(10deg);
+  }
+  15% {
+    transform: skew(0deg);
+  }
+  25% {
+    transform: skew(0deg);
+  }
+}
+
+#starter {
+  /*animation: 1s ease-out 2s 1 slideInFromLeft;*/
+  animation: glitched;
+  animation-duration: calc(0.9s * 1.4 * 4);
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  height:25px;
+  padding-left: 6px;
+  margin-bottom: 2 px;
+}
+
+#starter::after {
+  background-color: var(--colors-primary--pink);
+  box-shadow:  var(--ui-glow);
+  bottom: 0;
+  content: "";
+  height: 2px;
+  position: absolute;
+  width: 100%;
+  left: 6px;
+}
+
+#code-starter {
+  color: black;
+  text-align: left;
+}
+
+#main {
+  display: flex;
+}
+#camera-box {
+  flex: 50%;
+}
+
+#movement-box {
+  flex:50%;
+}
+
+#camera {
+  --aug-clip-tl1: initial;
+  --aug-round-tr1: initial;
+  --aug-clip-br1: initial;
+  --aug-round-bl1: initial;
+  --aug-border: initial;
+  --aug-inlay: initial;
+  --aug-border-all: 4px;
+  --aug-inlay-all: 2px;
+  --aug-border-bg: #FF0DE7;
+  --aug-tl1: 40px;
+  --aug-br1: 40px;
+  --aug-tr1: 10px;
+  --aug-bl1: 10px;
+  height: 480px;
+  width: 640px;
+  display:flex;
+  align-items: center;
+}
+
+#aim{
+  width:640px;
+  z-index: 30000;
+  position: absolute;
+  background: transparent;
+}
+
+#buttons {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start
+}
+
+button.cyberpunk{
+  --background-color: #FF0DE7;
+  display: block;
+  border: none;
+  border-radius: 0%;
+  font-size: 1rem;
+  line-height: 100%;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 28px 30px;
+  margin: 10px;
+  position: relative;
+  color: #fff;
+  border-right: 3px solid #1DEEE1;
+  clip-path: polygon(
+    -15px 0%,
+    calc(100% + 15px) 0%,
+    calc(100% + 15px) 100%,
+    20px 100%,
+    -15px calc(100% - 35px)
+  );
+  cursor: pointer;
+  background-color: var(--background-color);
+  outline: none;
+}
+
+button.cyberpunk:hover,
+button.cyberpunk:focus {
+  animation-name: bGlitched;
+  animation-duration: var(--glitched-duration);
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+button.cyberpunk::before{
+  --outside: 4px;
+  content: "";
+  position: absolute;
+  display: none;
+  background-color: var(--background-color);
+  width: calc(100% + (var(--outside) * 2));
+  height: 12px;
+  top: 0px;
+  left: calc(0px - 1px - var(--outside));
+  border-left: 2px solid #1DEEE1;
+  border-right: 2px solid #1DEEE1;
+}
+
+button.cyberpunk:hover::before,
+button.cyberpunk:focus::before {
+  display: block;
+  animation-name: bbGlitched;
+  animation-duration: var(--glitched-duration);
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+@keyframes bGlitched {
+  0% {
+    transform: skew(0deg);
+  }
+  60% {
+    transform: skew(0deg);
+  }
+  61% {
+    transform: skew(10deg);
+  }
+  70% {
+    transform: skew(10deg);
+  }
+  71% {
+    transform: skew(0deg);
+  }
+  100% {
+    transform: skew(0deg);
+  }
+}
+
+@keyframes bbGlitched {
+  0% {
+    display: none;
+    top: 0px;
+  }
+  10% {
+    display: none;
+    top: 0px;
+  }
+  11% {
+    display: block;
+    top: 5px;
+    left: calc(0px - 0px - var(--outside));
+  }
+  29% {
+    top: 5px;
+  }
+  30% {
+    display: none;
+    top: 0px;
+  }
+  50% {
+    display: none;
+    top: 0px;
+  }
+  51% {
+    display: block;
+    top: 40px;
+    filter: blur(1px);
+    height: 20px;
+  }
+  90% {
+    display: block;
+    top: 40px;
+    height: 20px;
+  }
+  91% {
+    filter: blur(0px);
+    display: none;
+    top: 0px;
+    height: 6px;
+  }
+  100% {
+    display: none;
+    top: 0px;
+  }
+}
+
+.slidecontainer {
+  margin-top: 40px;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  width:80%;
+}
+
+#ubleft{
+  --aug-clip-tl1: initial;
+  --aug-border: initial;
+  --aug-inlay: initial;
+  --aug-border-all: 4px;
+  --aug-inlay-all: 1px;
+  --aug-border-bg: var(--colors-primary--pink);
+  --aug-inlay-bg:  var(--colors-primary--pink);
+  --aug-inlay-opacity: 0.6;
+  --aug-tl1: 30px;
+  color:#543ba3;
+  text-align: center;
+  font-size: 1.5rem;
+  height: 70px;
+  width: 100%;
+}
+
+#ubcenter{
+  --aug-clip-tl1: initial;
+  --aug-clip-tr1: initial;
+  --aug-border: initial;
+  --aug-inlay: initial;
+  --aug-border-all: 4px;
+  --aug-inlay-all: 1px;
+  --aug-border-bg: var(--colors-primary--pink);
+  --aug-inlay-bg:  var(--colors-primary--pink);
+  --aug-inlay-opacity: 0.6;
+  --aug-tl1: 20px;
+  --aug-tl1: 20px;
+  color:#543ba3;
+  text-align: center;
+  font-size: 1.5rem;
+  height: 70px;
+  width: 100%;
+}
+
+#ubright{
+  --aug-clip-tr1: initial;
+  --aug-border: initial;
+  --aug-inlay: initial;
+  --aug-border-all: 4px;
+  --aug-inlay-all: 1px;
+  --aug-border-bg: var(--colors-primary--pink);
+  --aug-inlay-bg:  var(--colors-primary--pink);
+  --aug-inlay-opacity: 0.6;
+  --aug-tr1: 30px;
+  color:#543ba3;
+  text-align: center;
+  font-size: 1.5rem;
+  height: 70px;
+  width: 100%;
+}
+
+#uleft{
+  width:20%;
+}
+
+#ucenter{
+  width:20%;
+}
+
+#uright{
+  width:20%;
+}
+
+#lbleft{
+  --aug-clip-bl1: initial;
+  --aug-border: initial;
+  --aug-inlay: initial;
+  --aug-border-all: 4px;
+  --aug-inlay-all: 1px;
+  --aug-border-bg: var(--colors-primary--pink);
+  --aug-inlay-bg:  var(--colors-primary--pink);
+  --aug-inlay-opacity: 0.6;
+  --aug-bl1: 30px;
+  color:#543ba3;
+  text-align: center;
+  font-size: 1.5rem;
+  height: 70px;
+  width: 100%;
+}
+
+#lbcenter{
+  --aug-clip-bl1: initial;
+  --aug-clip-br1: initial;
+  --aug-border: initial;
+  --aug-inlay: initial;
+  --aug-border-all: 4px;
+  --aug-inlay-all: 1px;
+  --aug-border-bg: var(--colors-primary--pink);
+  --aug-inlay-bg:  var(--colors-primary--pink);
+  --aug-inlay-opacity: 0.6;
+  --aug-bl2: 20px;
+  --aug-br2: 20px;
+  color:#543ba3;
+  text-align: center;
+  font-size: 1.5rem;
+  height: 70px;
+  width: 100%;
+}
+
+#lbright{
+  --aug-clip-br1: initial;
+  --aug-border: initial;
+  --aug-inlay: initial;
+  --aug-border-all: 4px;
+  --aug-inlay-all: 1px;
+  --aug-border-bg: var(--colors-primary--pink);
+  --aug-inlay-bg:  var(--colors-primary--pink);
+  --aug-inlay-opacity: 0.6;
+  --aug-br1: 30px;
+  color:#543ba3;
+  text-align: center;
+  font-size: 1.5rem;
+  height: 70px;
+  width: 100%;
+}
+
+#lleft{
+  width:20%;
+}
+
+#lcenter{
+  width:20%;
+}
+
+#lright{
+  width:20%;
+}

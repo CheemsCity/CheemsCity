@@ -1,3 +1,6 @@
+{% load static %}
+<link href = "{% static 'CSS/style.css' %}" rel="stylesheet" type="text/css">
+<!DOCTYPE html>
 <html>
     <head>
         <title>Homepage</title>
@@ -123,45 +126,79 @@
               set_speed(slider.value);
             }
         </script>
-        <h1>Camera</h1>
-        <div>
-            <!-- metto la vista dello streaming video -->
-            <img src="{% url 'camera_stream' %}?filter={{filter}}">
+        <div id = "starter">
+          <!-- barra iniziale di desig, in teoria quando si apre la pagina è la prima ad apparire-->
+          <h3 id = "code-starter">CHEEMSBOT  VER 1.0 </h3>
         </div>
-        <form method="GET">
-            
-            {{ form }}
-            
-            <button class="btn btn-lg btn-primary btn-block" type="submit">Carica</button>
-        </form>
-        <div>
-          <div class="slidecontainer">
-            <input type="range" min="1" max="100" value="50"  id="myRange" onchange="speed()">
-            <p>Velocità: <span id="vel">50</span></p>
+        <div id = "main">
+          <div id = "camera-box">
+            <h1>Camera</h1>
+            <div id = "camera" data-augmented-ui="">
+                <img src = "{% static 'images/AIM2.svg' %}" alt = "mirino" id = "aim"  />
+                <!-- metto la vista dello streaming video -->
+                <img src="{% url 'camera_stream' %}?filter={{filter}}">
+            </div>
+            <div id = "buttons">
+              <button id="clear" class = "cyberpunk">No Filter</button>
+              <script type="text/javascript">
+                document.getElementById("clear").onclick = function () {
+                  var protocol  = window.location.protocol;
+                  var host      = window.location.host;
+                  var pathname  = window.location.pathname;
+                  location.href = protocol + "//" + host + pathname + "?filter=clear";
+                };
+              </script>
+              <button id="arucoMarker" class = "cyberpunk">Aruco Marker</button>
+              <script type="text/javascript">
+                document.getElementById("arucoMarker").onclick = function () {
+                  var protocol  = window.location.protocol;
+                  var host      = window.location.host;
+                  var pathname  = window.location.pathname;
+                  location.href = protocol + "//" + host + pathname + "?filter=aruco";
+                };
+              </script>
+              <button id="lineDetector" class = "cyberpunk">Line Detector</button>
+              <script type="text/javascript">
+                document.getElementById("lineDetector").onclick = function () {
+                  var protocol  = window.location.protocol;
+                  var host      = window.location.host;
+                  var pathname  = window.location.pathname;
+                  location.href = protocol + "//" + host + pathname + "?filter=line_detector";
+                };
+              </script>
+            </div>
           </div>
-        </div>
-        <!-- fecce direzionali -->
-        <!-- quando schiacciate inviano segnali ai motori per muoversi -->
-        <div>
-          <div align="left">
-            <button ontouchstart="run_action('frleft')" onmousedown="run_action('frleft')" ontouchend="run_action('stop')" onmouseup="run_action('stop')">◤</button>
-          </div>
-          <div align="center">
-            <button ontouchstart="run_action('forward')" onmousedown="run_action('forward')" ontouchend="run_action('stop')" onmouseup="run_action('stop')">▲</button>
-          </div>
-          <div align="right">
-            <button ontouchstart="run_action('frright')" onmousedown="run_action('frright')" ontouchend="run_action('stop')" onmouseup="run_action('stop')">◥</button>
-          </div>
-        </div>
-        <div>
-          <div align="left">
-            <button ontouchstart="run_action('bwleft')" onmousedown="run_action('bwleft')" ontouchend="run_action('stop')" onmouseup="run_action('stop')">◣</button>
-          </div>
-          <div align="center">
-            <button ontouchstart="run_action('backward')" onmousedown="run_action('backward')" ontouchend="run_action('stop')" onmouseup="run_action('stop')">▼</button>
-          </div>
-          <div align="right">
-            <button ontouchstart="run_action('bwright')" onmousedown="run_action('bwright')" ontouchend="run_action('stop')" onmouseup="run_action('stop')">◢</button>
+          <div id = "movement-box">
+            <div>
+              <div class="slidecontainer">
+                <input type="range" min="1" max="100" value="50"  id="myRange" onchange="speed()">
+                <p>Velocità: <span id="vel">50</span></p>
+              </div>
+            </div>
+            <!-- fecce direzionali -->
+            <!-- quando schiacciate inviano segnali ai motori per muoversi -->
+            <div class = "buttonContainer">
+              <div id = "uleft" >
+                <button  id = "ubleft" data-augmented-ui="" ontouchstart="run_action('frleft')" onmousedown="run_action('frleft')" ontouchend="run_action('stop')" onmouseup="run_action('stop')">◤</button>
+              </div>
+              <div id="ucenter" >
+                <button  id="ubcenter" data-augmented-ui="" ontouchstart="run_action('forward')" onmousedown="run_action('forward')" ontouchend="run_action('stop')" onmouseup="run_action('stop')">▲</button>
+              </div>
+              <div id ="uright">
+                <button id ="ubright" data-augmented-ui="" ontouchstart="run_action('frright')" onmousedown="run_action('frright')" ontouchend="run_action('stop')" onmouseup="run_action('stop')">◥</button>
+              </div>
+            </div>
+            <div class = "buttonContainer" >
+              <div id="lleft">
+                <button id="lbleft" data-augmented-ui="" ontouchstart="run_action('bwleft')" onmousedown="run_action('bwleft')" ontouchend="run_action('stop')" onmouseup="run_action('stop')">◣</button>
+              </div>
+              <div id="lcenter">
+                <button  id="lbcenter" data-augmented-ui="" ontouchstart="run_action('backward')" onmousedown="run_action('backward')" ontouchend="run_action('stop')" onmouseup="run_action('stop')">▼</button>
+              </div>
+              <div id="lright">
+                <button id="lbright" data-augmented-ui="" ontouchstart="run_action('bwright')" onmousedown="run_action('bwright')" ontouchend="run_action('stop')" onmouseup="run_action('stop')">◢</button>
+              </div>
+            </div>
           </div>
         </div>
     </body>
