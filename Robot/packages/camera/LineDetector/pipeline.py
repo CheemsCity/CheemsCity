@@ -40,6 +40,22 @@ class LineDetectorPipeline:
             self.comboBig = cv2.resize(lane_image, self.settings['line_detector_resizeImage'])
 
         return self.comboBig
+
+    def viewAll(self, image):
+        lane_image = np.copy(image)
+        filtered = self.lanefilter.toCanny(lane_image)
+        filtered = self.lanefilter.ROI(filtered)
+        res['ROI'] = np.copy(filtered)
+        skyview = self.birdview.sky_view(filtered)
+        result = self.curves.Detect(skyview,0) #molto lento, va ottimizzato
+        if result != -1:
+            combo = self.birdview.Visual(image, skyview, result['pixel_left_best_fit_curve'], result['pixel_right_best_fit_curve'])
+            self.comboBig = cv2.resize(combo, self.settings['line_detector_resizeImage'])
+        else:
+            self.comboBig = cv2.resize(lane_image, self.settings['line_detector_resizeImage'])
+
+        res['combo'] = self.comboBig
+        return res
     
 if __name__ == '__main__':
     detector = LineDetectorPipeline()
@@ -52,8 +68,10 @@ if __name__ == '__main__':
     white_flag = True
     while white_flag:
         image = vs.read()
-        comboBig = detector.lineDetector(image)
-        cv2.imshow("frame", comboBig)
+        res = detector.viewAll(self, image)
+        #comboBig = detector.lineDetector(image)
+        cv2.imshow("frame", res['combo'])
+        cv2.imshow("roi", res['ROI'])
         key = cv2.waitKey(1) & 0xFF
         if key == 27:         #ESC
             white_flag = False
