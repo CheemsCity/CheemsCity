@@ -11,9 +11,9 @@ import matplotlib.pyplot as plt
 class LineDetectorPipeline:
     def __init__(self):
         self.lanefilter = LaneFilter()
-        self.height = 479
-        self.source_points = [(0, self.height), (600, self.height), (360,240), (230, 240)]
-        self.dest_points = [(130, self.height), (500, self.height), (500, 0), (130, 0)]
+        #self.height = 479
+        #self.source_points = [(0, self.height), (600, self.height), (360,240), (230, 240)]
+        #self.dest_points = [(130, self.height), (500, self.height), (500, 0), (130, 0)]
 
         #with open(r'/home/pi/CheemsCity/Robot/packages/camera/FinalCalibration.yml') as file:
         file = resource_string('camera', 'FinalCalibration.yml')
@@ -24,6 +24,11 @@ class LineDetectorPipeline:
         #with open(r'/home/pi/CheemsCity/Robot/packages/camera/LineDetector/line_detector_settings.yaml') as file:
         file = resource_string('camera.LineDetector','line_detector_settings.yaml')
         self.settings = yaml.full_load(file)
+
+        file = resource_string('camera.LineDetector','birdview_settings.yaml')
+        data = yaml.full_load(file)
+        self.source_points = data['source']
+        self.dest_points = data['dest']
 
         self.birdview = BirdView(self.source_points, self.dest_points, self.matrix, self.dist_coef)
         self.curves = curves(9, 20, 50)

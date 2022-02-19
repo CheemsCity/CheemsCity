@@ -1,0 +1,26 @@
+dest:
+- !!python/tuple
+  - 130
+  - 479
+- !!python/tuple
+  - 500
+  - 479
+- !!python/tuple
+  - 500
+  - 0
+- !!python/tuple
+  - 130
+  - 0
+source:
+- !!python/tuple
+  - 0
+  - 479
+- !!python/tuple
+  - 600
+  - 479
+- !!python/tuple
+  - 360
+  - 240
+- !!python/tuple
+  - 230
+  - 240
