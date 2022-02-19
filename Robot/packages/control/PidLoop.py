@@ -34,9 +34,9 @@ dist_coef = calibration_data['distortion_coefficient']
 #dest_points = [(100, height), (220, height), (220, 0), (100, 0)]
 
 file = resource_string('camera.LineDetector','birdview_settings.yaml')
-        data = yaml.full_load(file)
-        self.source_points = data['source']
-        self.dest_points = data['dest']
+data = yaml.full_load(file)
+source_points = data['source']
+dest_points = data['dest']
 
 birdview = BirdView(source_points, dest_points, matrix, dist_coef)
 curve = curves(9, 20, 50)
