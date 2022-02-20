@@ -13,6 +13,10 @@
 String msg = "";
 bool stringComplete = false;
 bool ret = false;
+bool newData = false;
+// const byte numChars = 32; 
+// char receivedChars[numChars]; 
+// char tempChars[numChars]; 
 int power = 0;
   int MA1 = 5;
   int MA2 = 6; //A = motore 1
@@ -38,7 +42,14 @@ void setup() {
 }
 
 void loop() {
-  if(stringComplete){
+  recvWithStartEndMarkers();
+  if(newData==true) {
+    msgAnal(msg);
+    newData = false;
+    msg = "";
+  }
+  
+  /*if(stringComplete){
     //inserire tutte le condizioni derivanti dalla lettura
     ret = msgAnal(msg);
   }
@@ -47,7 +58,7 @@ void loop() {
   stringComplete = false;
   msg = "";
   delay(10); //capire il giusto tempo di pausa
-  if(Serial.available()>0){ serialEvent();}
+  if(Serial.available()>0){ serialEvent();}*/
 }
 
 void sendData() {
@@ -56,13 +67,38 @@ void sendData() {
   Serial.print(msg);
 }
 
-void serialEvent(){
+/*void serialEvent(){
   while(Serial.available()){
     char inChar = (char)Serial.read();
     msg += inChar;
     if (inChar == '\n'){
       stringComplete = true;
     }    
+  }
+}*/
+
+void recvWithStartEndMarkers() {
+  static bool recvInProgress = false;
+  char startMarker = '<';
+  char endMarker = '>';
+  char rc;
+
+  while(Serial.available() > 0 && newData == false){
+    rc = (char)Serial.read();
+
+    if (recvInProgress==true) {
+      if(rc != endMarker) {
+        msg += rc;
+      }
+      else {
+        recvInProgress = false;
+        newData = true;
+      }
+    }
+
+    else if (rc == startMarker) {
+      recvInProgress = true;
+    }
   }
 }
 
@@ -109,12 +145,12 @@ bool msgAnal(String msg){
       if(msg[2]=='l'){
         //controllo motore destro
         power = msg.substring(3).toInt();
-	setMotorPower(power,'l');
+	      setMotorPower(power,'l');
         
       }
       else if(msg[2]=='r'){
         //controllo motore sinistro
-        power = msg.substring(3).toFloat();
+        power = msg.substring(3).toInt();
         setMotorPower(power, 'r');
       }
       else{
