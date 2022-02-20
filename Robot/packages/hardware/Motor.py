@@ -41,7 +41,9 @@ class Motor:
             raise ValueError("[ERROR] motor può essere solo uguale a r o l")
             return False
         try:
-            if motor=='r':
+            if power = 0:
+                speed = 0
+            elif motor=='r':
                 speed = power + self._right_trim
             else:
                 speed = power + self._left_trim
