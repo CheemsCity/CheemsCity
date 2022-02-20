@@ -42,9 +42,9 @@ class Motor:
             return False
         try:
             if motor=='r':
-                speed = power + _right_trim
+                speed = power + self._right_trim
             else:
-                speed = power + _left_trim
+                speed = power + self._left_trim
             speed = max(-100, min(100, speed))
             print("velocità impostata ")
             print(speed)
