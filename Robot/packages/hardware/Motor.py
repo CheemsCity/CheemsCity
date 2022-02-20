@@ -13,7 +13,7 @@ class Motor:
     Baud rate and Serial port number are specified in the Serial Communication class'''
 
     
-    def __init__(self, left_trim =-5, right_trim = 0):
+    def __init__(self, left_trim =-10, right_trim = 0):
         '''ITA: left_trim specifica l'offset in velocità del motore sinistro e 
         right_trim per quello destro, il valore di default è 0.
         i valori saranno calibrati con un programma apposito
