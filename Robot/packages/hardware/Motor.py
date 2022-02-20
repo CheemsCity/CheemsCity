@@ -46,6 +46,8 @@ class Motor:
             else:
                 speed = power + _left_trim
             speed = max(-100, min(100, speed))
+            print("velocità impostata ")
+            print(speed)
             msg = "s" + "m" + motor + str(-(speed)) + "\n"
             print(msg)
             self.comm.SendCommand(msg)
