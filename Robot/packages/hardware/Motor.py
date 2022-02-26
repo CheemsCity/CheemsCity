@@ -53,7 +53,7 @@ class Motor:
             msg = "<" "s" + "m" + motor + str(-(speed)) + ">"
             print(msg)
             self.comm.SendCommand(msg)
-            time.sleep(0.01)
+            time.sleep(0.006)
             return True
         except:
             if motor=='r':

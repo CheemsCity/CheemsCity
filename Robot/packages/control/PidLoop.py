@@ -45,7 +45,7 @@ print("prova 1, pre definizione del PID")
 basePower = 50
 pid = PID(0,0,0)
 print("definizione del PID")
-pid.tune(0.4,0.4, 0.08)
+pid.tune(0.04,0.04, 0.008)
 motor = Motor()
 
 
