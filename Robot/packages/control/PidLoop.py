@@ -29,9 +29,14 @@ lanefilter = LaneFilter()
 matrix = calibration_data['camera_matrix']
 dist_coef = calibration_data['distortion_coefficient']
 
-height = 240
-source_points = [(0, height), (300, height), (250,150), (50, 150)]
-dest_points = [(100, height), (220, height), (220, 0), (100, 0)]
+#height = 240
+#source_points = [(0, height), (300, height), (250,150), (50, 150)]
+#dest_points = [(100, height), (220, height), (220, 0), (100, 0)]
+
+file = resource_string('camera.LineDetector','birdview_settings.yaml')
+data = yaml.full_load(file)
+source_points = data['source']
+dest_points = data['dest']
 
 birdview = BirdView(source_points, dest_points, matrix, dist_coef)
 curve = curves(9, 20, 50)
@@ -40,7 +45,7 @@ print("prova 1, pre definizione del PID")
 basePower = 50
 pid = PID(0,0,0)
 print("definizione del PID")
-pid.tune(0.4,0.4, 0.08)
+pid.tune(0.04,0.04, 0.008)
 motor = Motor()
 
 
