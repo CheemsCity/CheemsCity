@@ -46,6 +46,12 @@ class LineDetectorPipeline:
             self.comboBig = cv2.resize(lane_image, self.settings['line_detector_resizeImage'])
 
         return self.comboBig
+    def lineDetector2(self, image):
+        lane_image = np.copy(image)
+        filtered = self.lanefilter.toCanny(lane_image)
+        filtered = self.lanefilter.ROI(filtered)
+        self.comboBig = self.birdview.Hough(image, filtered)
+        return self.comboBig
 
     def viewAll(self, image):
         lane_image = np.copy(image)
@@ -72,14 +78,18 @@ if __name__ == '__main__':
 
     from camera.CameraStream import CameraStream
     import time
+    import timeit
     
     vs = CameraStream().start()
     time.sleep(1.0)
     white_flag = True
     while white_flag:
         image = vs.read()
+        start = time.time()
         #res = detector.viewAll( image)
-        comboBig = detector.lineDetector(image)
+        comboBig = detector.lineDetector2(image)
+        end = time.time()
+        print("the time is: ",end-start )
         #cv2.imshow("frame", res['combo'])
         cv2.imshow("frame", comboBig)
         #cv2.imshow("roi", res['roi'])

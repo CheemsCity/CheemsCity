@@ -26,14 +26,64 @@ class BirdView:
         shape = (temp_image.shape[1], temp_image.shape[0])
         warp_image = cv2.warpPerspective(temp_image, self.sky_matrix, shape, flags = cv2.INTER_LINEAR)
         return warp_image
+
+    def make_points(self, image, average):
+        slope, y_int = average
+        y1 = image.shape[0]
+        y2 = int(y1* (3/5))
+        x1 = int((y1- y_int) / slope)
+        x2 = int((y2 - y_int) / slope)
+        return np.array([x1, y1, x2, y2])
+
+
+    def Hough(self, image, binary):
+        print("[INFO] sta avvenendo la trasformazione Hough")
+        lines = cv2.HoughLinesP(binary, rho=2, theta=np.pi/180,threshold= 60, minLineLength=20, maxLineGap=5,lines =np.array([]))
+        left = []
+        right = []
+        #print("[INFO] divisione linee destra e sinistra")
+        try:
+            for line in lines:
+                x1, y1, x2, y2 = line.reshape(4)
+                parameters = np.polyfit((x1, x2), (y1, y2), 1)
+                slope = parameters[0]
+                y_int = parameters[1]
+                if slope < 0:
+                    left.append((slope, y_int))
+                else:
+                    right.append((slope, y_int))
+
+            #print("[INFO] calcolo average")
+            #print("[INFO] media destra")
+            right_avg = np.average(right, axis=0)
+            #print("[INFO] media sinistra")
+            left_avg = np.average(left, axis = 0)
+            #print("[INFO] left_line, makepoints")
+            left_line = self.make_points(binary, left_avg)
+            #print("[INFO] right_line, makepoints")
+            right_line = self.make_points(binary, right_avg)
+            coordinates = [left_line, right_line]
+
+            z = np.zeros_like(binary)
+            lines_image = np.dstack((z,z,z))
+            #print("[INFO] rappresetazione linee medie")
+            for x1, y1, x2, y2 in coordinates:
+                print("coeff : ", x1 , " ", y1, " |  ", x2, "- ", y2)
+                cv2.line(lines_image, (x1, y1), (x2, y2), (255, 255, 0), 10)
+                print("avvenuto riconoscimento")
+            combo =  cv2.addWeighted(image, 1, lines_image, 0.3, 0)
+            print("return image Weighted")
+            return combo
+        except:
+            return image
+
+
         
     def Visual(self, image, ImgBinary, left_fit, right_fit, color = (0, 255, 0), debug = False):
         z = np.zeros_like(ImgBinary)
         filtered = np.dstack((z,z,z))
         
-        if (left_fit is None or right_fit is None):
-            return image
-        else:
+        try:
             kl, kr = left_fit, right_fit
             h = filtered.shape[0]
             ys = np.linspace(0, h -1, h)
@@ -56,3 +106,5 @@ class BirdView:
             ground_lane = cv2.warpPerspective(filtered, self.inv_sky_matrix, shape)
             combo = cv2.addWeighted(image,1,ground_lane, 0.3, 0)
             return combo
+        except:
+            return image
