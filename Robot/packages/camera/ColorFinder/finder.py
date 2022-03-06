@@ -52,13 +52,13 @@ class ColorFinder():
                     self.bool_Md[i,j] = 255
         return self.bool_Md
 
-    def CannyContour(self):
+    def CannyContour(self): #IN DISUSO
         self.contour_Md = cv2.Canny(self.bool_Md, 70, 150)
         #trovo i contorni tramite l'algoritmo Canny sfruttando il fatto che ove era nel raggio
         #ora c'è il nero e nel resto c'è il bianco
         return self.contour_Md
 
-    def ColorContour(self, draw):
+    def ColorContour(self, draw): #IN DISUSO
         self.contours, self.hierarchy = cv2.findContours(self.contour_Md,cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
         #trovo i contorni dell'immagine tramite l'algoritmo di OpenCv
         if draw==1:
@@ -66,7 +66,7 @@ class ColorFinder():
         #li disegno nell'immagine
         return self.image
 
-    def findBiggest(self):
+    def findBiggest(self): #IN DISUSO
         length_list = list(len(self.contours[i]) for i in range(len(self.contours)))
         #creo una lista con tutte le lunghezze dei vari contorni
         max_item = max(length_list)
@@ -75,29 +75,19 @@ class ColorFinder():
         #prendo gli indici degli elementi che hanno quel valore
         return self.biggest_list
 
-    def findBiggerThan(self,limit):
+    def findBiggerThan(self,limit): #IN DISUSO
         self.result_bigger_list = list(filter(lambda i: len(self.contours[i]) > limit, range(len(self.contours))))
         #prendo gli indici degli elementi che hanno lunghezza maggiore di un limite
         return self.result_bigger_list
 
-    def defineRectangularContour(self,index):
-        column = []
-        row = []
-        l = self.contours[index]
-        #prendo la lista dei punti che costituiscono il contorno più grande in foto
-        for i in range(len(l)):
-            row.append(l[i][0][0])
-            column.append(l[i][0][1])
-        #creo la lista delle colonne e la lista delle righe
-        self.SO = (math.ceil(max(row)*(1+self.risk_coeff)),math.ceil(min(column)*(1-self.risk_coeff)))
-        self.SE = (math.ceil(max(row)*(1+self.risk_coeff)),math.ceil(max(column)*(1+self.risk_coeff)))
-        self.NE = (math.ceil(min(row)*(1-self.risk_coeff)),math.ceil(max(column)*(1+self.risk_coeff)))
-        self.NO = (math.ceil(min(row)*(1-self.risk_coeff)),math.ceil(min(column)*(1-self.risk_coeff)))
-        #prendo i 4 punti che costruiscono il rettangolo più grande che contiene l'oggetto
+    def defineRectangularContour(self):
+        self.SO = (math.ceil(min(np.nonzero(self.bool_Md)[1])*(1-self.risk_coeff)),math.ceil(max(np.nonzero(self.bool_Md)[0])*(1+self.risk_coeff)))
+        self.NE = (math.ceil(max(np.nonzero(self.bool_Md)[1])*(1+self.risk_coeff)),math.ceil(min(np.nonzero(self.bool_Md)[0])*(1-self.risk_coeff)))
+        #prendo i 2 punti che costruiscono il rettangolo più grande che contiene l'oggetto
         #inflaziono il rettangolo aumentando i massimi del coefficiente di rischio
         #e diminuendo i minimi dello sesso coefficiente
 
-        return[self.SO, self.SE, self.NE, self.NO]
+        return[self.SO, self.NE]
 
     def rectangleOnOriginalImage(self):
         return cv2.rectangle(self.or_image, self.SO, self.NE, (255,0,0), 2)
