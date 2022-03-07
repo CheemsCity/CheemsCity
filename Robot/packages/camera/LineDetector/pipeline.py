@@ -49,7 +49,7 @@ class LineDetectorPipeline:
     def lineDetector2(self, image):
         lane_image = np.copy(image)
         filtered = self.lanefilter.toCanny(lane_image)
-        filtered = self.lanefilter.ROI(filtered)
+        filtered = self.lanefilter.roiToHeight(filtered,100)
         self.comboBig = self.birdview.Hough(image, filtered)
         return self.comboBig
 

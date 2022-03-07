@@ -48,9 +48,9 @@ class BirdView:
                 parameters = np.polyfit((x1, x2), (y1, y2), 1)
                 slope = parameters[0]
                 y_int = parameters[1]
-                if slope < 0:
+                if (slope < 0 and slope > -2):
                     left.append((slope, y_int))
-                else:
+                elif(slope<2):
                     right.append((slope, y_int))
 
             #print("[INFO] calcolo average")
