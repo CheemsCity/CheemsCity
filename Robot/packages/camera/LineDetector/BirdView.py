@@ -35,9 +35,12 @@ class BirdView:
         x2 = int((y2 - y_int) / slope)
         return np.array([x1, y1, x2, y2])
 
-
     def Hough(self, image, binary):
-        print("[INFO] sta avvenendo la trasformazione Hough")
+        '''Metodo che utilizza la trasformazione Hough per trovare le 
+        linee della strada (come equazioni di primo grado) nell'immagine 
+        che ha gia subito il ROI ed i vari filtri.
+        Restituisce l'immagine completa con disegnate le linee della strada'''
+        #print("[INFO] sta avvenendo la trasformazione Hough")
         lines = cv2.HoughLinesP(binary, rho=2, theta=np.pi/180,threshold= 60, minLineLength=20, maxLineGap=5,lines =np.array([]))
         left = []
         right = []
@@ -77,7 +80,38 @@ class BirdView:
         except:
             return image
 
+    def HoughCenter(self, binary, x:int):
+        '''funzione che restituisce la coordinata y (width)
+        del centro della strada ad una data altezza x
+        (più è in basso nell'immagine,maggiore il valore di x.
+        Questo metodo effettua solo i calcoli e non disegna le 
+        linee sull'immagine'''
+        lines = cv2.HoughLinesP(binary, rho=2, theta=np.pi/180, threshold=60, minLineLength=20, maxLineGap=5, lines=np.array([]))
+        left = []
+        right=[]
 
+        try:
+            for line in lines:
+                x1, y1, x2, y2 = line.reshape(4)
+                parameters = np.polyfit((x1, x2), (y1, y2), 1)
+                slope = parameters[0]
+                y_int = parameters[1]
+                if (slope < 0 and slope > -2):
+                    left.append((slope, y_int))
+                elif(slope<2):
+                    right.append((slope, y_int))
+
+            #print("[INFO] calcolo average")
+            #print("[INFO] media destra")
+            right_avg = np.average(right, axis=0)
+            #print("[INFO] media sinistra")
+            left_avg = np.average(left, axis = 0)
+            #print("[INFO] left_line, makepoints")
+            slopeLeft, yLeft = left_avg
+            slopeRight, yRight = right_avg
+            yL = slopeLeft*x + yLeft
+            yR = slopeRight*x + yRight
+            return (yL - yR)
         
     def Visual(self, image, ImgBinary, left_fit, right_fit, color = (0, 255, 0), debug = False):
         z = np.zeros_like(ImgBinary)
