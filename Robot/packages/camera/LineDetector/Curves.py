@@ -84,9 +84,7 @@ class curves:
         self.out_img[self.left_ypoints, self.left_xpoints] = [255, 0, 255]
         self.out_img[self.right_ypoints, self.right_xpoints] = [0, 255, 255]
         
-        if (self.left_fit_curve_pix is None or self.right_fit_curve_pix is None):
-            return
-        else:
+        try:
             #kl e kr contengono i coefficienti dell'equazione di secondo grado
             kl, kr = self.left_fit_curve_pix, self.right_fit_curve_pix
             #linspace genera un insieme di self.h punti equalmente distanti da 0 a self.h, 
@@ -103,6 +101,9 @@ class curves:
             for xl, xr, y in zip(xls, xrs, ys):
                 cv2.line(self.out_img, (xl - t, y), (xl + t, y), (255, 255, 0), int(t / 2))
                 cv2.line(self.out_img, (xr - t, y), (xr + t, y), (0, 0, 255), int(t / 2))
+
+        except:
+            return
         
     def pixel_location(self, indices, img):
         all_pixels_x = np.array(img.nonzero()[1])
@@ -145,8 +146,8 @@ class curves:
             x[0], x[1] = self.findX(start_leftx)
             x[2], x[3] = self.findX(start_rightx)
             
-            self.draw_boundaries((x[0],y[0]),(x[1],y[1]), (255, 0 ,0))
-            self.draw_boundaries((x[2],y[0]),(x[3],y[1]), (0, 255 ,0))
+            #self.draw_boundaries((x[0],y[0]),(x[1],y[1]), (255, 0 ,0))
+            #self.draw_boundaries((x[2],y[0]),(x[3],y[1]), (0, 255 ,0))
             #scrivere funzione che disegni il rettangolo in foto per debug
             
             left_box_indices = self.indices_in_box(img,y[0],y[1], x[0], x[1])
@@ -167,12 +168,12 @@ class curves:
         self.right_xpoints, self.right_ypoints = self.pixel_location(self.right_indices, img)
         
         #metto if per evitare errori qual'ora non ci fosse la strada
-        if (self.left_ypoints.size != 0 and self.left_xpoints.size != 0 and self.right_ypoints.size != 0 and self.right_xpoints.size != 0):
+        try:
             print("[INFO] PolyFit in corso\n")
             self.left_fit_curve_pix = np.polyfit(self.left_ypoints, self.left_xpoints,2)
             self.right_fit_curve_pix = np.polyfit(self.right_ypoints, self.right_xpoints,2)
             self.position = self.getPosition()
-        else:
+        except:
             print("[INFO] Nessun PolyFit, errore\n")
             self.left_fit_curve_pix = None
             self.right_fit_curve_pix = None
