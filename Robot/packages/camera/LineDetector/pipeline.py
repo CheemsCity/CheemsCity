@@ -16,7 +16,7 @@ class LineDetectorPipeline:
         #self.dest_points = [(130, self.height), (500, self.height), (500, 0), (130, 0)]
 
         #with open(r'/home/pi/CheemsCity/Robot/packages/camera/FinalCalibration.yml') as file:
-        file = resource_string('camera', 'FinalCalibration.yml')
+        file = resource_string('camera', 'Calibration160.yml')
         calibration_data = yaml.load(file, Loader=yaml.UnsafeLoader)
         self.matrix = calibration_data['camera_matrix']
         self.dist_coef = calibration_data['distortion_coefficient']

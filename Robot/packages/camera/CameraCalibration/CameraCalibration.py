@@ -132,7 +132,7 @@ class ChessboardApp:
             "distortion_coefficient": distortion_coef
         }
         
-        with open('../FinalCalibration.yml', 'w') as outfile:
+        with open('../CalibrationUser.yml', 'w') as outfile:
             yaml.dump(calibration_data, outfile, default_flow_style=False)
         
         print("[INFO] saved FinalCalibration.yml")
