@@ -112,8 +112,11 @@ class BirdView:
             yL = slopeLeft*x + yLeft
             yR = slopeRight*x + yRight
             return (yL - yR)
+        except:
+            return None
+
         
-    def Visual(self, image, ImgBinary, left_fit, right_fit, color = (0, 255, 0), debug = False):
+    def Visual(self, image, ImgBinary, left_fit, right_fit, color = (0, 255, 0),debug = False):
         z = np.zeros_like(ImgBinary)
         filtered = np.dstack((z,z,z))
         
