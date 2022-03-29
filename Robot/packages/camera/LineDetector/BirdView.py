@@ -14,11 +14,20 @@ class BirdView:
         
         self.sky_matrix = cv2.getPerspectiveTransform(self.view_points, self.sky_points)
         self.inv_sky_matrix = cv2.getPerspectiveTransform( self.sky_points, self.view_points)
-        
+        self.start= True
+        self.mapx, self.mapy = None, None
+
     def undistort(self, raw_image):
      
         image = cv2.undistort(raw_image, self.cam_matrix, self.dist_coeff, None, self.cam_matrix)
-        return image 
+        return image
+    
+    def undistortFaster(self, raw_image):
+        if self.start:
+            h, w = raw_image.shape[:2]
+            self.mapx, self.mapy =  cv2.initUndistortRectifyMap(self.cam_matrix, self.dist_coeff,None, self.cam_matrix,(w,h),5)
+            self.start = False
+        return cv2.remap(raw_image, self.mapx, self.mapy, cv2.INTER_LINEAR)
 
     def sky_view(self, ground_image):
 

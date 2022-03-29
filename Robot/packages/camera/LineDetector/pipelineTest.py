@@ -55,19 +55,23 @@ class LineDetectorPipeline:
         numberCurve = 10# numero massimo di dati curvatura storati
 
         lane_image = np.copy(image)
+        #Unimage = self.birdview.undistortFaster(lane_image)
+        #cv2.imshow("Unimage", Unimage) 
         frameHSV = cv2.cvtColor(lane_image, cv2.COLOR_BGR2HSV)
         frameHSV = cv2.inRange(frameHSV,self.lower_white, self.upper_white)
         #cv2.imshow("Color", frameHSV)
         filtered = self.lanefilter.roiToHeight(frameHSV,150)
         #cv2.imshow("postROI", filtered)
-        
-        middlePoint = self.birdview.getHistogram(filtered,6, minPer=0.5)
-        curveAveragePoint = self.birdview.getHistogram(filtered,1, minPer=0.9)
+        #skyview = self.birdview.sky_view(filtered)
+        #cv2.imshow("postROI", skyview) 
+        middlePoint = self.birdview.getHistogram(filtered,6, minPer=0.2)
+        curveAveragePoint = self.birdview.getHistogram(filtered,1, minPer=0.5)
         curveRaw = curveAveragePoint - middlePoint
 
         if display:
+            cv2.circle(image, (middlePoint, image.shape[0]),20,(0,255,255), cv2.FILLED)
             cv2.putText(image, str(curveRaw), (image.shape[1]//2-80,85), cv2.FONT_HERSHEY_COMPLEX,2,(255,0,255),3)
-            cv2.line(image, (middlePoint, image.shape[0]), (curveAveragePoint, image.shape[0]//2), (255,0,255),5)
+            cv2.line(image, (middlePoint, image.shape[0]), (curveAveragePoint, image.shape[0]//3*2), (255,0,255),4)
         
         self.curveList.append(curveRaw)
         if len(self.curveList)>numberCurve:

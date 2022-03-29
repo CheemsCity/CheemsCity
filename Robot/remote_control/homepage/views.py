@@ -5,7 +5,7 @@ from controller.models import Camera
 from hardware.Motor import Motor
 
 cam = Camera() #oggetto per la camera (stream + filtri)
-mot = Motor() #oggetto per comunicazione seriale con i motori
+mot = Motor(left_trim=-6) #oggetto per comunicazione seriale con i motori
 mot_status = 0 #NON ANCORA IN USO mi dà un'indicazione del verso di movimento della camera
 speed = 50 #velocità standard
 
