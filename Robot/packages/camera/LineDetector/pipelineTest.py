@@ -1,7 +1,9 @@
 from camera.LineDetector.Curves import curves
 from camera.LineDetector.LaneFilter import LaneFilter 
 from camera.LineDetector.BirdView import BirdView
+from camera.ColorFinder.finder import ColorFinder
 import numpy as np
+import math
 import yaml
 import cv2
 import os
@@ -37,6 +39,10 @@ class LineDetectorPipeline:
         self.upper_white = np.array([255, sens,255])
         self.curveList = []
 
+        self.cf = ColorFinder()
+        self.colorCheems = [255, 193, 0]
+        self.radius = 50
+
     def lineDetector(self, image):
         lane_image = np.copy(image)
         filtered = self.lanefilter.toCanny(lane_image)
@@ -50,6 +56,7 @@ class LineDetectorPipeline:
             self.comboBig = cv2.resize(lane_image, self.settings['line_detector_resizeImage'])
 
         return self.comboBig
+
     def lineDetector2(self, image, display = False):
         
         numberCurve = 10# numero massimo di dati curvatura storati
@@ -79,6 +86,32 @@ class LineDetectorPipeline:
         curve = int(sum(self.curveList)/len(self.curveList))
 
         return middlePoint, curve
+
+    def lineDetector3(self, image, stripsN = 10, display = False):
+        lane_image = np.copy(image)
+        lane_image = cv2.cvtColor(lane_image, cv2.COLOR_BGR2RGB)
+
+        self.cf.newImage(lane_image)
+        self.cf.changeValues(self.colorCheems, self.radius)
+
+        bool_Md = self.cf.distInRange()
+
+        stripLength = math.ceil(bool_Md.shape[1] / stripsN)
+
+        sones = [] #SO NE s
+
+        for i in range(stripsN):
+            customImage = bool_Md[:,i*stripLength:(i+1)*stripLength]
+            [SO, NE] = self.cf.defineRectangularContourCustom(customImage)
+            if SO is not None and NE is not None:
+                sones.append([(SO[0]+i*stripLength,SO[1]), (NE[0]+i*stripLength,NE[1])])
+        
+        if display:
+            for sone in sones:
+                image = cv2.rectangle(image, sone[0], sone[1], (255, 0, 0), 2)
+            cv2.imshow("CheemsRec", image)
+
+        return sones
 
     def viewAll(self, image):
         lane_image = np.copy(image)
@@ -114,18 +147,20 @@ if __name__ == '__main__':
         image = vs.read()
         start = time.time()
         #res = detector.viewAll( image)
-        center, curve = detector.lineDetector2(image,display= True)
-        print("centro della strada: ", center)
-        print("curvature: ", curve)
-        end = time.time()
-        print("the time is: ",end-start )
+        # center, curve = detector.lineDetector2(image,display= True)
+        # print("centro della strada: ", center)
+        # print("curvature: ", curve)
+        # end = time.time()
+        # print("the time is: ",end-start )
         #cv2.imshow("frame", res['combo'])
-        cv2.imshow("frame", image)
+        #cv2.imshow("frame", image)
         #cv2.imshow("roi", res['roi'])
         #cv2.imshow("skyview", res['skyview'])
         #plt.imshow(res['roi'])
         #plt.imshow(res['skyview'])
         #plt.show()
+
+        sones = detector.lineDetector3(image, display = True)
         key = cv2.waitKey(1) & 0xFF
         if key == 27:         #ESC
             white_flag = False
