@@ -97,14 +97,16 @@ class LineDetectorPipeline:
         bool_Md = self.cf.distInRange()
 
         stripLength = math.ceil(bool_Md.shape[1] / stripsN)
+        stripHeigth = math.ceil(bool_Md.shape[0] / stripsN)
 
         sones = [] #SO NE s
 
         for i in range(stripsN):
-            customImage = bool_Md[:,i*stripLength:(i+1)*stripLength]
-            [SO, NE] = self.cf.defineRectangularContourCustom(customImage)
-            if SO is not None and NE is not None:
-                sones.append([(SO[0]+i*stripLength,SO[1]), (NE[0]+i*stripLength,NE[1])])
+            for j in range(stripsN):
+                customImage = bool_Md[j*stripHeigth:(j+1)*stripHeigth,i*stripLength:(i+1)*stripLength]
+                [SO, NE] = self.cf.defineRectangularContourCustom(customImage)
+                if SO is not None and NE is not None:
+                    sones.append([(SO[0]+i*stripLength,SO[1]+j*stripHeigth), (NE[0]+i*stripLength,NE[1]+j*stripHeigth)])
         
         if display:
             for sone in sones:
