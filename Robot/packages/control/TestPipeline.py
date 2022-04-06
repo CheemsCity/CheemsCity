@@ -53,11 +53,21 @@ pipeline = LineDetectorPipeline()
 
 while True:
     image = vs.read()
-    basePoint, curve = pipeline.lineDetector2(image)
+    areas, basePoint, curve = pipeline.lineDetector3(image)
     curve = curve//3
     sen = 1.3
     maxControl = 15
     basepower = 60
+    thresh = 2000
+    
+    #prima condizione: presenza cheemsVicini = stop
+    for area in areas:
+        if area > thresh:
+            '''attiviamo la funzione di stop'''
+            motor.Stop()
+            break
+            
+    #seconda parte: riconoscimento linee e direzione strada
     if curve > maxControl: curve = maxControl
     if curve < -maxControl: curve = - maxControl
     print(curve)

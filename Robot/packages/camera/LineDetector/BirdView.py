@@ -23,6 +23,9 @@ class BirdView:
         return image
     
     def undistortFaster(self, raw_image):
+        '''cv2.undistort chiama il metodo initUndistortRectifyMap ogni volta che viene chiamato,
+        spendendo così del tempo a creare ogni volta le mappe. undistortFaster tiene salvate le mappe della
+        prima chiamata e applica poi il remap  '''
         if self.start:
             h, w = raw_image.shape[:2]
             self.mapx, self.mapy =  cv2.initUndistortRectifyMap(self.cam_matrix, self.dist_coeff,None, self.cam_matrix,(w,h),5)

@@ -41,7 +41,7 @@ class LineDetectorPipeline:
 
         self.cf = ColorFinder()
         self.colorCheems = [255, 193, 0]
-        self.radius = 50
+        self.radius = 110
 
     def lineDetector(self, image):
         lane_image = np.copy(image)
@@ -87,16 +87,21 @@ class LineDetectorPipeline:
 
         return middlePoint, curve
 
-    def lineDetector3(self, image, stripsN = 10, display = False):
-        lane_image = np.copy(image)
-        lane_image = cv2.cvtColor(lane_image, cv2.COLOR_BGR2RGB)
+    def lineDetector3(self, image, display = False):
+        #copio le immagini per evitare di modificare l'orginale
+        lane_image1 = np.copy(image)
+        lane_image2 = np.copy(image)
 
-        self.cf.newImage(lane_image)
+        ########################### riconoscimento Cheems##########################
+        lane_image1 = cv2.cvtColor(lane_image1, cv2.COLOR_BGR2RGB)
+
+        self.cf.newImage(lane_image1)
         self.cf.changeValues(self.colorCheems, self.radius)
 
         bool_Md = self.cf.distInRange()
 
-        stripLength = math.ceil(bool_Md.shape[1] / stripsN)
+        #codice in probabile disuso
+        '''stripLength = math.ceil(bool_Md.shape[1] / stripsN)
 
         sones = [] #SO NE s
 
@@ -104,14 +109,49 @@ class LineDetectorPipeline:
             customImage = bool_Md[:,i*stripLength:(i+1)*stripLength]
             [SO, NE] = self.cf.defineRectangularContourCustom(customImage)
             if SO is not None and NE is not None:
-                sones.append([(SO[0]+i*stripLength,SO[1]), (NE[0]+i*stripLength,NE[1])])
-        
-        if display:
-            for sone in sones:
-                image = cv2.rectangle(image, sone[0], sone[1], (255, 0, 0), 2)
-            cv2.imshow("CheemsRec", image)
+                sones.append([(SO[0]+i*stripLength,SO[1]), (NE[0]+i*stripLength,NE[1])])'''
 
-        return sones
+        kernel = np.ones((5,5), np.uint8)
+        mg_erode = cv2.erode(bool_Md, kernel, iterations=1)
+        #cv2.imshow("erode", mg_erode)
+        mg_dilation = cv2.dilate(mg_erode, kernel, iterations=1)
+        #cv2.imshow("postED", mg_dilation)
+        im2, contours, hierarchy = cv2.findContours(mg_dilation, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        areas = []
+        for contour in contours:
+            area = cv2.contourArea(contour)
+            areas.append(area)
+        '''una certa area attiverà la risposta freno del robot'''
+        ######################### calcolo centro lineee ############################
+        numberCurve = 10 # numero massimo di dati curvatura storati
+
+        frameHSV = cv2.cvtColor(lane_image2, cv2.COLOR_BGR2HSV)
+        frameHSV = cv2.inRange(frameHSV,self.lower_white, self.upper_white)
+        filtered = self.lanefilter.roiToHeight(frameHSV,150)
+
+        #calcola la somma dei punti delle colonne dell'immagine e ne calcola 
+        #la media pesata. 
+        middlePoint = self.birdview.getHistogram(filtered,6, minPer=0.2)  
+        curveAveragePoint = self.birdview.getHistogram(filtered,1, minPer=0.5)
+        curveRaw = curveAveragePoint - middlePoint
+
+        if display:
+            cv2.circle(image, (middlePoint, image.shape[0]),20,(0,255,255), cv2.FILLED)
+            cv2.putText(image, str(curveRaw), (image.shape[1]//2-80,85), cv2.FONT_HERSHEY_COMPLEX,2,(255,0,255),3)
+            cv2.line(image, (middlePoint, image.shape[0]), (curveAveragePoint, image.shape[0]//3*2), (255,0,255),4)
+            #for sone in sones:
+                #image = cv2.rectangle(image, sone[0], sone[1], (255, 0, 0), 2)
+            cv2.drawContours(image, contours, -1, (0,255,0), 3)
+            cv2.imshow("CheemsRec", image)
+        
+        self.curveList.append(curveRaw)
+        if len(self.curveList)>numberCurve:
+            self.curveList.pop(0)
+        curve = int(sum(self.curveList)/len(self.curveList))
+
+        print(areas)
+        #return sones, middlePoint, curve
+        return areas, middlePoint, curve
 
     def viewAll(self, image):
         lane_image = np.copy(image)
@@ -146,21 +186,16 @@ if __name__ == '__main__':
     while white_flag:
         image = vs.read()
         start = time.time()
-        #res = detector.viewAll( image)
         # center, curve = detector.lineDetector2(image,display= True)
         # print("centro della strada: ", center)
         # print("curvature: ", curve)
         # end = time.time()
         # print("the time is: ",end-start )
-        #cv2.imshow("frame", res['combo'])
-        #cv2.imshow("frame", image)
-        #cv2.imshow("roi", res['roi'])
-        #cv2.imshow("skyview", res['skyview'])
-        #plt.imshow(res['roi'])
-        #plt.imshow(res['skyview'])
-        #plt.show()
-
-        sones = detector.lineDetector3(image, display = True)
+        sones, center, curve = detector.lineDetector3(image, display = True)
+        print("centro della strada: ", center)
+        print("curvature: ", curve)
+        end = time.time()
+        print("the time is: ", end-start) 
         key = cv2.waitKey(1) & 0xFF
         if key == 27:         #ESC
             white_flag = False
