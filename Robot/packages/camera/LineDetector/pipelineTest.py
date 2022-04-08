@@ -41,7 +41,7 @@ class LineDetectorPipeline:
 
         self.cf = ColorFinder()
         self.colorCheems = [255, 193, 0]
-        self.radius = 110
+        self.radius = 50
 
     def lineDetector(self, image):
         lane_image = np.copy(image)
@@ -128,7 +128,11 @@ class LineDetectorPipeline:
         frameHSV = cv2.cvtColor(lane_image2, cv2.COLOR_BGR2HSV)
         frameHSV = cv2.inRange(frameHSV,self.lower_white, self.upper_white)
         filtered = self.lanefilter.roiToHeight(frameHSV,150)
-
+        #cv2.imshow("filtered", filtered)
+        #line_erode = cv2.erode(filtered, kernel, iterations=1)
+        #cv2.imshow("erode", line_erode)
+        #line_dilation = cv2.dilate(line_erode, kernel, iterations=1)
+        #cv2.imshow("roi", line_dilation)
         #calcola la somma dei punti delle colonne dell'immagine e ne calcola 
         #la media pesata. 
         middlePoint = self.birdview.getHistogram(filtered,6, minPer=0.2)  
@@ -136,6 +140,7 @@ class LineDetectorPipeline:
         curveRaw = curveAveragePoint - middlePoint
 
         if display:
+            print("display = True")
             cv2.circle(image, (middlePoint, image.shape[0]),20,(0,255,255), cv2.FILLED)
             cv2.putText(image, str(curveRaw), (image.shape[1]//2-80,85), cv2.FONT_HERSHEY_COMPLEX,2,(255,0,255),3)
             cv2.line(image, (middlePoint, image.shape[0]), (curveAveragePoint, image.shape[0]//3*2), (255,0,255),4)

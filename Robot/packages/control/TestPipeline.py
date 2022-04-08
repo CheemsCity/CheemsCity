@@ -53,10 +53,11 @@ pipeline = LineDetectorPipeline()
 
 while True:
     image = vs.read()
-    areas, basePoint, curve = pipeline.lineDetector3(image)
+    areas, basePoint, curve = pipeline.lineDetector3(image, display = True)
     curve = curve//3
+    curve = int(15*curve//70)
     sen = 1.3
-    maxControl = 15
+    maxControl = 20
     basepower = 60
     thresh = 2000
     
