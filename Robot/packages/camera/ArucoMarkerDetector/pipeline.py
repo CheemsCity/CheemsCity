@@ -23,6 +23,7 @@ class ArucoDetectorPipeline():
         corner = self.detector.frameDetector(self.image)
         #calcolo il vettore distanza dalla camera e la rotazione rispetto ad essa per ogni aruco marker
         rvec, tvec, _ = self.detector.estimatePoseMarkers()
+        #distanza dal marker numero 0 è pari a tvec[0][0][2] nella stessa unità di misura del aruco_markerLength in aruco_settings.yaml
         #stampo sull'immagine i rettangoli intorno ai marker
         self.image = self.detector.drawDetectedMarkers(self.image)
         #stampo sull'immagine gli assi centrati

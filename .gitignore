@@ -3,3 +3,4 @@
 __pycache__/*
 Robot/packages/__pycache__/*
 */__pychache__/*
+*.pyc

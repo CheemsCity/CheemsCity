@@ -37,6 +37,8 @@ class ArucoDetector:
         if(self.arucoDictionary == 'ERROR'):
             print('Dizionario definito nell aruco_settings non esistente (DEFAULT: DICT_6X6_50)\n')
             self.arucoDictionary = cv2.aruco.DICT_6X6_50
+        #prendo la lista dei cartelli stradali con equivalente codice aruco
+        self.streetSign = self.settings['aruco_streetSign']
         #prendo il dizionario dei simboli aruco definitivi nelle settings
         self.dict = cv2.aruco.Dictionary_get(self.arucoDictionary)
         #qua posso definire paramtri personalizzati, per ora vanno bene quelli standard
@@ -62,6 +64,13 @@ class ArucoDetector:
         try:
             #funzione presente in cv2 per il riconoscimento degli aruco markers
             (self.corners, self.ids, self.rejected) = cv2.aruco.detectMarkers(image, self.dict, parameters=self.params)
+            for id in self.ids:
+                try:
+                    descr_cartello = self.streetSign[id[0]][1]
+                    print(descr_cartello)
+                    print("Trovato l'id {0} che equivale al cartello {1}\n".format(id[0], descr_cartello))
+                except:
+                    print("L'id {0} trovato non equivale a nessun cartello a DB\n".format(id[0]))
             print("[INFO] Trovati {:d} aruco\n".format(len(self.ids)))
         except:
             print("[ERRORE] Impossibile riconoscere i markers\n")
