@@ -38,17 +38,31 @@ class StreetLight:
         self.SO, self.NE = self.inBorder([xMin, max(ys)], [xMax, min(ys)]) #correggo in caso con i conti sono finito "fuori dai bordi"
         return self.SO, self.NE #torno le coordinate del SO e NE del futuro rettangolo di roi
 
-    def color(self): #TODO NON TROVA I COLORI CORRETTI, DA SISTEMARE
+    def color(self): #ERA GIUSTO CONTROLLARE SEMPRE CON CHE FORMATO DI COLORE è CARICATA L'IMMAGINE
         #prima provo a cercare il rosso RGB(255,0,0) con raggio 50 => da RGB(205,0,0) a RGB(255,0,0)
         #come immagine prendo la roi calcolata sopra, RICORDARE: y viene prima della x
         finder = ColorFinder(image = self.image[self.NE[1]:self.SO[1], self.SO[0]:self.NE[0]], color = (255,0,0), radius = 50)
-        redMask = finder.distInRange()
+        self.redMask = finder.distInRange()
         #cerco per il giallo RGB(255,255,0) metto raggio 60 perché il led gialli perdono tanta luminosità con piccoli sbalzi di corrente
         finder.changeValues(colorNew = (255,255,0), radiusNew = 60)
-        yellowMask = finder.distInRange()
+        self.yellowMask = finder.distInRange()
         #cerco per il verde RGB(0,255,0) metto raggio 50 => da RGB(0,205,0) a RGB(0,255,0)
         finder.changeValues(colorNew = (0,255,0), radiusNew = 50)
-        greenMask = finder.distInRange()
-        return redMask, yellowMask, greenMask
+        self.greenMask = finder.distInRange()
+        return self.redMask, self.yellowMask, self.greenMask
+
+    def lightColor(self):
+        #calcolo quanti pixel occupa un ogni colore così da trovare il colore predominante che ritengo essere il colore del semaforo
+        #nota che l'algoritmo viene chiamato solo qundo c'è il cartello del semaforo
+        self.r_num = np.count_nonzero(self.redMask)
+        self.y_num = np.count_nonzero(self.yellowMask)
+        self.g_num = np.count_nonzero(self.greenMask)
+        max_num = max([self.r_num, self.y_num, self.g_num])
+        if max_num == self.r_num:
+            return 'r'
+        elif max_num == self.y_num:
+            return 'y'
+        else: #non metto un'altra conferma perché un massimo esiste per forza
+            return 'g'
 
 
