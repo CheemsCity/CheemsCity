@@ -14,7 +14,10 @@ class LaneFilter:
         self.width = self.settings['res_w']
         
     def toCanny(self,img):
-        gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+        try:
+            gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+        except:
+            gray = img
         blur = cv2.GaussianBlur(gray, (5,5),0)
         canny = cv2.Canny(blur, 70, 170)
         return canny
@@ -61,6 +64,8 @@ class LaneFilter:
         cv2.fillPoly(mask, trapezio, 255)
         masked_image = cv2.bitwise_and(img, mask)
         return masked_image
+
+
 
 
 

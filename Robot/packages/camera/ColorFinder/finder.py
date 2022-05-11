@@ -3,14 +3,53 @@ import numpy as np
 import math
 
 class ColorFinder():
-    def __init__(self, image, color, radius):
+    def __init__(self, image = None, color = None, radius = None):
         self.or_image = image #copia dell'immagine originale per bu
         self.image = self.or_image #immagine su cui lavoro
         self.color = color #colore da cercare
         self.raggio = radius #"raggio" di'incertezza, per info vedasi documentazione
+        if self.image is not None:
+            self.width = self.image.shape[0] #larghezza immagine
+            self.height = self.image.shape[1] #altezza immagine
+        self.risk_coeff = 0.1 #coefficiente di rischio per tenere la distanza dall'oggetto trovato
+
+    def changeValues(self, colorNew = None, radiusNew = None, riskCoeffNew = 0.1):
+        if colorNew is not None:
+            self.color = colorNew
+        if radiusNew is not None:
+            self.raggio = radiusNew
+        self.risk_coeff = riskCoeffNew
+    
+    def newImage(self, imageNew):
+        self.image = imageNew
+        self.or_image = self.image
         self.width = self.image.shape[0] #larghezza immagine
         self.height = self.image.shape[1] #altezza immagine
-        self.risk_coeff = 0.1 #coefficiente di rischio per tenere la distanza dall'oggetto trovato
+
+    def distInRange(self, display = False):
+        #creo i due vettori di minimo e massimo per il range in cui cercare i colori
+        #vengono creati sottraendo o aggiungendo al colore cercato il raggio d'errore
+        self.lower = np.array([])
+        for i in range(3):
+            if self.color[i]-self.raggio < 0:
+                self.lower = np.append(self.lower,0)
+            else:
+                self.lower = np.append(self.lower, self.color[i]-self.raggio)
+        self.upper = np.array([])
+        for i in range(3):
+            if self.color[i]+self.raggio > 255:
+                self.upper = np.append(self.upper, 255)
+            else:
+                self.upper = np.append(self.upper, self.color[i]+self.raggio)
+
+        self.bool_Md = cv2.inRange(self.image, self.lower, self.upper)
+
+        #print([self.lower, self.upper])
+        if display:
+            cv2.imshow("c", self.bool_Md)
+        return self.bool_Md
+
+    ##########################################################################################################################
 
     def mat_diff(self):
         Mcolor = np.ones((self.width,self.height,3))
@@ -87,6 +126,38 @@ class ColorFinder():
         #inflaziono il rettangolo aumentando i massimi del coefficiente di rischio
         #e diminuendo i minimi dello sesso coefficiente
 
+        #ridimensiono i punti all'interno dell'immagine
+        if self.SO[0] < 0:
+            self.SO[0] = 0
+        if self.SO[1] > self.height:
+            self.SO[1] = self.height
+        if self.NE[0] > self.width:
+            self.NE[0] = self.width
+        if self.NE[1] < 0:
+            self.NE[1] = 0
+        
+        return[self.SO, self.NE]
+
+    def defineRectangularContourCustom(self, customImage):
+        try:
+            self.SO = (math.ceil(min(np.nonzero(customImage)[1])*(1-self.risk_coeff)),math.ceil(max(np.nonzero(customImage)[0])*(1+self.risk_coeff)))
+            self.NE = (math.ceil(max(np.nonzero(customImage)[1])*(1+self.risk_coeff)),math.ceil(min(np.nonzero(customImage)[0])*(1-self.risk_coeff)))
+        except:
+            return [None, None]
+        #prendo i 2 punti che costruiscono il rettangolo più grande che contiene l'oggetto
+        #inflaziono il rettangolo aumentando i massimi del coefficiente di rischio
+        #e diminuendo i minimi dello sesso coefficiente
+
+        #ridimensiono i punti all'interno dell'immagine
+        if self.SO[0] < 0:
+            self.SO[0] = 0
+        if self.SO[1] > self.height:
+            self.SO[1] = self.height
+        if self.NE[0] > self.width:
+            self.NE[0] = self.width
+        if self.NE[1] < 0:
+            self.NE[1] = 0
+        
         return[self.SO, self.NE]
 
     def rectangleOnOriginalImage(self):

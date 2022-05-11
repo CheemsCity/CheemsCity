@@ -14,11 +14,23 @@ class BirdView:
         
         self.sky_matrix = cv2.getPerspectiveTransform(self.view_points, self.sky_points)
         self.inv_sky_matrix = cv2.getPerspectiveTransform( self.sky_points, self.view_points)
-        
+        self.start= True
+        self.mapx, self.mapy = None, None
+
     def undistort(self, raw_image):
      
         image = cv2.undistort(raw_image, self.cam_matrix, self.dist_coeff, None, self.cam_matrix)
-        return image 
+        return image
+    
+    def undistortFaster(self, raw_image):
+        '''cv2.undistort chiama il metodo initUndistortRectifyMap ogni volta che viene chiamato,
+        spendendo così del tempo a creare ogni volta le mappe. undistortFaster tiene salvate le mappe della
+        prima chiamata e applica poi il remap  '''
+        if self.start:
+            h, w = raw_image.shape[:2]
+            self.mapx, self.mapy =  cv2.initUndistortRectifyMap(self.cam_matrix, self.dist_coeff,None, self.cam_matrix,(w,h),5)
+            self.start = False
+        return cv2.remap(raw_image, self.mapx, self.mapy, cv2.INTER_LINEAR)
 
     def sky_view(self, ground_image):
 
@@ -80,6 +92,29 @@ class BirdView:
         except:
             return image
 
+    def getHistogram(self, binary, region, minPer=0.1, display = False):
+
+        histValues = np.sum(binary[-binary.shape[0]//region:,:], axis=0)
+        maxValue = np.max(histValues)
+        minValue = minPer*maxValue
+        
+        indexArray = np.where(histValues >= minValue)
+        basePoint = int(np.average(indexArray))
+
+        if display:
+            imgHist = np.zeros((binary.shape[0],binary.shape[1],3),np.uint8)
+            for x,intensity in enumerate(histValues):
+                cv2.line(imgHist,(x,binary.shape[0]),(x,binary.shape[0]-intensity//255//region),(255,0,255),1)
+                cv2.circle(imgHist,(basePoint,binary.shape[0]),20,(0,255,255),cv2.FILLED)
+                cv2.imshow("Display Histogram", imgHist)
+
+        return basePoint
+        
+    def LaneCurvatureP(self, image, binary):
+        return
+        
+
+
     def HoughCenter(self, binary, x:int):
         '''funzione che restituisce la coordinata y (width)
         del centro della strada ad una data altezza x
@@ -112,8 +147,11 @@ class BirdView:
             yL = slopeLeft*x + yLeft
             yR = slopeRight*x + yRight
             return (yL - yR)
+        except:
+            return None
+
         
-    def Visual(self, image, ImgBinary, left_fit, right_fit, color = (0, 255, 0), debug = False):
+    def Visual(self, image, ImgBinary, left_fit, right_fit, color = (0, 255, 0),debug = False):
         z = np.zeros_like(ImgBinary)
         filtered = np.dstack((z,z,z))
         

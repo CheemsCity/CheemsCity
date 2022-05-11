@@ -1,7 +1,7 @@
 camera_calibration_canvasResolution: 640x480
 camera_calibration_chessboardX: 7
-camera_calibration_chessboardY: 7
-camera_calibration_squareSize: 0.039
+camera_calibration_chessboardY: 9
+camera_calibration_squareSize: 0.018
 camera_calibration_resizeImage: !!python/tuple
   - 711
   - 400

@@ -29,6 +29,7 @@ class ChessboardApp:
         self.cod = False
         #self.ctrl serve per attivare il delay dopo un'immagine buona in modo che l'utente capisca che è stata presa
         self.ctrl = False
+        self.nThresh = 5 #min number of cheesboard's data to create the matrix
         
         
         #create the main window of an application
@@ -53,9 +54,9 @@ class ChessboardApp:
             #self.btn.pack(side = 'bottom', fill="both", expand = "yes", padx=10, pady =10)
         
        # else:
-        self.btn = tk.Button(self.root, text = "SAVE", command = None)
+        self.btn = tk.Button(self.root, text = "SAVE", command = self.SaveMatrix,  state = 'disabled')
         self.btn.pack(side = 'bottom', fill="both", expand = "yes", padx=10, pady =10)
-        
+
         #thread che poolla i frame dalla camera
         self.endEvent= threading.Event()
         self.thread = threading.Thread(target=self.videoLoop, args=())
@@ -75,20 +76,21 @@ class ChessboardApp:
                 self.frame = self.vs.read()
                 
                 #analize image for chessboard
-                if self.n < 40:
+                if self.n < self.nThresh:
                     #attiva l'analisi delle foto finchè necessario
                     chessboard = Chessboard(nx = self.settings['camera_calibration_chessboardX'], ny = self.settings['camera_calibration_chessboardY'],frame = self.frame, square_size = self.settings['camera_calibration_squareSize']) #metri
-                    print(vars(chessboard))
                     if chessboard.ret == True:
                         self.ctrl = True
                         self.chessboards.append(chessboard)
                         self.n += 1
-                        self.pbar['value']=(self.n * 100)/40
+                        self.pbar['value']=(self.n * 100)/self.nThresh
                         cv2.drawChessboardCorners(self.frame, (8, 8), chessboard.imgpoints, chessboard.ret)
                         print(self.n)
 
-                if (self.n==40 and  self.cod ==False):
-                    self.btn.configure(command = self.SaveMatrix, bg = "#07e041")
+                if (self.n==self.nThresh and  self.cod ==False):
+                    #self.btn.configure(command = self.SaveMatrix, bg = "#07e041")
+                    self.btn['bg'] = "#07e041"
+                    self.btn['state'] = 'normal'
                     self.cod = True
                     
                 #opencv represents image in BGR, we need to convert i RGB
@@ -117,7 +119,8 @@ class ChessboardApp:
     
             
     def SaveMatrix(self):
-        
+
+        print("[INFO] starting the calculation for the matrix, wait 30s...")
         objpoints = []
         imgpoints = []
         h, w = self.frame.shape[:2]
@@ -126,13 +129,13 @@ class ChessboardApp:
             imgpoints.append(chessboard.imgpoints)
             
         ret, matrix, distortion_coef, rv, tv = cv2.calibrateCamera(objpoints, imgpoints, (w,h), None, None)
-        
+        print("[INFO] starting the file's creation")
         calibration_data = {
             "camera_matrix": matrix, 
             "distortion_coefficient": distortion_coef
         }
         
-        with open('../FinalCalibration.yml', 'w') as outfile:
+        with open('../prova.yml', 'w') as outfile:
             yaml.dump(calibration_data, outfile, default_flow_style=False)
         
         print("[INFO] saved FinalCalibration.yml")
@@ -143,8 +146,11 @@ class ChessboardApp:
         # the quit process to continue
         print("[INFO] closing...")
         self.endEvent.set()
+        print("[DEBUG] endEvent")
         self.vs.stop()
+        print("[DEBUG] end vs")
         self.root.quit()
+        print("[DEBUG] end root")
 
     def update_label(self):
         return f"Foto acquisite: {self.n}"
