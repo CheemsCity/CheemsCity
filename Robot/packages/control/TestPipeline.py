@@ -42,11 +42,14 @@ dest_points = data['dest']
 birdview = BirdView(source_points, dest_points, matrix, dist_coef)
 curve = curves(9, 20, 50)
 
-print("prova 1, pre definizione del PID")
+# valore di base della velocità
 basePower = 50
+#inizializzazione della classe PID
 pid = PID(0,0,0)
 print("definizione del PID")
 pid.tune(0.04,0.04, 0.008)
+#inizializzazione classe motore con il relativo errore di differenza
+#potenza in uscita dei motori
 motor = Motor(left_trim=-6)
 
 pipeline = LineDetectorPipeline()
@@ -57,8 +60,10 @@ while True:
     curve = curve//3
     curve = int(15*curve//70)
     sen = 1.3
+    #massimo valore da aggiungere o sottrarre al basePower
     maxControl = 20
     basepower = 60
+    #threshold di attivazione stop per cheems
     thresh = 2000
     
     #prima condizione: presenza cheemsVicini = stop
@@ -69,6 +74,7 @@ while True:
             break
             
     #seconda parte: riconoscimento linee e direzione strada
+    #impostiamo un valore soglia
     if curve > maxControl: curve = maxControl
     if curve < -maxControl: curve = - maxControl
     print(curve)
