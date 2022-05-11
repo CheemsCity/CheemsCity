@@ -1,0 +1,19 @@
+{% load static %}
+<link href = "{% static 'CSS/style.css' %}" rel="stylesheet" type="text/css">
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Camera Calibration</title>
+    </head>
+    <body>
+        <div id="camera-box">
+            <div id="camera">
+                <!-- metto la vista dello streaming video -->
+                <img src="{% url 'camera_stream' %}?filter={{filter}}">
+            </div>
+        </div>
+        <div id ="button">
+            <button id = "save" class = "cyberpunk">SAVE</button>
+        </div>
+    </body>
+</html>
