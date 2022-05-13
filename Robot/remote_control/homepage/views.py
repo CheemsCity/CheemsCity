@@ -64,3 +64,7 @@ def camera_stream(request):
 	if request.method == 'GET':
 		filter = request.GET['filter']
 	return StreamingHttpResponse(stream(cam,filter),content_type='multipart/x-mixed-replace; boundary=frame') #streaming del frame generato con stream()
+
+def camera_calibration(request): #vista della calibrazione della camera
+	filter = 'clear'
+	return render(request,'cameraCal.html', {'filter': filter})
