@@ -19,5 +19,6 @@ from homepage import views
 urlpatterns = [
     path('', views.index, name="Homepage"), #lui è il template html della homepge
     path('camera_stream', views.camera_stream, name="camera_stream"), #lui è la vista che gestisce il box di streaming video
-    path('camera_calibration',views.camera_calibration, name="camera_calibration")
+    path('camera_calibration',views.camera_calibration, name="camera_calibration"),
+    path('CameraCalibration',views.CameraCalibration, name="CameraCalibration"),
 ]

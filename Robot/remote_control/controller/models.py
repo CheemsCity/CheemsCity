@@ -25,3 +25,7 @@ class Camera(models.Model):
     def frameArucoDetector(self):
         f = self.cam.frameArucoDetector()
         return f
+    
+    def frameCameraCalibration(self):
+        f, chessboard = self.cam.frameCameraCalibration()
+        return f, chessboard

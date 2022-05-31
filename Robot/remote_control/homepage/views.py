@@ -3,11 +3,27 @@ from django.shortcuts import render
 from django.http.response import StreamingHttpResponse
 from controller.models import Camera
 from hardware.Motor import Motor
+from pkg_resources import resource_string
+import yaml
+import numpy as np
 
 cam = Camera() #oggetto per la camera (stream + filtri)
+'''---------------------------------------------------------------------
+	                variabili controllo motori
+					--------------------------
+'''
 mot = Motor(left_trim=-6) #oggetto per comunicazione seriale con i motori
 mot_status = 0 #NON ANCORA IN USO mi dà un'indicazione del verso di movimento della camera
 speed = 50 #velocità standard
+'''---------------------------------------------------------------------
+	                variabili camera calibration
+					--------------------------
+'''
+thresh = 40
+numphoto = 0
+file = resource_string('camera.CameraCalibration','camera_calibration_settings.yaml')
+settings = yaml.full_load(file)
+chessboards = []
 
 def index(request):
 	global mot_status, speed
@@ -57,7 +73,18 @@ def stream(camera, filter):
 		elif filter == 'aruco':
 			frame = camera.frameArucoDetector()
 		yield (b'--frame\r\n'
-				b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n') #si fa uno yield perché devo creare uno streming che verrà vito una volta sola
+				b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n') #si fa uno yield perché devo creare uno streming che verrà visto una volta sola
+
+def camera_cal_stream(camera):
+	global numphoto, chessboards
+	while True:
+		frame, chessboard = camera.frameCameraCalibration()
+		if chessboard is not None:
+			chessboards.append(chessboard)
+			numphoto += 1
+		print(np.size(frame))
+		yield (b'--frame\r\n'
+				b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n') #si fa uno yield perché devo creare uno streming che verrà visto una volta sola
 
 def camera_stream(request):
 	filter = 'clear'
@@ -66,5 +93,7 @@ def camera_stream(request):
 	return StreamingHttpResponse(stream(cam,filter),content_type='multipart/x-mixed-replace; boundary=frame') #streaming del frame generato con stream()
 
 def camera_calibration(request): #vista della calibrazione della camera
-	filter = 'clear'
-	return render(request,'cameraCal.html', {'filter': filter})
+	return StreamingHttpResponse(camera_cal_stream(cam),content_type='multipart/x-mixed-replace; boundary=frame') #streaming del frame generato con camera_cal_stream()
+
+def CameraCalibration(request):
+	return render(request, 'cameraCal.html')
