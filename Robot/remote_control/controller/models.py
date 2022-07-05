@@ -27,5 +27,5 @@ class Camera(models.Model):
         return f
     
     def frameCameraCalibration(self):
-        f, chessboard = self.cam.frameCameraCalibration()
-        return f, chessboard
+        f, chessboard, h ,w = self.cam.frameCameraCalibration()
+        return f, chessboard, h, w

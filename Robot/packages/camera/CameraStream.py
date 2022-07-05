@@ -8,6 +8,7 @@ from pkg_resources import resource_string
 import base64
 from camera.LineDetector.pipeline import LineDetectorPipeline
 from camera.ArucoMarkerDetector.pipeline import ArucoDetectorPipeline
+from camera.CameraCalibration.chessboard import Chessboard
 
 
 #distributing the frame gathering to a separate thread will definitely improve performance
@@ -33,7 +34,11 @@ class CameraStream:
         
         #variable to stop the thread
         self.stopped = False
-    
+
+        '''------------------- CAMERA CALIBRATION ----------------------'''
+        file  = resource_string('camera.CameraCalibration', 'camera_calibration_settings.yaml')
+        self.calSettings = yaml.full_load(file)
+
     def start(self):
         #start il thread che legge i frame dai video
         Thread(target=self.update, args =()).start()
@@ -80,3 +85,19 @@ class CameraStream:
         detector = ArucoDetectorPipeline()
         ret, self.frame_buff = cv2.imencode('.jpg', detector.arucoDetector(self.frame)) #posso anche mettere png, ma allora devo aggiornare anche homepage.html
         return self.frame_buff.tobytes()
+    
+    def frameCameraCalibration(self):
+        #creo l'oggetto chessboard
+        chessboard = Chessboard(nx = self.calSettings['camera_calibration_chessboardX'], ny = self.calSettings['camera_calibration_chessboardY'],frame = self.frame, square_size = self.calSettings['camera_calibration_squareSize']) #metri
+        #disegno la chessboard solo se è stata rilevata
+        if chessboard.ret == True:
+            cv2.drawChessboardCorners(self.frame, (8, 8), chessboard.imgpoints, chessboard.ret)
+            ret, self.frame_buff = cv2.imencode('.jpg', self.frame) #posso anche mettere png, ma allora devo aggiornare anche homepage.html
+            print("return chessboard")
+            h, w = self.frame.shape[:2]
+            return self.frame_buff.tobytes(), chessboard, h, w
+        else:
+            ret, self.frame_buff = cv2.imencode('.jpg', self.frame)
+            print("return only image")
+            h, w = self.frame.shape[:2]
+            return self.frame_buff.tobytes(), None, h ,w

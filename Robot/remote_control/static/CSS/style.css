@@ -156,6 +156,12 @@ button.cyberpunk{
   outline: none;
 }
 
+button.cyberpunk.disabled{
+  --background-color: #6e6e6e !important;
+  color: rgb(0, 0, 0) !important;
+
+}
+
 button.cyberpunk:hover,
 button.cyberpunk:focus {
   animation-name: bGlitched;

@@ -4,7 +4,7 @@ import serial, time
 class SerialCommunication:
     def __init__(self):
         self.portName = "/dev/ttyACM0"
-        self.baud = 57600
+        self.baud = 115200
         self.arduino = serial.Serial(self.portName, self.baud, timeout=1)
         time.sleep(0.1)
         if self.arduino.isOpen():

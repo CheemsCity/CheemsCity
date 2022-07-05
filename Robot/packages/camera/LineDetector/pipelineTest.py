@@ -41,6 +41,8 @@ class LineDetectorPipeline:
 
         self.cf = ColorFinder()
         self.colorCheems = [255, 193, 0]
+        self.upperCheems = np.array([179,255,255])
+        self.lowerCheems = np.array([0,95,180])
         self.radius = 50
 
     def lineDetector(self, image):
@@ -93,12 +95,15 @@ class LineDetectorPipeline:
         lane_image2 = np.copy(image)
 
         ########################### riconoscimento Cheems##########################
-        lane_image1 = cv2.cvtColor(lane_image1, cv2.COLOR_BGR2RGB)
+        #lane_image1 = cv2.cvtColor(lane_image1, cv2.COLOR_BGR2RGB)
 
-        self.cf.newImage(lane_image1)
-        self.cf.changeValues(self.colorCheems, self.radius)
+        #self.cf.newImage(lane_image1)
+        #self.cf.changeValues(self.colorCheems, self.radius)
 
-        bool_Md = self.cf.distInRange()
+        #bool_Md = self.cf.distInRange()
+        lane_image1 = cv2.cvtColor(lane_image1, cv2.COLOR_BGR2HSV)
+        bool_Md = cv2.inRange(lane_image1, self.lowerCheems, self.upperCheems)
+
 
         #codice in probabile disuso
         '''stripLength = math.ceil(bool_Md.shape[1] / stripsN)
@@ -156,7 +161,12 @@ class LineDetectorPipeline:
 
         print(areas)
         #return sones, middlePoint, curve
-        return areas, middlePoint, curve
+        if len(areas) == 0:
+            areaMax = 0
+        else:
+            areaMax = np.max(areas)
+
+        return areaMax, middlePoint, curve
 
     def viewAll(self, image):
         lane_image = np.copy(image)
@@ -200,7 +210,8 @@ if __name__ == '__main__':
         print("centro della strada: ", center)
         print("curvature: ", curve)
         end = time.time()
-        print("the time is: ", end-start) 
+        print("the time is: ", end-start)
+        print( "area is : ", sones)
         key = cv2.waitKey(1) & 0xFF
         if key == 27:         #ESC
             white_flag = False

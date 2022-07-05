@@ -1,5 +1,6 @@
 from utils.SerialCommunication import SerialCommunication
 import time
+import math
 
 class Motor:
     '''ITA: classe che rappresenta una combinazione di 2 motori appartenenti al robot,
@@ -46,7 +47,8 @@ class Motor:
             elif motor=='r':
                 speed = power + self._right_trim
             else:
-                speed = power + self._left_trim
+                speed = (abs(power) + self._left_trim)
+                speed = math.copysign(speed, (-1)*power)
             speed = max(-100, min(100, speed))
             print("velocità impostata ")
             print(speed)

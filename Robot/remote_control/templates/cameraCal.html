@@ -13,7 +13,15 @@
             </div>
         </div>
         <div id ="button">
-            <button id = "save" class = "cyberpunk">SAVE</button>
+            <button id = "save" class = "cyberpunk disabled"  disabled="disabled">SAVE</button>
+            <script type="text/javascript">
+                document.getElementById("save").onclick = function () {
+                  var protocol  = window.location.protocol;
+                  var host      = window.location.host;
+                  var pathname  = window.location.pathname;
+                  location.href = protocol + "//" + host + pathname + "?save";
+                };
+              </script>
         </div>
     </body>
 </html>
