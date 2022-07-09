@@ -1,6 +1,7 @@
 from utils.SerialCommunication import SerialCommunication
 import time
 import math
+from utils.sensorReading import sensorReading
 
 class Motor:
     '''ITA: classe che rappresenta una combinazione di 2 motori appartenenti al robot,
@@ -25,6 +26,8 @@ class Motor:
         self.comm = SerialCommunication()
         self._left_trim = left_trim
         self._right_trim = right_trim
+        #self.sensoreReader = sensorReading(self.comm).start()
+
 
     def __del__(self):
         self.Stop()
@@ -112,6 +115,9 @@ class Motor:
 
     def Right(self, power):
         ret = self.Power('l', power)
+
+    def ticksValue(self):
+        print("message: ", self.sensoreReader.read())
     
     #-------------------------------------------------------------------------------
     #                   funzioni utili per il joystick a 6 frecce

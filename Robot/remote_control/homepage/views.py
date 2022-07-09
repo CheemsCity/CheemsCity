@@ -28,6 +28,8 @@ chessboards = []
 
 def index(request):
 	global mot_status, speed
+	#print("il messaggio è:")
+	#print(mot.ticksValue())
 	filter = 'clear' #parto dal senza filtri
 	if request.method == 'GET':
 		if 'filter' in request.GET:

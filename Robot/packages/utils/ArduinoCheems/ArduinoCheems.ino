@@ -37,12 +37,16 @@ int   speedMa = 0;          //Speed Motor A, Velocità motore A *ticks/s
 int   speedMb = 0;          //Speed Motor B, Velocità motore B *ticks/s
 int   tickA = 0;            //number of ticks counted for Motor A
 int   tickB = 0;            //number of ticks counted for Motor B
-long prevT = 0;
-long time = 0;
-int posPrev = 0;
-int i = 0;
-
-
+long  prevT = 0;
+long  time = 0;
+int   posPrev = 0;
+int   i = 0;
+//------------------------ Timers ----------------------------------
+//utilizziamo il timer T2 (utilizzato dalla funzione tone), 8 bit
+//questo è seguito da un prescaler per modificare il valore.
+//si può controllare il timer tramite i registri TTCR2A O TTCR2B
+//mentre il conteggio è tenuto nel registro TCNT2
+//mentre il registro TIMSK2 associa l'azione alla fine del timer.
 
 
 void setup() {
@@ -79,6 +83,7 @@ void loop() {
     msgAnal(receivedChars);
     newData = false;
   }
+  //sendData();
 }
 void updateTickB(){
   tickB = tickB + 1;
@@ -89,9 +94,11 @@ void updateTickA(){
 }
 
 void sendData() {
-  //write data
-  Serial.print(" received : ");
-  Serial.print(receivedChars);
+
+  Serial.print('<');
+  Serial.print(tickA);
+  Serial.print('>');
+  Serial.print('\n');
 }
 
 void recvWithStartEndMarkers() {

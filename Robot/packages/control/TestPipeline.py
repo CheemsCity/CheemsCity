@@ -64,12 +64,13 @@ while True:
     maxControl = 20
     basepower = 65
     #threshold di attivazione stop per cheems
-    thresh = 2000
+    thresh = 8000
     
     #prima condizione: presenza cheemsVicini = stop
     if areaMax > thresh:
         '''attiviamo la funzione di stop'''
         motor.Stop()
+        continue
             
     #seconda parte: riconoscimento linee e direzione strada
     #impostiamo un valore soglia
