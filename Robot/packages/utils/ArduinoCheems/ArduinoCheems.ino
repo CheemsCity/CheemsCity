@@ -57,10 +57,6 @@ void setup() {
   pinMode(sensorS, INPUT_PULLUP);
   pinMode(sensorD, INPUT_PULLUP);
   
-  //definiamo le funzioni per l'interrupt degli encoder
-  //define interrupts related to encoders
-  //attachInterrupt(digitalPinToInterrupt(sensorS), updateTickB, HIGH);
-  //attachInterrupt(digitalPinToInterrupt(sensorD), updateTickA, HIGH);
 
   //comincia con i driver off
   digitalWrite(MA1, LOW);
@@ -84,21 +80,6 @@ void loop() {
     newData = false;
   }
   //sendData();
-}
-void updateTickB(){
-  tickB = tickB + 1;
-}
-
-void updateTickA(){
-  tickA = tickA + 1;
-}
-
-void sendData() {
-
-  Serial.print('<');
-  Serial.print(tickA);
-  Serial.print('>');
-  Serial.print('\n');
 }
 
 void recvWithStartEndMarkers() {

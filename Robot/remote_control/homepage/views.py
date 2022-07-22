@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.http.response import StreamingHttpResponse
 from controller.models import Camera
 from hardware.Motor import Motor
+from hardware.Encoder import Encoder
 from pkg_resources import resource_string
 import yaml
 import numpy as np
@@ -15,6 +16,8 @@ cam = Camera() #oggetto per la camera (stream + filtri)
 mot = Motor(left_trim=-3) #oggetto per comunicazione seriale con i motori
 mot_status = 0 #NON ANCORA IN USO mi dà un'indicazione del verso di movimento della camera
 speed = 50 #velocità standard
+enc = Encoder()
+
 '''---------------------------------------------------------------------
 	                variabili camera calibration
 					--------------------------
