@@ -30,13 +30,23 @@ class Encoder:
         self.tickR = 0
         self.tickL = 0
 
-    def updateR(self, _):
+    def updateR(self, Eright):
         #update tick counter Right
-        self.tickR += self.tickR
+        self.tickR = self.tickR + 1
     
-    def updateL(self, _):
+    def updateL(self, Eleft):
         #update tick counter L
-        self.tickL += self.tickL
+        self.tickL = self.tickL + 1
+    
+    def ResetR(self):
+        self.tickR = 0
+
+    def ResetL(self):
+        self.tickL = 0
+    
+    def ResetEncoder(self):
+        self.tickR = 0
+        self.tickL = 0
 
     def stop(self):
         GPIO.remove_event_detect(Eright)
