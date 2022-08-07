@@ -1,3 +1,6 @@
 wheelRadius: 0.0656
 encoderResolution: 20
 wheelDistance: 0.0903
+motorConstant: 0
+leftTrim: -3
+rightTrim: 0

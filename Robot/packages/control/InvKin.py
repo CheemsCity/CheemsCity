@@ -20,11 +20,13 @@ class InvKin:
         self.wheelRadius = settings['wheelRadius']
         self.encoderResolution = settings['encoderResolution']
         self.wheelDistance = settings['wheelDistance']
+        self.k = settings['motorConstant']
+        self.left_trim = settings['leftTrim']
+        self.right_trim = settings['rightTrim']
 
         #initialize Motor object
         #definiamo l'oggetto motor
-        self.mot = Motor(left_trim=-3) #oggetto per comunicazione seriale con i motori
-
+        self.mot = Motor(right_trim = self.rightTrim, left_trim=self.left_trim) #oggetto per comunicazione seriale con i motori
         self.enc = Encoder()
 
     def MoveUpDistance(self, meters, speed):
@@ -44,6 +46,21 @@ class InvKin:
     
     def Stop(self):
         self.mot.Stop()
+
+    def InverseKinematics(v, w):
+        #assumiamo costante dei motori uguale per destro e sinistro
+        #we assume the motor constant k for both motors
+        k_r = k_l = self.k
+
+        #inverse kinematics 1 (from v and w to single motor rotation)
+        w_r = (v + 0.5*self.wheelDistance*w) / self.wheelRadius
+        w_r = (v - 0.5*self.wheelDistance*w) / self.wheelRadius
+        
+        #inverse kinematics 2 (from rad/s to duty cicle)
+        u_r = w_r / k_r
+        u_l = w_l / k_l
+        
+        return max(min(u_r, 255),0) , max(min(u_l, 255),0)
 
 if __name__ == '__main__':
     commands = InvKin()
