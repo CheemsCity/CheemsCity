@@ -31,10 +31,19 @@ class BirdView:
             self.mapx, self.mapy =  cv2.initUndistortRectifyMap(self.cam_matrix, self.dist_coeff,None, self.cam_matrix,(w,h),5)
             self.start = False
         return cv2.remap(raw_image, self.mapx, self.mapy, cv2.INTER_LINEAR)
+    
+    def skyViewPoints(self, points):
+        '''ITA: funzione che permette di calcolare le coordinate di un insieme di punti nell'immagine
+        post skyview
+        ENG: this function is used to calculate the coordinates of some points in an image after the
+        skyview transformation'''
+
+        #TO-DO
+        return skyPoints
 
     def sky_view(self, ground_image):
 
-        temp_image = self.undistort(ground_image)
+        temp_image = self.undistortFaster(ground_image)
         shape = (temp_image.shape[1], temp_image.shape[0])
         warp_image = cv2.warpPerspective(temp_image, self.sky_matrix, shape, flags = cv2.INTER_LINEAR)
         return warp_image
@@ -93,6 +102,10 @@ class BirdView:
             return image
 
     def getHistogram(self, binary, region, minPer=0.1, display = False):
+
+        '''funzione che permette la creazione di un diagramma a colonne
+        a partire da un'immagine in bianco e nero. per ogni colonna
+        dell'immagine ne viene calcolata la quantità di pixel bianchi'''
 
         histValues = np.sum(binary[-binary.shape[0]//region:,:], axis=0)
         maxValue = np.max(histValues)

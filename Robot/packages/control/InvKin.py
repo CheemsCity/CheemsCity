@@ -32,22 +32,21 @@ class InvKin:
     def MoveUpDistance(self, meters, speed):
         self.enc.ResetEncoder()
         distance = 0
-        i = 0
         while distance < meters:
-            i = i + 1
             self.mot.Avanti(speed)
             print("tickL = ", self.enc.tickL)
             print("tickR = ", self.enc.tickR)
             distance = ((self.enc.tickL + self.enc.tickR)/2)*(self.wheelRadius * np.pi / self.encoderResolution)
-            print(i)
-            if i == 148:
-                self.mot.Stop()
-                break
     
     def Stop(self):
         self.mot.Stop()
 
     def InverseKinematics(v, w):
+        '''---------INPUT------------
+            v -> velocity of the center of mass of the robot
+            w -> angular velocity of the robot
+        '''
+
         #assumiamo costante dei motori uguale per destro e sinistro
         #we assume the motor constant k for both motors
         k_r = k_l = self.k
