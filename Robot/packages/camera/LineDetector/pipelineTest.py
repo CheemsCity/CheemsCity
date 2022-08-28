@@ -46,30 +46,65 @@ class LineDetectorPipeline:
         self.lowerCheems = np.array([0,95,180])
         self.radius = 50
 
-    def lineDetector(self, image,):
-        start = time.time_ns()
-        lane_image = np.copy(image)
-        filtered = self.lanefilter.roiToHeight(frameHSV,150)
-        frameHSV = cv2.cvtColor(filtered, cv2.COLOR_BGR2HSV)
+    def lineDetector(self, image, count = False, debug = False):
+        if count:
+            start = time.time_ns()
+
+        #STEP 1: rettifichiamo l'immagine, così da non avere problemi col fisheye
+        lane_image = np.copy(image[200 :, :, :])
+        canny_image = np.copy(image[200 :, :, :])
+        rect = self.birdview.undistortFaster(lane_image)
+
+        #STEP 2: isolare il colore Bianco
+        frameHSV = cv2.cvtColor(rect, cv2.COLOR_BGR2HSV)
         frameHSV = cv2.inRange(frameHSV,self.lower_white, self.upper_white)
-
-        tfiltered1 = time.time_ns()
-        tfiltered1D = (tfiltered1 - start)/(1000000000)
-        print("il tempo 1 è: ")
-        print(tfiltered1D)
-
-        skyview = self.birdview.sky_view(frameHSV)
-
-        tfiltered = time.time_ns()
-        tfilteredD = (tfiltered - start)/(1000000000)
-
-        print("il tempo è: ")
-        print(tfilteredD)
-        print("\n")
         
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            cv2.destroyAllWindows()
-        cv2.imshow("immagine", skyview)
+        if count:
+            t1 = time.time_ns()
+            dt1 = t1 - start
+            print("tempo immagine 1 = ", dt1/1000000000)
+        if debug:
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                cv2.destroyAllWindows()
+            cv2.imshow("immagine 1", frameHSV)
+
+        #STEP 3: chiudere eventuali buchi con un dilate:
+        kernel = cv2.getStructuringElement(
+            cv2.MORPH_ELLIPSE, (3, 3)
+        )
+
+        frameHSV = cv2.dilate(frameHSV, kernel)
+        if debug:
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                cv2.destroyAllWindows()
+            cv2.imshow("immagine 2", frameHSV)
+        
+        #STEP 4: applichiamo il canny sull'immagine di partenza e uniamo con un AND
+        # le due immagini risultato (canny + color detection)
+        edges = cv2.Canny(canny_image, 80, 200, apertureSize=3)
+        edge_color = cv2.bitwise_and(frameHSV, edges)
+        
+        if count:
+            t2 = time.time_ns()
+            dt2 = t2 - start
+            print("tempo immagine 2 = ", dt2/1000000000)
+        
+        if debug:
+
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                cv2.destroyAllWindows()
+            cv2.imshow("immagine 3", edge_color)
+        
+        #STEP 5: troviamo le linee con la HOUGH transform.
+        lines = self.birdview.Hough(edge_color)
+        
+        if time:
+            t3 = time.time_ns()
+            dt3 = t3 - start
+            print("tempo totale = ", dt2/1000000000)
+            print("\n")
+        
+        return lines
 
 
     def lineDetector2(self, image, display = False):
@@ -210,7 +245,7 @@ if __name__ == '__main__':
         key = cv2.waitKey(1) & 0xFF
         if key == 27:         #ESC
             white_flag = False
-        detector.lineDetector(image)
+        detector.lineDetector(image, count=True)
 
 
     cv2.destroyAllWindows()

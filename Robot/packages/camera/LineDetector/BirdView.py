@@ -56,11 +56,12 @@ class BirdView:
         x2 = int((y2 - y_int) / slope)
         return np.array([x1, y1, x2, y2])
 
-    def Hough(self, image, binary):
+    def DrawHough(self, image, binary):
         '''Metodo che utilizza la trasformazione Hough per trovare le 
         linee della strada (come equazioni di primo grado) nell'immagine 
         che ha gia subito il ROI ed i vari filtri.
         Restituisce l'immagine completa con disegnate le linee della strada'''
+
         #print("[INFO] sta avvenendo la trasformazione Hough")
         lines = cv2.HoughLinesP(binary, rho=2, theta=np.pi/180,threshold= 60, minLineLength=20, maxLineGap=5,lines =np.array([]))
         left = []
@@ -100,6 +101,20 @@ class BirdView:
             return combo
         except:
             return image
+    
+    def Hough(self, binary):
+        lines = cv2.HoughLinesP(
+            binary,
+            rho=1,
+            theta=np.pi/180,
+            threshold= 2,
+            minLineLength=3,
+            maxLineGap=1,
+            lines =np.array([])
+        )
+        
+        return lines
+
 
     def getHistogram(self, binary, region, minPer=0.1, display = False):
 
