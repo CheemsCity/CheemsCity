@@ -98,7 +98,7 @@ class LineDetectorPipeline:
         #STEP 5: troviamo le linee con la HOUGH transform.
         lines = self.birdview.Hough(edge_color)
         
-        if time:
+        if count:
             t3 = time.time_ns()
             dt3 = t3 - start
             print("tempo totale = ", dt2/1000000000)
