@@ -1,18 +1,26 @@
 import cv2 
 import numpy as np
 import matplotlib.pyplot as plt
+from pkg_resources import resource_string
+import yaml
 
 class BirdView:
     
-    def __init__(self, view_points, sky_points, cam_matrix, distortion_coeff):
+    def __init__(self, view_points, sky_points, cam_matrix, distortion_coeff, Hmatrix = False):
         self.vpoints = view_points
         self.spoints = sky_points
         self.view_points = np.array(view_points, np.float32)
         self.sky_points = np.array(sky_points, np.float32)
         self.cam_matrix = cam_matrix
         self.dist_coeff = distortion_coeff
-        
-        self.sky_matrix = cv2.getPerspectiveTransform(self.view_points, self.sky_points)
+
+        if Hmatrix:
+            file = resource_string('camera', 'homography.yml')
+            calibration_data = yaml.load(file, Loader=yaml.UnsafeLoader)
+            self.sky_matrix = calibration_data['H_matrix']
+
+        else:
+            self.sky_matrix = cv2.getPerspectiveTransform(self.view_points, self.sky_points)
         self.inv_sky_matrix = cv2.getPerspectiveTransform( self.sky_points, self.view_points)
         self.start= True
         self.mapx, self.mapy = None, None
@@ -37,8 +45,13 @@ class BirdView:
         post skyview
         ENG: this function is used to calculate the coordinates of some points in an image after the
         skyview transformation'''
+        vector = np.append(points, np.array([1]))
+        ground_point = np.dot(self.sky_matrix, vector)
+        x = ground_point[0]
+        y= ground_point[1]
+        z = ground_point[2]
 
-        #TO-DO
+        skyPoints = np.array([(y/z), (x/z)])
         return skyPoints
 
     def sky_view(self, ground_image):

@@ -13,6 +13,12 @@ from chessboard import Chessboard
 import yaml
 import matplotlib.pyplot as plt
 
+'''COME FUNZIONA: 
+    bisogna avere una scacchiera (appoggiata al terreno) e un punto di riferimento fisso dove il robot viene messo
+    (TO-DO: creare file di stampa con scacchiera e punto dove posizionare ROBOT).
+    Si vogliono trasformare le coordinate in pixel della scacchiera in coordinate di 
+    un sistema di riferimento piano con origine nel ROBOT'''
+
 vs = CameraStream().start()
 time.sleep(2.0)
 

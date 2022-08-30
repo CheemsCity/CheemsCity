@@ -12,6 +12,7 @@ from camera.LineDetector.pipelineTest import LineDetectorPipeline
 from PID import PID
 from pkg_resources import resource_string
 from hardware.Motor import Motor
+import matplotlib.pyplot as plt
 
 vs = CameraStream().start()
 time.sleep(2.0)
@@ -29,7 +30,7 @@ data = yaml.full_load(file)
 source_points = data['source']
 dest_points = data['dest']
 
-birdview = BirdView(source_points, dest_points, matrix, dist_coef)
+birdview = BirdView(source_points, dest_points, matrix, dist_coef, Hmatrix= True)
 
 pipeline = LineDetectorPipeline()
 
@@ -41,8 +42,9 @@ Start = True
 
 while True:
     image = vs.read()
+
     if Start:
-        h, w = image.size
+        h, w = image.shape[:2]
         Start = False
     
     lines = pipeline.lineDetector(image)
@@ -76,6 +78,28 @@ while True:
     Road_vec1 = (Road_vec1 + roi_vect)
     Road_vec2 = (Road_vec2 + roi_vect)
 
-    #otteniamo quante più informazioni possibili da questi punti:
+    numPoints = Road_vec1.shape[0] if Road_vec1.shape[1]==2 else 0
+    skyList1 = []
+    skyList2 = []
+    for i in range(numPoints):
+        skyList1.append(birdview.skyViewPoints(Road_vec1[i,:]))
+        skyList2.append(birdview.skyViewPoints(Road_vec2[i,:])) 
     
+    skyPoints1 = np.array(skyList1, ndmin = 2)
+    skyPoints2 = np.array(skyList2, ndmin = 2)
 
+    #otteniamo quante più informazioni possibili da questi punti:
+    #controlliamo siano nel formato giusto
+    numPoints = skyPoints1.shape[0] if skyPoints1.shape[1]==2 else 0
+    avg_dir = 0
+    if numPoints > 1:
+        #prendiamo tutti quei punti non troppo distanti dal robot
+        #ricordiamo che il centro del loro sistema di riferimento
+        #è la telecamera del robot
+        points_keep = np.linalg.norm(skyPoints1, axis=1) < 0.7
+        numPoints = np.sum(points_keep)
+        skyPoints1 = skyPoints1[points_keep]
+        skyPoints2 = skyPoints2[points_keep]
+        t = skyPoints2 - skyPoints1
+        t_norm = t/ np.linalg.norm(t, axis = 1, keepdims= True)
+        avg_dir = np.mean(np.abs(t_norm), axis = 0)
