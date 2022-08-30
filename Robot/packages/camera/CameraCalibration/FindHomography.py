@@ -44,6 +44,10 @@ while not ret:
     offsetx = 0.102
     board_offset = np.array([offsetx, -offsety])
 
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        cv2.destroyAllWindows()
+    cv2.imshow("immagine 1", rect)
+
     #nota, se hai una scacchiera non quadrata, il lato lungo deve essere messo parallelo alla direzione della fotocamera del robot
     ##luce sembra influire molto
     print("[INFO] calcolo chessboard")
@@ -59,16 +63,35 @@ while not ret:
         imgplot = plt.imshow(rect)
         plt.show()
 
+        #punti del nuovo sistema di riferimento, l'origine della scacchiera sarà nel suo 
+        #punto in basso a destra (questo spiega l'offset)
+
         src_pts = []
         square_size = settings['camera_calibration_squareSize']
-        for r in range(settings['camera_calibration_chessboardX']):
-            for c in range(settings['camera_calibration_chessboardY']):
+        for r in range(settings['camera_calibration_chessboardY']):
+            for c in range(settings['camera_calibration_chessboardX']):
                 src_pts.append(np.array([r * square_size , c * square_size] , dtype='float32')
                             + board_offset)
         
-        print("calcolo matrice omografica")
+        #noi vogliamo che lo zero nel nuovo piano si trovi nel Robot,
+        #quindi dato che le immagini di opencv sono array nel cui punto più alto sta lo zero
+        #dovremo invertire la lista dei punti delle coordinate che cerchiamo
+        src_pts.reverse()
+
+        print("[INFO] calcolo matrice omografica")
+        print("[INFO] premere x sull'immagine per andare avanti")
         H, _mask = cv2.findHomography(chessboard.imgpoints.reshape(len(chessboard.imgpoints), 2), np.array(src_pts), cv2.RANSAC)
-        print(H)
+        
+        #save MATRIX:
+        print("[INFO] salvataggio matrice")
+        calibration_data = {
+            "H_matrix": H, 
+        }
+
+        with open('../homography.yml', 'w') as outfile:
+            yaml.dump(calibration_data, outfile, default_flow_style=False)
+        
+        print("[INFO] salvataggio effettuato")
         
 print(" \n fine")
 
