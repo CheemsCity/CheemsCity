@@ -93,6 +93,7 @@ while True:
     numPoints = skyPoints1.shape[0] if skyPoints1.shape[1]==2 else 0
     avg_dir = 0
     if numPoints > 1:
+
         #prendiamo tutti quei punti non troppo distanti dal robot
         #ricordiamo che il centro del loro sistema di riferimento
         #è la telecamera del robot
@@ -102,4 +103,15 @@ while True:
         skyPoints2 = skyPoints2[points_keep]
         t = skyPoints2 - skyPoints1
         t_norm = t/ np.linalg.norm(t, axis = 1, keepdims= True)
-        avg_dir = np.mean(np.abs(t_norm), axis = 0)
+        #avg abs dir è utile per modificare la velocità in funzione della pendenza
+        #la normalizziamo in modo da avere un valore da 0 a 1
+        avg_abs_dir = np.mean(np.abs(t_norm), axis = 0)
+        avg_dir_normalized = avg_abs_dir / np.linalg.norm(avg_abs_dir)
+
+        #calcoliamo ora il punto da raggiungere
+        points = np.vstack([skyPoints1, skyPoints2])
+        PPpoint = [np.mean(points[:,0],axis=0),0.2]
+    
+    plt.plot(points[:,0],points[:,1], 'ro')
+    plt.plot(PPpoint[0],PPpoint[1], 'bo')
+    plt.show()
