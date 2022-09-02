@@ -1,22 +1,18 @@
 # CheemsCity
  
-(title of the project)
-Tutto il materiale con documentazione del progetto di robotica Cheems City
+CheemsCity is an opens source STEM kit for people who want to learn robotics
+The repository contains all the material related to the robot ecosystem: 3d models, PCB files and codes.
 
-##explanation
+We will realise an official kit made by us on kickstarter, but you can also build it yourself using the files in this repository.
+If you build or buy one, please help the project by documenting bugs with a GitHub issue.
 
+The kit contains: 
+a CheemsCar, Cyber Cheems (the pedestrians of the cyty), traffic sign and a modular street.
 
-Algoritmo line detection:
-1. Creazione della matrice di calibrazione e dei coefficienti di distorsione usando una scacchiera. 
-2. Usare le matrici per correggere la distorsione data dalla camera.
-3. usare i vari filtri (canny, gaussian blur, color threshold) per eliminare tutte le informazioni in eccesso.
-4. applicare la trasfromazione di prospettiva a "birdeye".
-5. determinare la ROI e le linee.
-6. scegliere la migliore curva che approssima quelle linee.
-7. Proiettare le linee di nuovo sull'immagine originale.
-8. Sistemare bene la visuale
+##How do i build one?
 
-2) 
-##installation guide
+##Contributing
+If you would like to contribute to the project, awesome! Check out the contributing page to get started.
 
-(usare docker)
+##Community
+CheemsCity aims to create a big community around the product; discussion about the project happens on the Discord server!
