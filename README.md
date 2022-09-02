@@ -9,10 +9,10 @@ If you build or buy one, please help the project by documenting bugs with a GitH
 The kit contains: 
 a CheemsCar, Cyber Cheems (the pedestrians of the cyty), traffic sign and a modular street.
 
-##How do i build one?
+## How do i build one?
 
-##Contributing
+## Contributing
 If you would like to contribute to the project, awesome! Check out the contributing page to get started.
 
-##Community
+## Community
 CheemsCity aims to create a big community around the product; discussion about the project happens on the Discord server!
