@@ -1,7 +1,7 @@
 # CheemsCity
  
-CheemsCity is an opens source STEM kit for people who want to learn robotics
-The repository contains all the material related to the robot ecosystem: 3d models, PCB files and codes.
+CheemsCity is a STEM online platform for people who want to learn robotics, electronics and coding.
+The repository contains all the material related to the Open Source robot ecosystem: 3d models, PCB files and codes.
 
 We will realise an official kit made by us on kickstarter, but you can also build it yourself using the files in this repository.
 If you build or buy one, please help the project by documenting bugs with a GitHub issue.
