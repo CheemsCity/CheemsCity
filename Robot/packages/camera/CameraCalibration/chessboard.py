@@ -4,7 +4,7 @@ import cv2
 import os
 
 class Chessboard:
-    def __init__(self, nx, ny, frame, square_size):
+    def __init__(self, nx, ny, frame, square_size, flag  = None):
     
         self.nx, self.ny = nx, ny
         self.n = (self.nx, self.ny)
@@ -25,7 +25,7 @@ class Chessboard:
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
         #trova gli spigoli
-        self.ret, corners = cv2.findChessboardCorners(gray, self.n, None)
+        self.ret, corners = cv2.findChessboardCorners(gray, self.n, flag)
 
         #se trovato, aggiungi gli object points e gli image points
         if self.ret == True:

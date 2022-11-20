@@ -50,28 +50,27 @@ print("definizione del PID")
 pid.tune(0.04,0.04, 0.008)
 #inizializzazione classe motore con il relativo errore di differenza
 #potenza in uscita dei motori
-motor = Motor(left_trim=-6)
+motor = Motor(left_trim=-5)
 
 pipeline = LineDetectorPipeline()
 
 while True:
     image = vs.read()
-    areas, basePoint, curve = pipeline.lineDetector3(image, display = True)
+    areaMax, basePoint, curve = pipeline.lineDetector3(image, display = True)
     curve = curve//3
     curve = int(15*curve//70)
     sen = 1.3
     #massimo valore da aggiungere o sottrarre al basePower
     maxControl = 20
-    basepower = 60
+    basepower = 65
     #threshold di attivazione stop per cheems
-    thresh = 2000
+    thresh = 8000
     
     #prima condizione: presenza cheemsVicini = stop
-    for area in areas:
-        if area > thresh:
-            '''attiviamo la funzione di stop'''
-            motor.Stop()
-            break
+    if areaMax > thresh:
+        '''attiviamo la funzione di stop'''
+        motor.Stop()
+        continue
             
     #seconda parte: riconoscimento linee e direzione strada
     #impostiamo un valore soglia

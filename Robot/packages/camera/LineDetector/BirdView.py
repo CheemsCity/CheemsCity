@@ -1,18 +1,26 @@
 import cv2 
 import numpy as np
 import matplotlib.pyplot as plt
+from pkg_resources import resource_string
+import yaml
 
 class BirdView:
     
-    def __init__(self, view_points, sky_points, cam_matrix, distortion_coeff):
+    def __init__(self, view_points, sky_points, cam_matrix, distortion_coeff, Hmatrix = False):
         self.vpoints = view_points
         self.spoints = sky_points
         self.view_points = np.array(view_points, np.float32)
         self.sky_points = np.array(sky_points, np.float32)
         self.cam_matrix = cam_matrix
         self.dist_coeff = distortion_coeff
-        
-        self.sky_matrix = cv2.getPerspectiveTransform(self.view_points, self.sky_points)
+
+        if Hmatrix:
+            file = resource_string('camera', 'homography.yml')
+            calibration_data = yaml.load(file, Loader=yaml.UnsafeLoader)
+            self.sky_matrix = calibration_data['H_matrix']
+
+        else:
+            self.sky_matrix = cv2.getPerspectiveTransform(self.view_points, self.sky_points)
         self.inv_sky_matrix = cv2.getPerspectiveTransform( self.sky_points, self.view_points)
         self.start= True
         self.mapx, self.mapy = None, None
@@ -31,10 +39,24 @@ class BirdView:
             self.mapx, self.mapy =  cv2.initUndistortRectifyMap(self.cam_matrix, self.dist_coeff,None, self.cam_matrix,(w,h),5)
             self.start = False
         return cv2.remap(raw_image, self.mapx, self.mapy, cv2.INTER_LINEAR)
+    
+    def skyViewPoints(self, points):
+        '''ITA: funzione che permette di calcolare le coordinate di un insieme di punti nell'immagine
+        post skyview
+        ENG: this function is used to calculate the coordinates of some points in an image after the
+        skyview transformation'''
+        vector = np.append(points, np.array([1]))
+        ground_point = np.dot(self.sky_matrix, vector)
+        x = ground_point[0]
+        y= ground_point[1]
+        z = ground_point[2]
+
+        skyPoints = np.array([(y/z), (x/z)])
+        return skyPoints
 
     def sky_view(self, ground_image):
 
-        temp_image = self.undistort(ground_image)
+        temp_image = self.undistortFaster(ground_image)
         shape = (temp_image.shape[1], temp_image.shape[0])
         warp_image = cv2.warpPerspective(temp_image, self.sky_matrix, shape, flags = cv2.INTER_LINEAR)
         return warp_image
@@ -47,11 +69,12 @@ class BirdView:
         x2 = int((y2 - y_int) / slope)
         return np.array([x1, y1, x2, y2])
 
-    def Hough(self, image, binary):
+    def DrawHough(self, image, binary):
         '''Metodo che utilizza la trasformazione Hough per trovare le 
         linee della strada (come equazioni di primo grado) nell'immagine 
         che ha gia subito il ROI ed i vari filtri.
         Restituisce l'immagine completa con disegnate le linee della strada'''
+
         #print("[INFO] sta avvenendo la trasformazione Hough")
         lines = cv2.HoughLinesP(binary, rho=2, theta=np.pi/180,threshold= 60, minLineLength=20, maxLineGap=5,lines =np.array([]))
         left = []
@@ -91,8 +114,26 @@ class BirdView:
             return combo
         except:
             return image
+    
+    def Hough(self, binary):
+        lines = cv2.HoughLinesP(
+            binary,
+            rho=1,
+            theta=np.pi/180,
+            threshold= 2,
+            minLineLength=3,
+            maxLineGap=1,
+            lines =np.array([])
+        )
+        
+        return lines
+
 
     def getHistogram(self, binary, region, minPer=0.1, display = False):
+
+        '''funzione che permette la creazione di un diagramma a colonne
+        a partire da un'immagine in bianco e nero. per ogni colonna
+        dell'immagine ne viene calcolata la quantità di pixel bianchi'''
 
         histValues = np.sum(binary[-binary.shape[0]//region:,:], axis=0)
         maxValue = np.max(histValues)
