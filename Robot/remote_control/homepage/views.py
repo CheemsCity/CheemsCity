@@ -13,7 +13,7 @@ cam = Camera() #oggetto per la camera (stream + filtri)
 	                variabili controllo motori
 					--------------------------
 '''
-mot = Motor(left_trim=-3) #oggetto per comunicazione seriale con i motori
+mot = Motor(left_trim=0) #oggetto per comunicazione seriale con i motori
 mot_status = 0 #NON ANCORA IN USO mi dà un'indicazione del verso di movimento della camera
 speed = 50 #velocità standard
 enc = Encoder()
