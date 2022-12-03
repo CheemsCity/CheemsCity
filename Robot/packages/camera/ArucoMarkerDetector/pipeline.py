@@ -1,4 +1,5 @@
 from camera.ArucoMarkerDetector.ArucoDetector import ArucoDetector
+from camera.StreetLight.StreetLight import StreetLight
 import time
 import yaml
 import sys
@@ -23,14 +24,21 @@ class ArucoDetectorPipeline():
         corner = self.detector.frameDetector(self.image)
         #calcolo il vettore distanza dalla camera e la rotazione rispetto ad essa per ogni aruco marker
         rvec, tvec, _ = self.detector.estimatePoseMarkers()
+        #distanza dal marker numero 0 è pari a tvec[0][0][2] nella stessa unità di misura del aruco_markerLength in aruco_settings.yaml
         #stampo sull'immagine i rettangoli intorno ai marker
         self.image = self.detector.drawDetectedMarkers(self.image)
         #stampo sull'immagine gli assi centrati
         self.image = self.detector.drawAxis(self.image)
+        return corner
         return self.image
     
-    def printImage(self):
-        key = self.detector.printImage(self.image)
+    def printImage(self, image=None, SO=None, NE=None):
+        if ((SO is None or NE is None) and image is None):
+            key = self.detector.printImage(self.image)
+        elif image is None:
+            key = self.detector.printImage(self.image[NE[1]:SO[1],SO[0]:NE[0]])
+        else:
+            key = self.detector.printImage(image)
         return key
 
     def close(self):
@@ -43,12 +51,26 @@ if __name__ == '__main__':
     vs = CameraStream().start()
     time.sleep(1.0)
     detector = ArucoDetectorPipeline()
+    streetlight = StreetLight()
 
     white_flag = True
     while white_flag:
         raw_image = vs.read()
-        detector.arucoDetector(raw_image)
-        key = detector.printImage()
+        corner = detector.arucoDetector(raw_image)
+        streetlight.changeImage(raw_image)
+        try:
+            SO, NE = streetlight.roi(corner[0])
+            red, yellow, green = streetlight.color()
+        except:
+            SO = None
+            NE = None
+            red = None
+            yellow = None
+            green = None
+            print(' ')
+        print([SO, NE])
+        #key = detector.printImage(SO=SO,NE=NE)
+        key = detector.printImage(image=red)
         if key == 27:         # wait for ESC key to exit and terminate progra,
             detector.close()
             white_flag = False

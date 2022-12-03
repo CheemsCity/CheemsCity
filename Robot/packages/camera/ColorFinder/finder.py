@@ -91,34 +91,6 @@ class ColorFinder():
                     self.bool_Md[i,j] = 255
         return self.bool_Md
 
-    def CannyContour(self): #IN DISUSO
-        self.contour_Md = cv2.Canny(self.bool_Md, 70, 150)
-        #trovo i contorni tramite l'algoritmo Canny sfruttando il fatto che ove era nel raggio
-        #ora c'è il nero e nel resto c'è il bianco
-        return self.contour_Md
-
-    def ColorContour(self, draw): #IN DISUSO
-        self.contours, self.hierarchy = cv2.findContours(self.contour_Md,cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
-        #trovo i contorni dell'immagine tramite l'algoritmo di OpenCv
-        if draw==1:
-            cv2.drawContours(self.image, self.contours, -1, (0, 255, 0), 3)
-        #li disegno nell'immagine
-        return self.image
-
-    def findBiggest(self): #IN DISUSO
-        length_list = list(len(self.contours[i]) for i in range(len(self.contours)))
-        #creo una lista con tutte le lunghezze dei vari contorni
-        max_item = max(length_list)
-        #prendo il contorno maggiore 
-        self.biggest_list = list(filter(lambda i: len(self.contours[i]) >= max_item, range(len(self.contours))))
-        #prendo gli indici degli elementi che hanno quel valore
-        return self.biggest_list
-
-    def findBiggerThan(self,limit): #IN DISUSO
-        self.result_bigger_list = list(filter(lambda i: len(self.contours[i]) > limit, range(len(self.contours))))
-        #prendo gli indici degli elementi che hanno lunghezza maggiore di un limite
-        return self.result_bigger_list
-
     def defineRectangularContour(self):
         self.SO = (math.ceil(min(np.nonzero(self.bool_Md)[1])*(1-self.risk_coeff)),math.ceil(max(np.nonzero(self.bool_Md)[0])*(1+self.risk_coeff)))
         self.NE = (math.ceil(max(np.nonzero(self.bool_Md)[1])*(1+self.risk_coeff)),math.ceil(min(np.nonzero(self.bool_Md)[0])*(1-self.risk_coeff)))

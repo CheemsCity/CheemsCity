@@ -1,5 +1,18 @@
 aruco_dictionary: DICT_6X6_50
-aruco_markerLength: 0.03
+aruco_markerLength: 0.066
 aruco_canvasResolution: !!python/tuple
   - 640
   - 480
+aruco_streetSign: 
+  - #0
+    - 'STOP'
+    - 'Stop'
+  - #1
+    - 'IN'
+    - 'Incrocio'
+  - #2
+    - 'ATTC'
+    - 'Attraversamento Cheems'
+  - #3
+    - 'NOAC'
+    - 'Divieto di Accesso'
