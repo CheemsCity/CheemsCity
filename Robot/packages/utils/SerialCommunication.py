@@ -1,14 +1,14 @@
 import serial, time
 #sfrutta la libreria SerialPy
 #https://pyserial.readthedocs.io/en/latest/index.html
-
 import pysignals
+
 from utils.Signals import motorSignal
 
 class SerialCommunication:
 
     portName = "/dev/ttyACM0"
-    baud = 57600
+    baud = 115200
     arduino = serial.Serial(portName, baud, timeout=1)
 
     def __init__(self):
@@ -48,19 +48,11 @@ class SerialCommunication:
     def SendCommand(self, sender, msg, **kwargs):
         #funzione per inviare comandi all'arduino, vedere documentazione sul
         #come impostare questi comandi
-        print("ecco messaggio: ")
-        print(msg)
         print("tipo del messaggio ricevuto: {}".format(type(msg)))
         try:
             SerialCommunication.arduino.write(msg.encode('utf-8'))
             print("messaggio inviato")
             print(" ")
-            #print("live receiver:")
-            #print(motStatus._live_receivers(self.__class__))
-            #print ("seconda condizione:")
-            #print(motStatus.sender_receivers_cache.get(self.__class__) is object())
-            #responses = motStatus.send(sender=self.__class__, msg="inviato")
-            #print(responses)
             return True
         except:
             print("qualcosa è andato storto")
