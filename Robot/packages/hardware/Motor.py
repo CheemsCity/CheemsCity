@@ -1,6 +1,61 @@
-from utils.SerialCommunication import SerialCommunication
 import time
+from threading import Thread
+import RPi.GPIO as GPIO
 import math
+
+from utils.Signals import motorSignal
+from pysignals import receiver
+
+class Encoder:
+
+    def __init__(self):
+
+        Eright = 18
+        Eleft = 19
+        #we need to specify wich convention we are using
+        #for the pin's number
+        #specifichiamo convenzione numero pin rapsberry
+        GPIO.setmode(GPIO.BCM)
+
+        #right encoder
+        #encoder destro
+        GPIO.setup(Eright, GPIO.IN)
+        #left encoder
+        #encoder sinistro
+        GPIO.setup(Eleft, GPIO.IN)
+
+        #thread to read the encoder
+        #thread per leggere encoder
+        GPIO.add_event_detect(Eright, GPIO.RISING, callback=self.updateR)
+        GPIO.add_event_detect(Eleft, GPIO.RISING, callback=self.updateL)
+
+        #ticks motore destro e sinistro
+        #right and left motor ticks from encoders
+        self.tickR = 0
+        self.tickL = 0
+
+    def updateR(self, Eright):
+        #update tick counter Right
+        self.tickR = self.tickR + 1
+        
+
+    def updateL(self, Eleft):
+        #update tick counter L
+        self.tickL = self.tickL + 1
+
+    def ResetR(self):
+        self.tickR = 0
+
+    def ResetL(self):
+        self.tickL = 0
+
+    def ResetEncoder(self):
+        self.tickR = 0
+        self.tickL = 0
+
+    def stop(self):
+        GPIO.remove_event_detect(Eright)
+        GPIO.remove_event_detect(Eleft)
 
 class Motor:
     '''ITA: classe che rappresenta una combinazione di 2 motori appartenenti al robot,
@@ -22,7 +77,6 @@ class Motor:
         ENG: left_trim is the amount of offset of the speed of the left motor, while right_trim
         is the offset of the right motor. Default value is 0.'''
 
-        self.comm = SerialCommunication()
         self._left_trim = left_trim
         self._right_trim = right_trim
 
@@ -55,7 +109,7 @@ class Motor:
             print(speed)
             msg = "<" "s" + "m" + motor + str(-(speed)) + ">"
             print(msg)
-            self.comm.SendCommand(msg)
+            responses = motorSignal.send(sender=self.__class__, msg=msg)
             time.sleep(0.006)
             return True
         except:
@@ -73,26 +127,26 @@ class Motor:
         
     def Test(self):
         print("accendendo motore destro con direzione avanti")
-        for i in range(1000):
-            ret=self.Power('r', 100)
+        ret=self.Power('r', 100)
+        time.sleep(3)
         ret = self.Power('r', 0)
         time.sleep(1)
         
         print("accendendo motore sinistro con direzione avanti")
-        for i in range(1000):
-            ret=self.Power('l', 100)
+        ret=self.Power('l', 100)
+        time.sleep(3)
         ret = self.Power('l', 0)
         time.sleep(1)
         
         print("accendendo motore destro con direzione indietro")
-        for i in range(1000):
-            ret=self.Power('r', -100)
+        ret=self.Power('r', -100)
+        time.sleep(3)
         ret = self.Power('r', 0)
         time.sleep(1)
         
         print("accendendo motore sinistro con direzione indietro")
-        for i in range(1000):
-            ret=self.Power('l', -100)
+        ret=self.Power('l', -100)
+        time.sleep(3)
         ret = self.Power('l', 0)
         time.sleep(1)
     

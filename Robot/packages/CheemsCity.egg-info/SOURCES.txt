@@ -11,6 +11,7 @@ camera/ArucoMarkerDetector/ArucoDetector.py
 camera/ArucoMarkerDetector/__init__.py
 camera/ArucoMarkerDetector/pipeline.py
 camera/CameraCalibration/CameraCalibration.py
+camera/CameraCalibration/FindHomography.py
 camera/CameraCalibration/StartAppChess.py
 camera/CameraCalibration/__init__.py
 camera/CameraCalibration/chessboard.py
@@ -27,13 +28,16 @@ camera/LineDetector/pipelineTest.py
 camera/StreetLight/StreetLight.py
 camera/StreetLight/__init__.py
 control/Comandi.py
+control/InvKin.py
 control/PID.py
 control/PIDProva.py
 control/PidLoop.py
 control/ProvaMotor.py
+control/PurePursuit.py
 control/TestPipeline.py
 control/__init__.py
 hardware/Motor.py
 hardware/__init__.py
 utils/SerialCommunication.py
+utils/Signals.py
 utils/__init__.py
