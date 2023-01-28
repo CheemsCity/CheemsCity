@@ -13,8 +13,11 @@ a CheemsCar, Cyber Cheems (pedestrians of the city), traffic sign and a modular 
 ## How do i build one?
 To build the robot follow the instructions in the Robot repository, while for the software open your raspberry pi and:
 1. Create a virtual environment and activate it.
-2. Install git and clone this repository.
-3. Go to the CheemsCity directory and to install al the required packages, lunch:
+2. Install `git` and clone this repository.
+```
+git clone https://github.com/CheemsCity/CheemsCity.git
+```
+3. Go to the CheemsCity directory (`cd CheemsCity`) and to install all the required packages, run:
 ```
 pip3 install -r requirements.txt
 ```
@@ -26,3 +29,9 @@ If you would like to contribute to the project, awesome! Check out the contribut
 
 ## Community
 CheemsCity aims to create a big community around the product; discussion about the project happens on the Discord server!
+
+## Follow Us!
+We're on social media:
+
+- [Instagram](https://www.instagram.com/cheems.city/) tag us in your post showing your cheems!
+- [Linkedin](https://www.linkedin.com/company/cheemscity/) if you want to discover our serious side!
