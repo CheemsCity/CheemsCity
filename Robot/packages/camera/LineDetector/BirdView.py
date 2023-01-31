@@ -6,7 +6,7 @@ import yaml
 
 class BirdView:
     
-    def __init__(self, view_points, sky_points, cam_matrix, distortion_coeff, Hmatrix = False):
+    def __init__(self, view_points=None, sky_points=None, cam_matrix, distortion_coeff, Hmatrix = False):
         self.vpoints = view_points
         self.spoints = sky_points
         self.view_points = np.array(view_points, np.float32)
@@ -150,11 +150,6 @@ class BirdView:
                 cv2.imshow("Display Histogram", imgHist)
 
         return basePoint
-        
-    def LaneCurvatureP(self, image, binary):
-        return
-        
-
 
     def HoughCenter(self, binary, x:int):
         '''funzione che restituisce la coordinata y (width)

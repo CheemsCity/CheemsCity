@@ -8,7 +8,7 @@ from camera.LineDetector.BirdView import BirdView
 from camera.LineDetector.Curves import curves
 from camera.LineDetector.LaneFilter import LaneFilter 
 from camera.CameraStream import CameraStream
-from camera.LineDetector.pipelineTest import LineDetectorPipeline
+from camera.LineDetector.pipeline import LineDetectorPipeline
 from PID import PID
 from pkg_resources import resource_string
 from hardware.Motor import Motor
