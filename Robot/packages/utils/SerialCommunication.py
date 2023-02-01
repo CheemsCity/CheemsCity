@@ -5,6 +5,7 @@ import pysignals
 
 from utils.Signals import motorSignal
 
+
 class SerialCommunication:
 
     portName = "/dev/ttyACM0"
@@ -16,7 +17,7 @@ class SerialCommunication:
         if SerialCommunication.arduino.isOpen():
             print("{} connected!".format(SerialCommunication.arduino.port))
 
-    def ArduinoReset(self,debug=False):
+    def ArduinoReset(self, debug=False):
         #forza l'arduino al reset come se fosse stato premuto l'interruttore.
         ret = False
         try:
@@ -30,7 +31,7 @@ class SerialCommunication:
             time.sleep(3)
             #self.arduino.reset_input_buffer()
             #if debug == True:
-               # print("proc 3:ok")
+            # print("proc 3:ok")
             #time.sleep(1)
             SerialCommunication.arduino.dtr = True
             if debug == True:
@@ -41,9 +42,9 @@ class SerialCommunication:
             ret = True
         except:
             print("reset non andato a buon fine")
-        
+
         return ret
-    
+
     @classmethod
     def SendCommand(self, sender, msg, **kwargs):
         #funzione per inviare comandi all'arduino, vedere documentazione sul
@@ -62,19 +63,12 @@ class SerialCommunication:
         #funzione per leggere i dati inviati dal raspberry
         try:
             SerialCommunication.arduino.flush()
-            msg = SerialCommunication.arduino.readline().decode('utf-8').rstrip()
+            msg = SerialCommunication.arduino.readline().decode(
+                'utf-8').rstrip()
             SerialCommunication.arduino.reset_input_buffer()
             return msg
         except:
             return False
 
+
 motorSignal.connect(SerialCommunication.SendCommand)
-            
-            
-                  
-                  
-                
-    
-                  
-        
-        

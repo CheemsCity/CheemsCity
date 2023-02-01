@@ -14,8 +14,8 @@ fps = FPS().start()
 # loop over some frames...this time using the threaded stream
 while fps.numFrames < 100:
     print(fps.numFrames)
-	# grab the frame from the threaded video stream and resize it
-	# to have a maximum width of 400 pixels
+    # grab the frame from the threaded video stream and resize it
+    # to have a maximum width of 400 pixels
     frame = vs.read()
     #cv2.imshow("Frame", frame)
     #key = cv2.waitKey(1) & 0xFF

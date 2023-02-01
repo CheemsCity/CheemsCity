@@ -5,15 +5,17 @@ import yaml
 import sys
 from pkg_resources import resource_string
 
+
 class ArucoDetectorPipeline():
+
     def __init__(self):
         #with open(r'/home/pi/CheemsCity/Robot/packages/camera/FinalCalibration.yml') as file:
-            #calibration_data = yaml.load(file, Loader=yaml.UnsafeLoader)
+        #calibration_data = yaml.load(file, Loader=yaml.UnsafeLoader)
         file = resource_string('camera', 'FinalCalibration.yml')
         calibration_data = yaml.load(file, Loader=yaml.UnsafeLoader)
         self.cam_matrix = calibration_data['camera_matrix']
         self.dist_coeff = calibration_data['distortion_coefficient']
-        
+
         self.detector = ArucoDetector(self.cam_matrix, self.dist_coeff)
 
     def arucoDetector(self, raw_image):
@@ -31,19 +33,20 @@ class ArucoDetectorPipeline():
         self.image = self.detector.drawAxis(self.image)
         return corner
         return self.image
-    
+
     def printImage(self, image=None, SO=None, NE=None):
         if ((SO is None or NE is None) and image is None):
             key = self.detector.printImage(self.image)
         elif image is None:
-            key = self.detector.printImage(self.image[NE[1]:SO[1],SO[0]:NE[0]])
+            key = self.detector.printImage(self.image[NE[1]:SO[1],
+                                                      SO[0]:NE[0]])
         else:
             key = self.detector.printImage(image)
         return key
 
     def close(self):
         self.detector.close()
-        
+
 
 if __name__ == '__main__':
     from camera.CameraStream import CameraStream
@@ -71,7 +74,7 @@ if __name__ == '__main__':
         print([SO, NE])
         #key = detector.printImage(SO=SO,NE=NE)
         key = detector.printImage(image=red)
-        if key == 27:         # wait for ESC key to exit and terminate progra,
+        if key == 27:  # wait for ESC key to exit and terminate progra,
             detector.close()
             white_flag = False
 

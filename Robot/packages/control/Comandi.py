@@ -3,7 +3,7 @@ import pygame
 import time
 
 pygame.init()
-motori =Motor()
+motori = Motor()
 screen = pygame.display.set_mode([240, 160])
 
 while True:

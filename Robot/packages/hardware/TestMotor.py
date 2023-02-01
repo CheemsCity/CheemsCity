@@ -1,6 +1,6 @@
 from hardware.Motor import Motor
 import time
-from utils.SerialCommunication import SerialCommunication 
+from utils.SerialCommunication import SerialCommunication
 import serial
 
 comm = SerialCommunication()

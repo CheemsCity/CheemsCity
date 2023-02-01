@@ -4,8 +4,10 @@ from camera.CameraStream import CameraStream
 from camera.LineDetector.LaneFilter import LaneFilter
 import time
 
+
 def empty(a):
     pass
+
 
 cv2.namedWindow("ROI")
 cv2.resizeWindow("ROI", 320, 240)
@@ -27,5 +29,3 @@ while white_flag:
         cv2.waitKey(0)
 
 cv2.destroyAllWindows()
-
-

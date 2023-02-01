@@ -6,6 +6,7 @@ import math
 from utils.Signals import motorSignal
 from pysignals import receiver
 
+
 class Encoder:
 
     def __init__(self):
@@ -37,7 +38,6 @@ class Encoder:
     def updateR(self, Eright):
         #update tick counter Right
         self.tickR = self.tickR + 1
-        
 
     def updateL(self, Eleft):
         #update tick counter L
@@ -57,6 +57,7 @@ class Encoder:
         GPIO.remove_event_detect(Eright)
         GPIO.remove_event_detect(Eleft)
 
+
 class Motor:
     '''ITA: classe che rappresenta una combinazione di 2 motori appartenenti al robot,
     utilizza la comunicazione I2C per comunicare con Arduino che gestisce tutte le
@@ -68,8 +69,7 @@ class Motor:
     of this class in low level commands thath the DRV8833 can understand.
     Baud rate and Serial port number are specified in the Serial Communication class'''
 
-    
-    def __init__(self, left_trim =0, right_trim = 0):
+    def __init__(self, left_trim=0, right_trim=0):
         '''ITA: left_trim specifica l'offset in velocità del motore sinistro e 
         right_trim per quello destro, il valore di default è 0.
         i valori saranno calibrati con un programma apposito
@@ -80,30 +80,30 @@ class Motor:
         self._left_trim = left_trim
         self._right_trim = right_trim
 
-
     def __del__(self):
         self.Stop()
 
-    
-    def Power(self, motor:str, power:int) -> bool:
+    def Power(self, motor: str, power: int) -> bool:
         '''Metodo che definisce la potenza dei motori, motor è un char che indica se
         motore destro('r') o sinistro('l'), mentre power è un int compreso tra -100 e 100
         con i numeri negativi a significare la direzione contraria.
         una potenza pari a 0 spegnerà i motori'''
         if (power < -100 or power > 100):
-            raise ValueError("[ERROR] La potenza dei motori deve essere compresa tra -100 e 100")
+            raise ValueError(
+                "[ERROR] La potenza dei motori deve essere compresa tra -100 e 100"
+            )
             return False
-        if (motor != 'r' and motor !='l'):
+        if (motor != 'r' and motor != 'l'):
             raise ValueError("[ERROR] motor può essere solo uguale a r o l")
             return False
         try:
             if power == 0:
                 speed = 0
-            elif motor=='r':
+            elif motor == 'r':
                 speed = power + self._right_trim
             else:
                 speed = (abs(power) + self._left_trim)
-                speed = math.copysign(speed, (-1)*power)
+                speed = math.copysign(speed, (-1) * power)
             speed = max(-100, min(100, speed))
             print("velocità impostata ")
             print(speed)
@@ -113,53 +113,53 @@ class Motor:
             time.sleep(0.006)
             return True
         except:
-            if motor=='r':
+            if motor == 'r':
                 print("[ERROR] problema comunicazione con motore destro")
             else:
                 print("[ERROR] problema comunicazione con motore sinistro")
             return False
-    
+
     def Stop(self):
         '''ITA: ferma tutti i movimenti dei due motori'''
         '''ENG: Stop all movements'''
         self.Power('r', 0)
         self.Power('l', 0)
-        
+
     def Test(self):
         print("accendendo motore destro con direzione avanti")
-        ret=self.Power('r', 100)
+        ret = self.Power('r', 100)
         time.sleep(3)
         ret = self.Power('r', 0)
         time.sleep(1)
-        
+
         print("accendendo motore sinistro con direzione avanti")
-        ret=self.Power('l', 100)
+        ret = self.Power('l', 100)
         time.sleep(3)
         ret = self.Power('l', 0)
         time.sleep(1)
-        
+
         print("accendendo motore destro con direzione indietro")
-        ret=self.Power('r', -100)
+        ret = self.Power('r', -100)
         time.sleep(3)
         ret = self.Power('r', 0)
         time.sleep(1)
-        
+
         print("accendendo motore sinistro con direzione indietro")
-        ret=self.Power('l', -100)
+        ret = self.Power('l', -100)
         time.sleep(3)
         ret = self.Power('l', 0)
         time.sleep(1)
-    
+
     def Avanti(self, power):
         '''ITA: si muove avanti ad una desiderata potenza'''
         '''ENG: Move forward at the specified power (0, 100)'''
-        ret=self.Power('r',power)
+        ret = self.Power('r', power)
         ret = self.Power('l', power)
 
     def Indietro(self, power):
         '''ITA: si muove indietro ad una specificata potenza.
         ENG: Move backward at the specified power (0, 100)'''
-        ret = self.Power('r', power*(-1))
+        ret = self.Power('r', power * (-1))
         ret = self.Power('l', power * (-1))
 
     def Left(self, power):
@@ -170,28 +170,23 @@ class Motor:
 
     def ticksValue(self):
         print("message: ", self.sensoreReader.read())
-    
+
     #-------------------------------------------------------------------------------
     #                   funzioni utili per il joystick a 6 frecce
     #-------------------------------------------------------------------------------
-    
+
     #Sud-Est, il robot esegue una curva a potenza power, indietro e verso destra
     def SE(self, power):
-        ret = self.Power('l', (-1)*(power))
-    
+        ret = self.Power('l', (-1) * (power))
+
     #Sud-Ovest, il robot esegue una curva a potenza power, indietro e verso sinistra
     def SO(self, power):
-        ret = self.Power('r', (-1)*(power))
-    
+        ret = self.Power('r', (-1) * (power))
+
     #Nord-Est, il robot esegue una curva a potenza power, avanti e verso destra
     def NE(self, power):
         ret = self.Power('l', power)
-    
+
     #Nord-Ovest, il robot esegue una curva a potenza power, avanti e verso sinistra
     def NO(self, power):
         ret = self.Power('r', power)
-        
-
-    
-    
-                  
