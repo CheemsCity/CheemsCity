@@ -51,6 +51,8 @@ class LineDetectorPipeline:
         self.radius = 50
 
     def lineDetector(self, image, count=False, debug=False):
+        #ATTUALE
+        #TO-DO: inserire riconoscimento cheems e cartelli
         if count:
             start = time.time_ns()
 
@@ -107,7 +109,7 @@ class LineDetectorPipeline:
             print("\n")
 
         return lines
-
+'''
     def lineDetector2(self, image, display=False):
 
         numberCurve = 10  # numero massimo di dati curvatura storati
@@ -140,7 +142,7 @@ class LineDetectorPipeline:
             self.curveList.pop(0)
         curve = int(sum(self.curveList) / len(self.curveList))
 
-        return middlePoint, curve
+        return middlePoint, curve'''
 
     def lineDetector3(self, image, display=False):
         #copio le immagini per evitare di modificare l'orginale
