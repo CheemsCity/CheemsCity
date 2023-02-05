@@ -1,33 +1,52 @@
-import serial, time
-#sfrutta la libreria SerialPy
+'''
+sfrutta la libreria SerialPy
 #https://pyserial.readthedocs.io/en/latest/index.html
+'''
+import serial
+
+import time
 import pysignals
 
 from utils.Signals import motorSignal
 
 
 class SerialCommunication:
+    '''Class that implements the communication with the Arduino.
 
-    portName = "/dev/ttyACM0"
+    To make possible for every module to communicate with the arduino without problem
+    of having multiple serialcommunication object, the class use a publish and
+    subscribe system. This system is implemented through the library PySignal.
+    First a signal is declared in Signals.py and then connected with 
+    signal_name.connect(SerialCommunication.SendCommand) at the end of this module.
+    '''
+
+    port_name = "/dev/ttyACM0"
     baud = 115200
-    arduino = serial.Serial(portName, baud, timeout=1)
+    arduino = serial.Serial(port_name, baud, timeout=1)
 
     def __init__(self):
         time.sleep(0.1)
         if SerialCommunication.arduino.isOpen():
             print("{} connected!".format(SerialCommunication.arduino.port))
 
-    def ArduinoReset(self, debug=False):
-        #forza l'arduino al reset come se fosse stato premuto l'interruttore.
+    def arduino_reset(self, debug=False):
+        '''Force the arduino reset, just as the reset button was pushed
+        
+        Args:
+            debug: if true, the function will print the status of every passage.
+        
+        Returns:
+            True if successful, False otherwise.
+        '''
         ret = False
         try:
             print("cominciando il riavvio dell'arduino")
             SerialCommunication.arduino.close()
             if debug == True:
-                print("procedura 1:ok")
+                print("arduino.close: ok")
             SerialCommunication.arduino.dtr = False
             if debug == True:
-                print("procedura 2: ok")
+                print("arduino.dtr false: ok")
             time.sleep(3)
             #self.arduino.reset_input_buffer()
             #if debug == True:
@@ -35,7 +54,7 @@ class SerialCommunication:
             #time.sleep(1)
             SerialCommunication.arduino.dtr = True
             if debug == True:
-                print("proc4: ok")
+                print("arduino.dtr true: ok")
             time.sleep(5)
             SerialCommunication.arduino.open()
             print("Arduino reset completato")
@@ -46,9 +65,14 @@ class SerialCommunication:
         return ret
 
     @classmethod
-    def SendCommand(self, sender, msg, **kwargs):
-        #funzione per inviare comandi all'arduino, vedere documentazione sul
-        #come impostare questi comandi
+    def send_command(self, sender, msg, **kwargs):
+        '''Send a message to the arduino.
+        
+        The correct way of sending a message to the arduino is trough a pysignal
+        connected to this method. This is not a standard method that you can call
+        in a script to send a message to the arduino.
+        '''
+        
         print("tipo del messaggio ricevuto: {}".format(type(msg)))
         try:
             SerialCommunication.arduino.write(msg.encode('utf-8'))
@@ -59,8 +83,8 @@ class SerialCommunication:
             print("qualcosa è andato storto")
             return False
 
-    def Read(self):
-        #funzione per leggere i dati inviati dal raspberry
+    def read(self):
+        '''Read messages from Raspberry'''
         try:
             SerialCommunication.arduino.flush()
             msg = SerialCommunication.arduino.readline().decode(
@@ -71,4 +95,4 @@ class SerialCommunication:
             return False
 
 
-motorSignal.connect(SerialCommunication.SendCommand)
+motorSignal.connect(SerialCommunication.send_command)
