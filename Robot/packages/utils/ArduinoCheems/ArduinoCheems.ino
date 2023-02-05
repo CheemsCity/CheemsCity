@@ -16,9 +16,6 @@ int MA1 = 5; //A = motore 1  Destro (motor 1, right)
 int MA2 = 6; 
 int MB1 = 9; //B = motore 2 Sinistro (motor 2, left)
 int MB2 = 10; 
-// interrupts PIN
-int sensorS = 3; //encoder S (sinista, left)
-int sensorD = 2;  //encoder D (destra, right)
 
 //---------------------------- Message utils -----------------------
 //variables needed to receive orders from raspberry
@@ -53,10 +50,7 @@ void setup() {
   pinMode(MA1, OUTPUT);
   pinMode(MA2, OUTPUT);
   pinMode(MB1, OUTPUT);
-  pinMode(MB2, OUTPUT);
-  pinMode(sensorS, INPUT_PULLUP);
-  pinMode(sensorD, INPUT_PULLUP);
-  
+  pinMode(MB2, OUTPUT);  
 
   //comincia con i driver off
   digitalWrite(MA1, LOW);
