@@ -54,7 +54,7 @@ while not ret:
     cv2.imshow("immagine 1", rect)
 
     #nota, se hai una scacchiera non quadrata, il lato lungo deve essere messo parallelo alla direzione della fotocamera del robot
-    ##luce sembra influire molto
+    ##luce sembra influire molto!!
     print("[INFO] calcolo chessboard")
     chessboard = Chessboard(
         nx=settings['camera_calibration_chessboardY'],

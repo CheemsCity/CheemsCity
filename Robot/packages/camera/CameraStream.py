@@ -73,7 +73,7 @@ class CameraStream:
 #                       RemoteControler's code
 #chiamo solo le pipeline relative ai filtri
 
-    def frameClear(self):
+    def frame_clear(self):
         ret, self.frame_buff = cv2.imencode(
             '.jpg', self.frame
         )  #posso anche mettere png, ma allora devo aggiornare anche homepage.html
@@ -82,21 +82,21 @@ class CameraStream:
         #self.frame_b64 = base64.b64encode(self.frame_buff).decode("utf-8")
         #return self.frame_b64
 
-    def frameLineDetector(self):
+    def frame_line_detector(self):
         detector = LineDetectorPipeline()
         ret, self.frame_buff = cv2.imencode(
             '.jpg', detector.lineDetector(self.frame)
         )  #posso anche mettere png, ma allora devo aggiornare anche homepage.html
         return self.frame_buff.tobytes()
 
-    def frameArucoDetector(self):
+    def frame_aruco_detector(self):
         detector = ArucoDetectorPipeline()
         ret, self.frame_buff = cv2.imencode(
             '.jpg', detector.arucoDetector(self.frame)
         )  #posso anche mettere png, ma allora devo aggiornare anche homepage.html
         return self.frame_buff.tobytes()
 
-    def frameCameraCalibration(self):
+    def frame_camera_calibration(self):
         #creo l'oggetto chessboard
         chessboard = Chessboard(
             nx=self.calSettings['camera_calibration_chessboardX'],

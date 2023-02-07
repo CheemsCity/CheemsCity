@@ -46,15 +46,15 @@ class BirdView:
                               None, self.cam_matrix)
         return image
 
-    def undistortFaster(self, raw_image):
+    def undistort_faster(self, raw_image):
         ''' undistort an image faster than cv2.undistort.
         
-        it saves the undistort map (a function to the from the distorted image to the 
+        it saves the undistort map (a function from the distorted image to the 
         undistorted) for future usage, while cv2.undistort needs to recreate the map 
         everytime it gets called.
         
         Args:
-            raw_image: binary image (made by 0 and 1, only one channel)
+            raw_image: an image
         
         Returns:
             An binary image unidstorted from radial and tangential distortion
@@ -68,7 +68,7 @@ class BirdView:
             self.start = False
         return cv2.remap(raw_image, self.mapx, self.mapy, cv2.INTER_LINEAR)
 
-    def skyViewPoints(self, points):
+    def sky_view_points(self, points):
         '''Calculate the new points' coordinates in the skyview image.
 
         ITA: funzione che permette di calcolare le coordinate di un insieme di punti
@@ -92,7 +92,7 @@ class BirdView:
         ex. an image of a road will be returned as it was taken from the sky. 
         '''
 
-        temp_image = self.undistortFaster(ground_image)
+        temp_image = self.undistort_faster(ground_image)
         shape = (temp_image.shape[1], temp_image.shape[0])
         warp_image = cv2.warpPerspective(temp_image,
                                          self.sky_matrix,
@@ -100,15 +100,8 @@ class BirdView:
                                          flags=cv2.INTER_LINEAR)
         return warp_image
 
-    def make_points(self, image, average):
-        slope, y_int = average
-        y1 = image.shape[0]
-        y2 = int(y1 * (3 / 5))
-        x1 = int((y1 - y_int) / slope)
-        x2 = int((y2 - y_int) / slope)
-        return np.array([x1, y1, x2, y2])
-
     def DrawHough(self, image, binary):
+        #NOTES: ragionare se ha senso tenerla
         '''Metodo che utilizza la trasformazione Hough per trovare le 
         linee della strada (come equazioni di primo grado) nell'immagine 
         che ha gia subito il ROI ed i vari filtri.
@@ -160,11 +153,11 @@ class BirdView:
         except:
             return image
 
-    def Hough(self, binary):
+    def hough(self, binary):
         """Apply the Hough transformation to an image.
         
         Args:
-            binary: binary image (made by 0 and 1, only one channel)
+            binary: binary image (made by 0 and 1, only one channel).
         """
         lines = cv2.HoughLinesP(binary,
                                 rho=1,
@@ -176,10 +169,21 @@ class BirdView:
 
         return lines
 
-    def getHistogram(self, binary, region, minPer=0.1, display=False):
-        '''funzione che permette la creazione di un diagramma a colonne
-        a partire da un'immagine in bianco e nero. per ogni colonna
-        dell'immagine ne viene calcolata la quantità di pixel bianchi'''
+    def get_histogram(self, binary, region, minPer=0.1, display=False):
+        '''Calculate the number of white pixels for every columns of the image.
+        
+        Funzione che calcola per ogni colonna dell'immagine la quantità di pixel
+        bianchi e restituisce poi la posizione di una W media ottenuta facendo la
+        media pesata delle colonne. In modalità display TRUE è possibile vedere 
+        rappresentati i dati in un istogramma.
+        Casi d'uso: ottenere il valore w medio verso cui tende una strada a partire
+        da un'immagine in bianco e nero.
+        
+        Args:
+            binary: binary image (made by 0 and 1, only one channel).
+            region: an integer that define the ROI of interest.
+            minPer: a value to filter the columns with little white pixels.
+        '''
 
         histValues = np.sum(binary[-binary.shape[0] // region:, :], axis=0)
         maxValue = np.max(histValues)
@@ -200,10 +204,10 @@ class BirdView:
 
         return basePoint
 
-    def HoughCenter(self, binary, x: int):
+    def hough_center(self, binary, x: int):
         '''funzione che restituisce la coordinata y (width)
         del centro della strada ad una data altezza x
-        (più è in basso nell'immagine,maggiore il valore di x.
+        (più è in basso nell'immagine,maggiore il valore di x).
         Questo metodo effettua solo i calcoli e non disegna le 
         linee sull'immagine'''
         lines = cv2.HoughLinesP(binary,
@@ -240,43 +244,3 @@ class BirdView:
             return (yL - yR)
         except:
             return None
-
-    def Visual(self,
-               image,
-               ImgBinary,
-               left_fit,
-               right_fit,
-               color=(0, 255, 0),
-               debug=False):
-        z = np.zeros_like(ImgBinary)
-        filtered = np.dstack((z, z, z))
-
-        try:
-            kl, kr = left_fit, right_fit
-            h = filtered.shape[0]
-            ys = np.linspace(0, h - 1, h)
-            lxs = kl[0] * (ys**2) + kl[1] * ys + kl[2]
-            rxs = kr[0] * (ys**2) + kr[1] * ys + kr[2]
-            #creiamo un array verticale che contine i punti x e y della curva
-            pts_left = np.array([np.transpose(np.vstack([lxs, ys]))])
-            #qua uso transpose perche si inverte l'ordine dei punti e si può fare una bella area
-            pts_right = np.array(
-                [np.flipud(np.transpose(np.vstack([rxs, ys])))])
-            #creiamo un array orizzontale dei 2 punti delle curve
-            pts = np.hstack((pts_left, pts_right))
-            #riempiamo lo spazio tra i punti
-            cv2.fillPoly(filtered, np.int_(pts), color)
-            cv2.line(filtered, (0, int(filtered.shape[0] * (3 / 4))),
-                     (filtered.shape[1], int(filtered.shape[0] * (3 / 4))),
-                     (152, 2, 137), 6)
-            if debug == True:
-                plt.imshow(filtered)
-                plt.show()
-            shape = (filtered.shape[1], filtered.shape[0])
-            #faccio l'inversa della maschera per rimetterla sull'immagine originale
-            ground_lane = cv2.warpPerspective(filtered, self.inv_sky_matrix,
-                                              shape)
-            combo = cv2.addWeighted(image, 1, ground_lane, 0.3, 0)
-            return combo
-        except:
-            return image

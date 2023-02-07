@@ -27,13 +27,8 @@ calibration_data = yaml.load(file, Loader=yaml.UnsafeLoader)
 matrix = calibration_data['camera_matrix']
 dist_coef = calibration_data['distortion_coefficient']
 
-file = resource_string('camera.LineDetector', 'birdview_settings.yaml')
-data = yaml.full_load(file)
-source_points = data['source']
-dest_points = data['dest']
-
-birdview = BirdView(source_points,
-                    dest_points,
+birdview = BirdView(None,
+                    None,
                     matrix,
                     dist_coef,
                     Hmatrix=True)
@@ -53,7 +48,7 @@ while True:
         h, w = image.shape[:2]
         Start = False
 
-    lines = pipeline.lineDetector(image)
+    lines = pipeline.line_detector(image)
 
     #TO-DO: ragionare sulla geometria di proiezione dei punti sul terreno
 
@@ -88,8 +83,8 @@ while True:
     sky_list1 = []
     sky_list2 = []
     for i in range(numPoints):
-        sky_list1.append(birdview.skyViewPoints(Road_vec1[i, :]))
-        sky_list2.append(birdview.skyViewPoints(Road_vec2[i, :]))
+        sky_list1.append(birdview.sky_view_points(Road_vec1[i, :]))
+        sky_list2.append(birdview.sky_view_points(Road_vec2[i, :]))
 
     sky_points1 = np.array(sky_list1, ndmin=2)
     sky_points2 = np.array(sky_list2, ndmin=2)

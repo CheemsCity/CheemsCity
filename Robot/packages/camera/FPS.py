@@ -1,6 +1,5 @@
 import datetime
 
-
 #class to calculate the fps used in a process
 class FPS:
 

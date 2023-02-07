@@ -35,11 +35,9 @@ class StreetLight:
         ).T  #trasposta perché voglio una riga di coordinate x ed una di coordinate y
         xs = coordinates[0].astype(int)  #coordinate x arrotondate all'intero
         ys = coordinates[1].astype(int)  #coordinate y arrotondate all'intero
-        len = max(xs) - min(
-            xs)  #larghezza cartello (rispetto a piano della camera)
+        len = max(xs) - min(xs)  #larghezza cartello (rispetto a piano della camera)
         #devo ora prendere la roi che è il rettangolo di uguali dimensioni a sx di quello in input
-        xMin = min(
-            xs) - len  #il nuovo minimo è il vecchio minimo meno la larghezza
+        xMin = min(xs) - len  #il nuovo minimo è il vecchio minimo meno la larghezza
         xMax = min(xs)  #il nuovo massimo è il vecchio minimo
         self.SO, self.NE = self.inBorder(
             [xMin, max(ys)],

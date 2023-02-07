@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import yaml
+
 from pkg_resources import resource_string
 
 
@@ -14,7 +15,7 @@ class LaneFilter:
         self.height = self.settings['res_h']
         self.width = self.settings['res_w']
 
-    def toCanny(self, img):
+    def to_canny(self, img):
         try:
             gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
         except:
@@ -23,7 +24,7 @@ class LaneFilter:
         canny = cv2.Canny(blur, 70, 170)
         return canny
 
-    def ROI(self, img):
+    def roi(self, img):
         #roy da modificare quando avremo la struttura della macchina e quindi posizione fissa della telecamera
         trapezio = np.array([[(0, self.height), (self.width, self.height),
                               (self.width, 200), (0, 200)]])
@@ -32,7 +33,7 @@ class LaneFilter:
         masked_image = cv2.bitwise_and(img, mask)
         return masked_image
 
-    def roiToHeight(self, img, height: int):
+    def roi_to_height(self, img, height: int):
         '''Metodo che restituisce un'immagine con ROI personalizzato
         di tipo rettangolo la cui base maggiore è il lato inferiore
         della foto e come parametro personalizzabile l'altezza'''
@@ -48,7 +49,7 @@ class LaneFilter:
         masked_image = cv2.bitwise_and(img, mask)
         return masked_image
 
-    def customRoi(self, img, height: int, wRight: int, wLeft: int):
+    def custom_roi(self, img, height: int, wRight: int, wLeft: int):
         '''Metodo che restituisce un'immagine con un ROI personalizzato
         avente come base maggiore il lato inferiore della foto e parametri
         regolabili quali l'altezza del trapezio e la posizione lungo

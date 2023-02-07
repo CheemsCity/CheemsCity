@@ -50,7 +50,7 @@ class LineDetectorPipeline:
         self.lowerCheems = np.array([0, 95, 180])
         self.radius = 50
 
-    def lineDetector(self, image, count=False, debug=False):
+    def line_detector(self, image, count=False, debug=False):
         #ATTUALE
         #TO-DO: inserire riconoscimento cheems e cartelli
         if count:
@@ -59,7 +59,7 @@ class LineDetectorPipeline:
         #STEP 1: rettifichiamo l'immagine, così da non avere problemi col fisheye
         lane_image = np.copy(image[200:, :, :])
         canny_image = np.copy(image[200:, :, :])
-        rect = self.birdview.undistortFaster(lane_image)
+        rect = self.birdview.undistort_faster(lane_image)
 
         #STEP 2: isolare il colore Bianco
         frameHSV = cv2.cvtColor(rect, cv2.COLOR_BGR2HSV)
@@ -100,7 +100,7 @@ class LineDetectorPipeline:
             cv2.imshow("immagine 3", edge_color)
 
         #STEP 5: troviamo le linee con la HOUGH transform.
-        lines = self.birdview.Hough(edge_color)
+        lines = self.birdview.hough(edge_color)
 
         if count:
             t3 = time.time_ns()
