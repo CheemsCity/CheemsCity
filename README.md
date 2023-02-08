@@ -19,6 +19,7 @@ To build the robot follow the instructions in the Robot repository, while for th
 pip3 install opencv-python
 ```
 or you can install the [optimized version](https://pyimagesearch.com/2017/10/09/optimizing-opencv-on-the-raspberry-pi/) (preferred).
+
 3. Install `git` and clone this repository.
 ```
 git clone https://github.com/CheemsCity/CheemsCity.git
@@ -27,7 +28,7 @@ git clone https://github.com/CheemsCity/CheemsCity.git
 ```
 pip3 install -r requirements.txt
 ```
-4.Check our free courses on github or just have fun with your Robot!
+5. Check our free courses on github or just have fun with your Robot!
 
 
 ## Contributing
