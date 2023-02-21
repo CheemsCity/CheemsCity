@@ -13,7 +13,7 @@ class StreetLight:
             self.SO = (0, self.height)
             self.NE = (self.width, 0)
 
-    def changeImage(self, imageNew=None):
+    def change_image(self, imageNew=None):
         self.image = imageNew
         if self.image is not None:
             self.width = math.trunc(self.image.shape[0])
@@ -21,7 +21,7 @@ class StreetLight:
             self.SO = (0, self.height)
             self.NE = (self.width, 0)
 
-    def inBorder(self, SO,
+    def in_border(self, SO,
                  NE):  #controllo solo le x perché le y non le modifico
         if SO[0] < 0:
             SO[0] = 0
@@ -63,7 +63,7 @@ class StreetLight:
         self.greenMask = finder.distInRange()
         return self.redMask, self.yellowMask, self.greenMask
 
-    def lightColor(self):
+    def light_color(self):
         #calcolo quanti pixel occupa un ogni colore così da trovare il colore predominante che ritengo essere il colore del semaforo
         #nota che l'algoritmo viene chiamato solo qundo c'è il cartello del semaforo
         self.r_num = np.count_nonzero(self.redMask)

@@ -1,3 +1,5 @@
+#vecchio non più usato
+
 import cv2
 from picamera import PiCamera
 from threading import Thread

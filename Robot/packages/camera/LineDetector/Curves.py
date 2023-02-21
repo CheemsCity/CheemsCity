@@ -3,7 +3,7 @@
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
-#andiamo ad analizzare un'array binario contenente 1 dove dovrebbero esserci ipixel delle linee (utilizzo np.logical_and)
+#andiamo ad analizzare un'array binario contenente 1 dove dovrebbero esserci i pixel delle linee (utilizzo np.logical_and)
 #devo utilizzare lo sliding window algorithm
 #cercare di utilizzare il più possibile numpy perchè effettua i calcoli più velocemente di tutte le funzioni python
 

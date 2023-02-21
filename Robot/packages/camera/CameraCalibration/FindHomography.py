@@ -26,22 +26,17 @@ calibration_data = yaml.load(file, Loader=yaml.UnsafeLoader)
 matrix = calibration_data['camera_matrix']
 dist_coef = calibration_data['distortion_coefficient']
 
-file = resource_string('camera.LineDetector', 'birdview_settings.yaml')
-data = yaml.full_load(file)
-source_points = data['source']
-dest_points = data['dest']
-
 with open(r'camera_calibration_settings.yaml') as file:
     settings = yaml.full_load(file)
 
-birdview = BirdView(source_points, dest_points, matrix, dist_coef)
+birdview = BirdView(matrix, dist_coef)
 chessboards = []
 
 ret = False
 
 while not ret:
     frame = vs.read()
-    rect = birdview.undistortFaster(frame)
+    rect = birdview.undistort_faster(frame)
     print("[INFO] immagine letta e rettificata")
     flags = cv2.CALIB_CB_ADAPTIVE_THRESH
 

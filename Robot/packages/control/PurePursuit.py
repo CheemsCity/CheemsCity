@@ -27,9 +27,7 @@ calibration_data = yaml.load(file, Loader=yaml.UnsafeLoader)
 matrix = calibration_data['camera_matrix']
 dist_coef = calibration_data['distortion_coefficient']
 
-birdview = BirdView(None,
-                    None,
-                    matrix,
+birdview = BirdView(matrix,
                     dist_coef,
                     Hmatrix=True)
 

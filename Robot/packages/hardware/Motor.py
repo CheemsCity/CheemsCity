@@ -6,6 +6,8 @@ import RPi.GPIO as GPIO
 
 from utils.Signals import motorSignal
 from pysignals import receiver
+from pkg_resources import resource_string
+import yaml
 
 
 class Encoder:
@@ -84,6 +86,8 @@ class Motor:
 
         self._left_trim = left_trim
         self._right_trim = right_trim
+        #self.enc = Encoder()
+        #self.kin = InvKin()
 
     def __del__(self):
         self.stop()
@@ -132,6 +136,10 @@ class Motor:
         '''ENG: Stop all movements'''
         self.power('r', 0)
         self.power('l', 0)
+    
+    def set_vel(elf, motor: str, power: int):
+        #dovrà utilizzare i thread per il controllo della velocità del motore
+        return
 
     def test(self):
         print("accendendo motore destro con direzione avanti")

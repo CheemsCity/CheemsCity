@@ -1,5 +1,6 @@
 #classe legata ai comanda di cinematica inversa
 #class linked to inverse kynematics
+#Vecchia, va unita alla classe motor
 
 from hardware.Motor import Motor
 from hardware.Encoder import Encoder

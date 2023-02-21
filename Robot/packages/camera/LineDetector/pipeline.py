@@ -16,39 +16,24 @@ class LineDetectorPipeline:
 
     def __init__(self):
         self.lanefilter = LaneFilter()
-        #self.height = 479
-        #self.source_points = [(0, self.height), (600, self.height), (360,240), (230, 240)]
-        #self.dest_points = [(130, self.height), (500, self.height), (500, 0), (130, 0)]
 
-        #with open(r'/home/pi/CheemsCity/Robot/packages/camera/FinalCalibration.yml') as file:
         file = resource_string('camera', 'Calibration160.yml')
         calibration_data = yaml.load(file, Loader=yaml.UnsafeLoader)
         self.matrix = calibration_data['camera_matrix']
         self.dist_coef = calibration_data['distortion_coefficient']
 
-        #with open(r'/home/pi/CheemsCity/Robot/packages/camera/LineDetector/line_detector_settings.yaml') as file:
         file = resource_string('camera.LineDetector',
                                'line_detector_settings.yaml')
         self.settings = yaml.full_load(file)
 
-        file = resource_string('camera.LineDetector', 'birdview_settings.yaml')
-        data = yaml.full_load(file)
-        self.source_points = data['source']
-        self.dest_points = data['dest']
-
-        self.birdview = BirdView(self.source_points, self.dest_points,
-                                 self.matrix, self.dist_coef)
-        self.curves = curves(9, 20, 50)
+        self.birdview = BirdView(self.matrix, self.dist_coef, Hmatrix=True)
         sens = 100  #sensitività del colore
         self.lower_white = np.array([0, 0, 255 - sens])  #convenzione HSV
         self.upper_white = np.array([255, sens, 255])
         self.curveList = []
 
-        self.cf = ColorFinder()
-        self.colorCheems = [255, 193, 0]
         self.upperCheems = np.array([179, 255, 255])
         self.lowerCheems = np.array([0, 95, 180])
-        self.radius = 50
 
     def line_detector(self, image, count=False, debug=False):
         #ATTUALE
@@ -60,6 +45,7 @@ class LineDetectorPipeline:
         lane_image = np.copy(image[200:, :, :])
         canny_image = np.copy(image[200:, :, :])
         rect = self.birdview.undistort_faster(lane_image)
+        #perchè non rettifico anche la canny? TO-DO: Fare prova per vedere se ho differenze
 
         #STEP 2: isolare il colore Bianco
         frameHSV = cv2.cvtColor(rect, cv2.COLOR_BGR2HSV)
@@ -109,42 +95,9 @@ class LineDetectorPipeline:
             print("\n")
 
         return lines
-'''
-    def lineDetector2(self, image, display=False):
-
-        numberCurve = 10  # numero massimo di dati curvatura storati
-
-        lane_image = np.copy(image)
-        #Unimage = self.birdview.undistortFaster(lane_image)
-        #cv2.imshow("Unimage", Unimage)
-        frameHSV = cv2.cvtColor(lane_image, cv2.COLOR_BGR2HSV)
-        frameHSV = cv2.inRange(frameHSV, self.lower_white, self.upper_white)
-        #cv2.imshow("Color", frameHSV)
-        filtered = self.lanefilter.roiToHeight(frameHSV, 150)
-        #cv2.imshow("postROI", filtered)
-        #skyview = self.birdview.sky_view(filtered)
-        #cv2.imshow("postROI", skyview)
-        middlePoint = self.birdview.getHistogram(filtered, 6, minPer=0.2)
-        curveAveragePoint = self.birdview.getHistogram(filtered, 1, minPer=0.5)
-        curveRaw = curveAveragePoint - middlePoint
-
-        if display:
-            cv2.circle(image, (middlePoint, image.shape[0]), 20, (0, 255, 255),
-                       cv2.FILLED)
-            cv2.putText(image, str(curveRaw), (image.shape[1] // 2 - 80, 85),
-                        cv2.FONT_HERSHEY_COMPLEX, 2, (255, 0, 255), 3)
-            cv2.line(image, (middlePoint, image.shape[0]),
-                     (curveAveragePoint, image.shape[0] // 3 * 2),
-                     (255, 0, 255), 4)
-
-        self.curveList.append(curveRaw)
-        if len(self.curveList) > numberCurve:
-            self.curveList.pop(0)
-        curve = int(sum(self.curveList) / len(self.curveList))
-
-        return middlePoint, curve'''
 
     def lineDetector3(self, image, display=False):
+        #OLD
         #copio le immagini per evitare di modificare l'orginale
         lane_image1 = np.copy(image)
         lane_image2 = np.copy(image)
@@ -210,27 +163,6 @@ class LineDetectorPipeline:
             areaMax = np.max(areas)
 
         return areaMax, middlePoint, curve
-
-    def viewAll(self, image):
-        lane_image = np.copy(image)
-        filtered = self.lanefilter.toCanny(lane_image)
-        filtered = self.lanefilter.ROI(filtered)
-        roi = np.copy(filtered)
-        skyview = self.birdview.sky_view(filtered)
-        result = self.curves.Detect(skyview, 0)  #molto lento, va ottimizzato
-        if result != -1:
-            combo = self.birdview.Visual(image, skyview,
-                                         result['pixel_left_best_fit_curve'],
-                                         result['pixel_right_best_fit_curve'])
-            self.comboBig = cv2.resize(
-                combo, self.settings['line_detector_resizeImage'])
-        else:
-            self.comboBig = cv2.resize(
-                lane_image, self.settings['line_detector_resizeImage'])
-
-        res = {'roi': roi, 'combo': self.comboBig, 'skyview': skyview}
-        return res
-
 
 if __name__ == '__main__':
     detector = LineDetectorPipeline()
