@@ -10,5 +10,5 @@ import numpy as np
 vs = CameraStream().start()
 time.sleep(2.0)
 
-pba = ChessboardApp(vs,"")
+pba = ChessboardApp(vs, "")
 pba.root.mainloop()

@@ -4,11 +4,13 @@ import math
 import yaml
 from pkg_resources import resource_string
 
+
 class ArucoDetector:
 
     def __init__(self, cam_matrix, dist_coeff):
-       # with open(r'/home/pi/CheemsCity/Robot/packages/camera/ArucoMarkerDetector/aruco_settings.yaml') as file:
-        file = resource_string('camera.ArucoMarkerDetector', 'aruco_settings.yaml')
+        # with open(r'/home/pi/CheemsCity/Robot/packages/camera/ArucoMarkerDetector/aruco_settings.yaml') as file:
+        file = resource_string('camera.ArucoMarkerDetector',
+                               'aruco_settings.yaml')
         self.settings = yaml.full_load(file)
         self.arucoDictionary = {
             "DICT_4X4_50": cv2.aruco.DICT_4X4_50,
@@ -34,8 +36,10 @@ class ArucoDetector:
             "DICT_APRILTAG_36h11": cv2.aruco.DICT_APRILTAG_36h11
         }.get(self.settings['aruco_dictionary'], 'ERROR')
         #se c'è un errore nella richiesta del dizionario nelle settings
-        if(self.arucoDictionary == 'ERROR'):
-            print('Dizionario definito nell aruco_settings non esistente (DEFAULT: DICT_6X6_50)\n')
+        if (self.arucoDictionary == 'ERROR'):
+            print(
+                'Dizionario definito nell aruco_settings non esistente (DEFAULT: DICT_6X6_50)\n'
+            )
             self.arucoDictionary = cv2.aruco.DICT_6X6_50
         #prendo la lista dei cartelli stradali con equivalente codice aruco
         self.streetSign = self.settings['aruco_streetSign']
@@ -57,29 +61,37 @@ class ArucoDetector:
     def undistort(self, raw_image):
         #annullare gli effetti di curvatura della camera
         #gray = cv2.cvtColor(raw_image, cv2.COLOR_BGR2GRAY)
-        image = cv2.undistort(raw_image, self.cam_matrix, self.dist_coeff, None, self.cam_matrix)
+        image = cv2.undistort(raw_image, self.cam_matrix, self.dist_coeff,
+                              None, self.cam_matrix)
         return image
 
     def frameDetector(self, image):
         try:
             #funzione presente in cv2 per il riconoscimento degli aruco markers
-            (self.corners, self.ids, self.rejected) = cv2.aruco.detectMarkers(image, self.dict, parameters=self.params)
+            (self.corners, self.ids,
+             self.rejected) = cv2.aruco.detectMarkers(image,
+                                                      self.dict,
+                                                      parameters=self.params)
             for id in self.ids:
                 try:
                     descr_cartello = self.streetSign[id[0]][1]
                     print(descr_cartello)
-                    print("Trovato l'id {0} che equivale al cartello {1}\n".format(id[0], descr_cartello))
+                    print("Trovato l'id {0} che equivale al cartello {1}\n".
+                          format(id[0], descr_cartello))
                 except:
-                    print("L'id {0} trovato non equivale a nessun cartello a DB\n".format(id[0]))
+                    print(
+                        "L'id {0} trovato non equivale a nessun cartello a DB\n"
+                        .format(id[0]))
             print("[INFO] Trovati {:d} aruco\n".format(len(self.ids)))
         except:
             print("[ERRORE] Impossibile riconoscere i markers\n")
         return self.corners
-    
+
     def estimatePoseMarkers(self):
         #questa funzione mi restituisce le cooridnate del centro del marker nel sistema di rifermineto centrato nella camera
         #le coordinate dei vertici del marker sono (-markerLength/2, markerLength/2, 0), (markerLength/2, markerLength/2, 0), (markerLength/2, -markerLength/2, 0), (-markerLength/2, -markerLength/2, 0)
-        self.rvec, self.tvec, self._ = cv2.aruco.estimatePoseSingleMarkers(self.corners, self.markerLength, self.cam_matrix, self.dist_coeff)
+        self.rvec, self.tvec, self._ = cv2.aruco.estimatePoseSingleMarkers(
+            self.corners, self.markerLength, self.cam_matrix, self.dist_coeff)
         return self.rvec, self.tvec, self._
 
     def rodrigues(self, r):
@@ -88,8 +100,12 @@ class ArucoDetector:
         #pag 5
         theta = np.linalg.norm(r)
         u = np.array(r / theta)
-        cross_u = np.array([[0,-u[2],u[1]],[u[2],0,-u[0]],[-u[1],u[0],0]])
-        R = np.array(np.eye(3)*math.cos(theta) + (1-math.cos(theta))*np.matmul(u,u.T) + cross_u*math.sin(theta))
+        cross_u = np.array([[0, -u[2], u[1]], [u[2], 0, -u[0]],
+                            [-u[1], u[0], 0]])
+        R = np.array(
+            np.eye(3) * math.cos(theta) +
+            (1 - math.cos(theta)) * np.matmul(u, u.T) +
+            cross_u * math.sin(theta))
         return R
 
     def drawDetectedMarkers(self, image):
@@ -103,7 +119,9 @@ class ArucoDetector:
         #per i 4 punti e si ha il sistema di riferimento
         try:
             for i in range(len(self.ids)):
-                image = cv2.aruco.drawAxis(image, self.cam_matrix, self.dist_coeff, self.rvec[i], self.tvec[i], self.markerLength/2)
+                image = cv2.aruco.drawAxis(image, self.cam_matrix,
+                                           self.dist_coeff, self.rvec[i],
+                                           self.tvec[i], self.markerLength / 2)
             return image
         except:
             print("[ERRORE] Non ci sono markers di cui calcolare gli assi")

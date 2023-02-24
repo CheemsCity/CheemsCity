@@ -44,10 +44,10 @@ def index(request):
 			print(speed)
 			print(type(speed))
 			if action == 'ready':
-				mot.Stop() #ferma i motori
+				mot.stop() #ferma i motori
 				mot_status = 0
 			elif action == 'stop':
-				mot.Stop() #ferma i motori
+				mot.stop() #ferma i motori
 				mot_status = 0
 			elif action == 'frleft':
 				mot.NO(speed) #va a Nord Ovest
@@ -74,18 +74,19 @@ def index(request):
 def stream(camera, filter):
 	while True: #qui vengono chiamate diverse pipeline per i frame a seconda del filro richiesto
 		if filter == 'clear':
-			frame = camera.frameClear()
+			frame = camera.frame_clear()
 		elif filter == 'line_detector':
-			frame = camera.frameLineDetector()
+			frame = camera.frame_line_detector()
 		elif filter == 'aruco':
-			frame = camera.frameArucoDetector()
+			frame = camera.frame_aruco_detector()
 		yield (b'--frame\r\n'
 				b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n') #si fa uno yield perché devo creare uno streming che verrà visto una volta sola
 
 def camera_cal_stream(camera):
+	#TO-DO: finire di implementare la calibrazione online
 	global numphoto, chessboards, h, w
 	while True:
-		frame, chessboard, h, w = camera.frameCameraCalibration()
+		frame, chessboard, h, w = camera.frame_camera_calibration()
 		if chessboard is not None:
 			chessboards.append(chessboard)
 			numphoto += 1

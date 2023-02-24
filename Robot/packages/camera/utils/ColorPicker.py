@@ -3,8 +3,10 @@ import numpy as np
 from camera.CameraStream import CameraStream
 import time
 
+
 def empty(a):
     pass
+
 
 cv2.namedWindow("HSV")
 cv2.resizeWindow("HSV", 320, 240)
@@ -29,10 +31,10 @@ while white_flag:
     s_max = cv2.getTrackbarPos("SAT max", "HSV")
     v_min = cv2.getTrackbarPos("VALUE min", "HSV")
     v_max = cv2.getTrackbarPos("VALUE max", "HSV")
-    
+
     lower = np.array([h_min, s_min, v_min])
     upper = np.array([h_max, s_max, v_max])
-    mask = cv2.inRange(imgHsv,lower, upper)
+    mask = cv2.inRange(imgHsv, lower, upper)
     result = cv2.bitwise_and(image, image, mask=mask)
 
     mask = cv2.cvtColor(mask, cv2.COLOR_GRAY2BGR)
@@ -43,8 +45,3 @@ while white_flag:
         cv2.waitKey(0)
 
 cv2.destroyAllWindows()
-
-
-
-
-

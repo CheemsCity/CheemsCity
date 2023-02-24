@@ -14,18 +14,18 @@ class Camera(models.Model):
     def __del__(self):
         self.cam.stop()
 
-    def frameClear(self):
-        f = self.cam.frameClear()
+    def frame_clear(self):
+        f = self.cam.frame_clear()
         return f
 
-    def frameLineDetector(self):
-        f = self.cam.frameLineDetector()
+    def frame_line_detector(self):
+        f = self.cam.frame_line_detector()
         return f
 
-    def frameArucoDetector(self):
-        f = self.cam.frameArucoDetector()
+    def frame_aruco_detector(self):
+        f = self.cam.frame_aruco_detector()
         return f
     
-    def frameCameraCalibration(self):
-        f, chessboard, h ,w = self.cam.frameCameraCalibration()
+    def frame_camera_calibration(self):
+        f, chessboard, h ,w = self.cam.frame_camera_calibration()
         return f, chessboard, h, w

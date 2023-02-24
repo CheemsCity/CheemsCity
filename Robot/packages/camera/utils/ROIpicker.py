@@ -4,8 +4,10 @@ from camera.CameraStream import CameraStream
 from camera.LineDetector.LaneFilter import LaneFilter
 import time
 
+
 def empty(a):
     pass
+
 
 cv2.namedWindow("ROI")
 cv2.resizeWindow("ROI", 320, 240)
@@ -20,12 +22,10 @@ while white_flag:
     image = vs.read()
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     h = cv2.getTrackbarPos("ROI max", "ROI")
-    roi = lanefilter.roiToHeight(gray, h)
+    roi = lanefilter.roi_to_height(gray, h)
     cv2.imshow("ROI result", roi)
     if cv2.waitKey(1) and 0xFF == ord('q'):
         white_flag = False
         cv2.waitKey(0)
 
 cv2.destroyAllWindows()
-
-
