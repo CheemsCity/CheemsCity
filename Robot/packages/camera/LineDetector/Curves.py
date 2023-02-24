@@ -3,12 +3,17 @@
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
+
 #andiamo ad analizzare un'array binario contenente 1 dove dovrebbero esserci i pixel delle linee (utilizzo np.logical_and)
 #devo utilizzare lo sliding window algorithm
 #cercare di utilizzare il più possibile numpy perchè effettua i calcoli più velocemente di tutte le funzioni python
 
 
 class curves:
+    '''Used for an accurate detection of the road lines: too slow for real time.
+
+    It uses a sliding window algorithm to sample the points from the lines.
+    '''
 
     def __init__(self, NumberOfWindows, Margin, nPixelActivation):
         self.n = NumberOfWindows  #numero di  sliding windows
@@ -135,7 +140,7 @@ class curves:
         #calcoliamo la distanza in pixel: <0 se la macchina sta curvando troppo verso sinsitra, >0 ser verso destra
         self.position = road_pox - mid
 
-    def Detect(self, img, plot=0):
+    def detect(self, img, plot=0):
         #funzione principale
         self.getInfo(img)
         start_leftx, start_rightx = self.start(img, Hist=None)

@@ -1,18 +1,24 @@
+import math
+import os
+import time
+
+import numpy as np
+import yaml
+import cv2
+from pkg_resources import resource_string
+import matplotlib.pyplot as plt
+
 from camera.LineDetector.Curves import curves
 from camera.LineDetector.LaneFilter import LaneFilter
 from camera.LineDetector.BirdView import BirdView
 from camera.ColorFinder.finder import ColorFinder
-import numpy as np
-import math
-import yaml
-import cv2
-import os
-from pkg_resources import resource_string
-import matplotlib.pyplot as plt
-import time
 
 
 class LineDetectorPipeline:
+    '''class used to create the final image pipeline for autonomous driving.
+
+    This class needs a calibrated camera (camera calibration + homography matrix).
+    '''
 
     def __init__(self):
         self.lanefilter = LaneFilter()
@@ -27,6 +33,7 @@ class LineDetectorPipeline:
         self.settings = yaml.full_load(file)
 
         self.birdview = BirdView(self.matrix, self.dist_coef, Hmatrix=True)
+
         sens = 100  #sensitività del colore
         self.lower_white = np.array([0, 0, 255 - sens])  #convenzione HSV
         self.upper_white = np.array([255, sens, 255])

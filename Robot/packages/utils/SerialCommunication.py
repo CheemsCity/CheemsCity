@@ -28,9 +28,12 @@ class SerialCommunication:
         time.sleep(0.1)
         if SerialCommunication.arduino.isOpen():
             print("{} connected!".format(SerialCommunication.arduino.port))
+            print("just wait 2 seconds")
+            time.sleep(2)
+            print("OK!")
 
     def arduino_reset(self, debug=False):
-        '''Force the arduino reset, just as the reset button was pushed
+        '''Force the arduino reset, just as the reset button was pushed.
         
         Args:
             debug: if true, the function will print the status of every passage.

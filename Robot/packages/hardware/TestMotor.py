@@ -5,6 +5,8 @@ import serial
 from hardware.Motor import Motor
 from utils.SerialCommunication import SerialCommunication
 
+'''use this script to test if the motors work without problems'''
+
 comm = SerialCommunication()
 motori = Motor()
 

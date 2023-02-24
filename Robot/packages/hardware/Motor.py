@@ -11,6 +11,11 @@ import yaml
 
 
 class Encoder:
+    '''Class representing the two motors' encoders.
+
+    It uses the library RPi to update the ticks value instantly, in order to
+    avoid missing some values.
+    '''
 
     def __init__(self):
 

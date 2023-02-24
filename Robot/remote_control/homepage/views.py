@@ -44,10 +44,10 @@ def index(request):
 			print(speed)
 			print(type(speed))
 			if action == 'ready':
-				mot.Stop() #ferma i motori
+				mot.stop() #ferma i motori
 				mot_status = 0
 			elif action == 'stop':
-				mot.Stop() #ferma i motori
+				mot.stop() #ferma i motori
 				mot_status = 0
 			elif action == 'frleft':
 				mot.NO(speed) #va a Nord Ovest
