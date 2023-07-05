@@ -32,6 +32,7 @@ class BirdView:
             file = resource_string('camera', 'homography.yml')
             calibration_data = yaml.load(file, Loader=yaml.UnsafeLoader)
             self.sky_matrix = calibration_data['H_matrix']
+            #self.sky_matrix[1, :] = self.sky_matrix[1, :] * -1
 
         else:
             try:

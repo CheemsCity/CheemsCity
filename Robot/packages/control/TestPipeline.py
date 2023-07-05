@@ -6,13 +6,12 @@ from threading import Thread
 import time
 import numpy as np
 import os
-from camera.LineDetector.BirdView import BirdView
-from camera.LineDetector.Curves import curves
 from camera.LineDetector.LaneFilter import LaneFilter
 from camera.CameraStream import CameraStream
-from camera.LineDetector.pipelineTest import LineDetectorPipeline
+from camera.LineDetector.pipeline import LineDetectorPipeline
 from PID import PID
 from pkg_resources import resource_string
+from utils.SerialCommunication import SerialCommunication
 from hardware.Motor import Motor
 
 vs = CameraStream().start()
@@ -42,8 +41,6 @@ data = yaml.full_load(file)
 source_points = data['source']
 dest_points = data['dest']
 
-birdview = BirdView(source_points, dest_points, matrix, dist_coef)
-curve = curves(9, 20, 50)
 
 # valore di base della velocità
 basePower = 50
@@ -54,6 +51,7 @@ pid.tune(0.04, 0.04, 0.008)
 #inizializzazione classe motore con il relativo errore di differenza
 #potenza in uscita dei motori
 motor = Motor(left_trim=-5)
+comm = SerialCommunication()
 
 pipeline = LineDetectorPipeline()
 
@@ -72,7 +70,7 @@ while True:
     #prima condizione: presenza cheemsVicini = stop
     if areaMax > thresh:
         '''attiviamo la funzione di stop'''
-        motor.Stop()
+        motor.stop()
         continue
 
     #seconda parte: riconoscimento linee e direzione strada
@@ -89,5 +87,5 @@ while True:
     powerRight = basepower - curve * sen
     powerLeft = basepower + curve * sen
     print("motore destro: ", powerRight, " e motore sinisto", powerLeft)
-    motor.Power('l', powerLeft)
-    motor.Power('r', powerRight)
+    motor.power('l', powerLeft)
+    motor.power('r', powerRight)

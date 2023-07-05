@@ -11,14 +11,14 @@ class ArucoDetectorPipeline():
     def __init__(self):
         #with open(r'/home/pi/CheemsCity/Robot/packages/camera/FinalCalibration.yml') as file:
         #calibration_data = yaml.load(file, Loader=yaml.UnsafeLoader)
-        file = resource_string('camera', 'FinalCalibration.yml')
+        file = resource_string('camera', 'Calibration160.yml')
         calibration_data = yaml.load(file, Loader=yaml.UnsafeLoader)
         self.cam_matrix = calibration_data['camera_matrix']
         self.dist_coeff = calibration_data['distortion_coefficient']
 
         self.detector = ArucoDetector(self.cam_matrix, self.dist_coeff)
 
-    def arucoDetector(self, raw_image):
+    def aruco_detector(self, raw_image):
         #correggo la curvatura derivante dalla camera
         self.image = self.detector.undistort(raw_image)
         #self.image = raw_image
@@ -34,7 +34,7 @@ class ArucoDetectorPipeline():
         return corner
         return self.image
 
-    def printImage(self, image=None, SO=None, NE=None):
+    def print_image(self, image=None, SO=None, NE=None):
         if ((SO is None or NE is None) and image is None):
             key = self.detector.printImage(self.image)
         elif image is None:
@@ -59,8 +59,8 @@ if __name__ == '__main__':
     white_flag = True
     while white_flag:
         raw_image = vs.read()
-        corner = detector.arucoDetector(raw_image)
-        streetlight.changeImage(raw_image)
+        corner = detector.aruco_detector(raw_image)
+        streetlight.change_image(raw_image)
         try:
             SO, NE = streetlight.roi(corner[0])
             red, yellow, green = streetlight.color()
@@ -73,7 +73,7 @@ if __name__ == '__main__':
             print(' ')
         print([SO, NE])
         #key = detector.printImage(SO=SO,NE=NE)
-        key = detector.printImage(image=red)
+        key = detector.print_image(image=red)
         if key == 27:  # wait for ESC key to exit and terminate progra,
             detector.close()
             white_flag = False

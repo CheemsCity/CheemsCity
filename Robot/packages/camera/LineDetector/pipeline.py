@@ -45,17 +45,17 @@ class LineDetectorPipeline:
     def line_detector(self, image, count=False, debug=False):
         #ATTUALE
         #TO-DO: inserire riconoscimento cheems e cartelli
+
         if count:
             start = time.time_ns()
 
         #STEP 1: rettifichiamo l'immagine, così da non avere problemi col fisheye
-        lane_image = np.copy(image[200:, :, :])
-        canny_image = np.copy(image[200:, :, :])
-        rect = self.birdview.undistort_faster(lane_image)
-        #perchè non rettifico anche la canny? TO-DO: Fare prova per vedere se ho differenze
+        rect = self.birdview.undistort_faster(image)
+        lane_image = np.copy(rect[200:, :, :])
+        canny_image = np.copy(rect[200:, :, :])
 
         #STEP 2: isolare il colore Bianco
-        frameHSV = cv2.cvtColor(rect, cv2.COLOR_BGR2HSV)
+        frameHSV = cv2.cvtColor(lane_image, cv2.COLOR_BGR2HSV)
         frameHSV = cv2.inRange(frameHSV, self.lower_white, self.upper_white)
 
         if count:
@@ -78,6 +78,7 @@ class LineDetectorPipeline:
 
         #STEP 4: applichiamo il canny sull'immagine di partenza e uniamo con un AND
         # le due immagini risultato (canny + color detection)
+        #canny_image = cv2.cvtColor(canny_image, cv2.COLOR_BGR2GRAY)
         edges = cv2.Canny(canny_image, 80, 200, apertureSize=3)
         edge_color = cv2.bitwise_and(frameHSV, edges)
 
@@ -102,7 +103,34 @@ class LineDetectorPipeline:
             print("\n")
 
         return lines
+    
+    def cheems_recognition(self, image, display = False):
 
+        c_image = np.copy(image)
+        c_image = cv2.cvtColor(c_image, cv2.COLOR_BGR2HSV)
+        bool_Md = cv2.inRange(c_image, self.lowerCheems, self.upperCheems)
+        kernel = np.ones((5, 5), np.uint8)
+        mg_erode = cv2.erode(bool_Md, kernel, iterations=1)
+        mg_dilation = cv2.dilate(mg_erode, kernel, iterations=1)
+        im2, contours, hierarchy = cv2.findContours(mg_dilation,
+                                                    cv2.RETR_EXTERNAL,
+                                                    cv2.CHAIN_APPROX_SIMPLE)
+        areas = []
+        for contour in contours:
+            area = cv2.contourArea(contour)
+            areas.append(area)
+        
+        if display:
+            cv2.drawContours(image, contours, -1, (0,255,0), 3)
+            cv2.imshow("cheems_detected", image)
+        
+        return areas
+        '''una certa area attiverà la risposta freno del robot'''
+
+    def change_cheems_color(self, array_min, array_max):
+        self.upperCheems = array_max
+        self.lowerCheems = array_min
+        
     def lineDetector3(self, image, display=False):
         #OLD
         #copio le immagini per evitare di modificare l'orginale
@@ -136,11 +164,11 @@ class LineDetectorPipeline:
 
         frameHSV = cv2.cvtColor(lane_image2, cv2.COLOR_BGR2HSV)
         frameHSV = cv2.inRange(frameHSV, self.lower_white, self.upper_white)
-        filtered = self.lanefilter.roiToHeight(frameHSV, 150)
+        filtered = self.lanefilter.roi_to_height(frameHSV, 150)
         #calcola la somma dei punti delle colonne dell'immagine e ne calcola
         #la media pesata.
-        middlePoint = self.birdview.getHistogram(filtered, 6, minPer=0.2)
-        curveAveragePoint = self.birdview.getHistogram(filtered, 1, minPer=0.5)
+        middlePoint = self.birdview.get_histogram(filtered, 6, minPer=0.2)
+        curveAveragePoint = self.birdview.get_histogram(filtered, 1, minPer=0.5)
         curveRaw = curveAveragePoint - middlePoint
 
         if display:
@@ -183,6 +211,7 @@ if __name__ == '__main__':
     white_flag = True
     while white_flag:
         image = vs.read()
+        lines = detector.line_detector(image, debug= True)
         '''start = time.time()
         # center, curve = detector.lineDetector2(image,display= True)
         # print("centro della strada: ", center)
@@ -198,6 +227,5 @@ if __name__ == '__main__':
         key = cv2.waitKey(1) & 0xFF
         if key == 27:  #ESC
             white_flag = False
-        detector.lineDetector(image, count=True)
 
     cv2.destroyAllWindows()
