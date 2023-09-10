@@ -1,7 +1,7 @@
 # CheemsCity
 
 CheemsCity is a **STEM online platform for people who want to learn robotics, electronics and coding**.
-For starters, we will offer some free courses on GitHub through Jupyter notebooks and later via an official website and app.
+For starters, we will offer some [free courses on GitHub](https://github.com/CheemsCity/CheemsVision) through Jupyter notebooks and later via an official website and app.
 The repository contains all the material related to the robot's code.
 
 We are going to lunch the first official kit on Kickstarter; however, you can also build it by yourself using the files in the [Robot repository](https://github.com/CheemsCity/CheemsCar).
