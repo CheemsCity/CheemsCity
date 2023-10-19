@@ -127,6 +127,27 @@ class LineDetectorPipeline:
         return areas
         '''una certa area attiverà la risposta freno del robot'''
 
+    
+    def cheems_detector(self, image):
+        
+        c_image = np.copy(image)
+        c_image = cv2.cvtColor(c_image, cv2.COLOR_BGR2HSV)
+        bool_Md = cv2.inRange(c_image, self.lowerCheems, self.upperCheems)
+        kernel = np.ones((5, 5), np.uint8)
+        mg_erode = cv2.erode(bool_Md, kernel, iterations=1)
+        mg_dilation = cv2.dilate(mg_erode, kernel, iterations=1)
+        im2, contours, hierarchy = cv2.findContours(mg_dilation,
+                                                    cv2.RETR_EXTERNAL,
+                                                    cv2.CHAIN_APPROX_SIMPLE)
+        areas = []
+        for contour in contours:
+            area = cv2.contourArea(contour)
+            areas.append(area)
+        
+        cv2.drawContours(image, contours, -1, (0,255,0), 3)
+        
+        return image
+
     def change_cheems_color(self, array_min, array_max):
         self.upperCheems = array_max
         self.lowerCheems = array_min

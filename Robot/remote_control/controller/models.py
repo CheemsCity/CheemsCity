@@ -18,8 +18,8 @@ class Camera(models.Model):
         f = self.cam.frame_clear()
         return f
 
-    def frame_line_detector(self):
-        f = self.cam.frame_line_detector()
+    def frame_cheems_detector(self):
+        f = self.cam.frame_cheems_detector()
         return f
 
     def frame_aruco_detector(self):

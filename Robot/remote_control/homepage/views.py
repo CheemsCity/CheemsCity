@@ -75,8 +75,8 @@ def stream(camera, filter):
 	while True: #qui vengono chiamate diverse pipeline per i frame a seconda del filro richiesto
 		if filter == 'clear':
 			frame = camera.frame_clear()
-		elif filter == 'line_detector':
-			frame = camera.frame_line_detector()
+		elif filter == 'cheems_detector':
+			frame = camera.frame_cheems_detector()
 		elif filter == 'aruco':
 			frame = camera.frame_aruco_detector()
 		yield (b'--frame\r\n'
