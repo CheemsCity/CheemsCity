@@ -85,14 +85,14 @@ class CameraStream:
     def frame_line_detector(self):
         detector = LineDetectorPipeline()
         ret, self.frame_buff = cv2.imencode(
-            '.jpg', detector.lineDetector(self.frame)
+                '.jpg', detector.line_detector(self.frame)
         )  #posso anche mettere png, ma allora devo aggiornare anche homepage.html
         return self.frame_buff.tobytes()
 
     def frame_aruco_detector(self):
         detector = ArucoDetectorPipeline()
         ret, self.frame_buff = cv2.imencode(
-            '.jpg', detector.arucoDetector(self.frame)
+            '.jpg', detector.aruco_detector(self.frame)
         )  #posso anche mettere png, ma allora devo aggiornare anche homepage.html
         return self.frame_buff.tobytes()
 

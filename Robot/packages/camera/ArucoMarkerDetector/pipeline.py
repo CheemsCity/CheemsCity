@@ -31,7 +31,7 @@ class ArucoDetectorPipeline():
         self.image = self.detector.drawDetectedMarkers(self.image)
         #stampo sull'immagine gli assi centrati
         self.image = self.detector.drawAxis(self.image)
-        return corner
+        #return corner
         return self.image
 
     def print_image(self, image=None, SO=None, NE=None):

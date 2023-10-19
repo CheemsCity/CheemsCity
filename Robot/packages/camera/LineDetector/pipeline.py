@@ -40,7 +40,7 @@ class LineDetectorPipeline:
         self.curveList = []
 
         self.upperCheems = np.array([179, 255, 255])
-        self.lowerCheems = np.array([0, 95, 180])
+        self.lowerCheems = np.array([0, 95, 115])
 
     def line_detector(self, image, count=False, debug=False):
         #ATTUALE
@@ -211,7 +211,8 @@ if __name__ == '__main__':
     white_flag = True
     while white_flag:
         image = vs.read()
-        lines = detector.line_detector(image, debug= True)
+        detector.cheems_recognition(image, display=True)
+        #lines = detector.line_detector(image, debug= True)
         '''start = time.time()
         # center, curve = detector.lineDetector2(image,display= True)
         # print("centro della strada: ", center)

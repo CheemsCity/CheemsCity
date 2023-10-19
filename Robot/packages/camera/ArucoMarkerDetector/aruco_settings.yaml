@@ -8,11 +8,11 @@ aruco_streetSign:
     - 'STOP'
     - 'Stop'
   - #1
-    - 'IN'
-    - 'Incrocio'
-  - #2
     - 'ATTC'
     - 'Attraversamento Cheems'
+  - #2
+    - 'IN'
+    - 'Incrocio'
   - #3
     - 'NOAC'
     - 'Divieto di Accesso'
