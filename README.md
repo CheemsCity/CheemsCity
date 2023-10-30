@@ -36,6 +36,7 @@ If you would like to contribute to the project, awesome! You can check out the c
 
 ## Community
 CheemsCity aims to create a big community around the product; discussion about the project happens on the Discord server!
+
 Se sei una scuola o un club di robotica e vuoi utilizzare il nostro robot, scrivici pure e potremo aiutarti nella creazione del corso!
 
 ## Follow Us!
