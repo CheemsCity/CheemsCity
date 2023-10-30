@@ -4,14 +4,14 @@ CheemsCity is a **STEM online platform for people who want to learn robotics, el
 For starters, we will offer some [free courses on GitHub](https://github.com/CheemsCity/CheemsVision) through Jupyter notebooks and later via an official website and app.
 The repository contains all the material related to the robot's code.
 
-We are going to lunch the first official kit on Kickstarter; however, you can also build it by yourself using the files in the [Robot repository](https://github.com/CheemsCity/CheemsCar) (work in progress).
+We are going to launch the first official kit on Kickstarter; however, you can also build it by yourself using the files in the [Robot repository](https://github.com/CheemsCity/CheemsCar) (work in progress).
 If you build or buy one, please help the project by documenting bugs with a GitHub issue.
 
 The kit will contain: 
 a CheemsCar, Cyber Cheems (pedestrians of the city), traffic sign and a modular street.
 
-## How do i build one?
-To build the robot follow the instructions in the Robot repository, while for the software open your raspberry pi and:
+## How do I build one?
+To build the robot follow the instructions in the Robot repository, while for the software open your Raspberry Pi and:
 **requirements**: Python and pip installed.
 1. Create a virtual environment and activate it.
 2. You can install the common version of openCV with:
@@ -28,17 +28,20 @@ git clone https://github.com/CheemsCity/CheemsCity.git
 ```
 pip3 install -r requirements.txt
 ```
-5. Check our free courses on github or just have fun with your Robot!
+5. Check our free courses on Git Hub or have fun with your Robot!
 
 
 ## Contributing
-If you would like to contribute to the project, awesome! Check out the contributing page to get started.
+If you would like to contribute to the project, awesome! You can check out the contributing page to get started.
 
 ## Community
 CheemsCity aims to create a big community around the product; discussion about the project happens on the Discord server!
+Se sei una scuola o un club di robotica e vuoi utilizzare il nostro robot, scrivici pure e potremo aiutarti nella creazione del corso!
 
 ## Follow Us!
 We're on social media:
 
 - [Instagram](https://www.instagram.com/cheems.city/) tag us in your post showing your cheems!
 - [Linkedin](https://www.linkedin.com/company/cheemscity/) if you want to discover our serious side!
+  
+Official Email: cheemscity.startup@gmail.com 
